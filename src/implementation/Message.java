@@ -1,7 +1,11 @@
 package implementation;
 
 import domainLayer.MessageData;
-
+/**
+ * This class is mainly meant to help right things to the persistence system
+ * @author aradno
+ *
+ */
 public class Message {
 	protected MessageData _msgBody;
 	protected long _msgPostTime;

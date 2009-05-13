@@ -1,11 +1,12 @@
 package implementation;
 
-public class RegisteredUser extends NonRegisteredUser {
+public class RegisteredUser{ //extends NonRegisteredUser {
 	//protected String _password;
 	protected long _lastLogInTime;
 	protected long _signUpTime;
 	protected int _numOfMessages;
 	protected long _uID;
+	protected String _userName;
 	
 	public RegisteredUser(String userName,long ID){
 		super();
@@ -46,5 +47,13 @@ public class RegisteredUser extends NonRegisteredUser {
 
 	public void set_uID(long _uid) {
 		_uID = _uid;
+	}
+	
+	public String get_userName() {
+		return _userName;
+	}
+
+	public void set_userName(String name) {
+		_userName = name;
 	}
 }

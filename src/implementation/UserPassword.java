@@ -1,5 +1,10 @@
 package implementation;
 
+/**
+ * This class is mainly to make it easy to write things to the persistence system.s
+ * @author aradno
+ *
+ */
 public class UserPassword {
 
 	protected long _userID;

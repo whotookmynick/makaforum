@@ -33,9 +33,9 @@ public class PersistenceSystemXML implements PersistenceSystem {
 	}
 
 	@Override
-	public void addUser(userData ud,String password) {
-		writeObjectToFile(ud, userFilePath, userTag);
-		long userId = ((RegisteredUser)ud).get_uID();
+	public void addUser(RegisteredUser ru,String password) {
+		writeObjectToFile(ru, userFilePath, userTag);
+		long userId = ru.get_uID();
 		writeObjectToFile(new UserPassword(userId,password),passFilePath,passTag);
 	}
 
