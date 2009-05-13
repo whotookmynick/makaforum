@@ -5,9 +5,14 @@ import java.util.Collection;
 import implementation.Message;
 import implementation.RegisteredUser;
 
+/**
+ * This interface defines the needs from the persistence system.
+ * @author aradno
+ *
+ */
 public interface PersistenceSystem {
 	
-	public void addUser(userData ud,String password);
+	public void addUser(RegisteredUser ud,String password);
 	
 	public RegisteredUser getUser(long uid);
 	

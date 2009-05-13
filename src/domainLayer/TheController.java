@@ -36,6 +36,15 @@ public class TheController {
 		_currentUserID = 1;
 	}
 	
+	/**
+	 * This method loggs the user to the system allowing that his password matches
+	 * the one specified in the persistence system.
+	 * NOTE: this method assumes that there is a way to convert username to userID
+	 * @param userName
+	 * @param pass
+	 * @return
+	 * @throws UserDoesNotExistException
+	 */
 	public boolean logMeIn(String userName,String pass) throws UserDoesNotExistException{
 		RegisteredUser currentUser;
 		Long userId = _userNameToUserId.get(userName);
@@ -57,6 +66,18 @@ public class TheController {
 		System.out.println("Username or password do not exist");
 		throw new UserDoesNotExistException();
 				
+	}
+	
+	/**
+	 * This method receive a registered user, checks if he is logged in
+	 * and if so loggs him out of the system. Furthermore the system also updates
+	 * any information about the user that needs to be updated.
+	 * @param ru
+	 * @return
+	 */
+	public boolean logMeOut(RegisteredUser ru){
+		_loggedUsers.remove(ru);
+		return true;
 	}
 	
 	/**
@@ -91,6 +112,11 @@ public class TheController {
 		
 	}
 	
+	/**
+	 * This method takes care of adding a message to the system and the persistence system.
+	 * @param user
+	 * @param msg
+	 */
 	public void addNewMessage(RegisteredUser user,Message msg){
 		if (msg != null && _loggedUsers.contains(user)){
 			_persistenceLayer.addMsg(msg);
@@ -98,6 +124,13 @@ public class TheController {
 		}
 	}
 	
+	/**
+	 * This method checks that the given user is authorized to edit the message
+	 * and then replaces the old message data with the new one.
+	 * @param user
+	 * @param mid
+	 * @param newMsgData
+	 */
 	public void editMsg(RegisteredUser user,long mid,MessageData newMsgData){
 		Message oldMsg = _persistenceLayer.getMessage(mid);
 		if (oldMsg.get_msgPosterID() == user.get_uID()){
@@ -106,14 +139,27 @@ public class TheController {
 		System.out.println("Message does not belong to user");
 	}
 
+	/**
+	 * is not implemented right now
+	 * @param fatherID
+	 * @return
+	 */
 	public Collection<Message> getAllMessagesChildren(long fatherID){
 		return _persistenceLayer.getMessagesWithFather(fatherID);
 	}
 
+	/**
+	 * Rights a new message to the persistence system where the father message is fatherID
+	 * @param replyMsgData
+	 * @param msgPoster
+	 * @param fatherID
+	 * @param originalID
+	 */
 	public void replyToMessage(MessageData replyMsgData,long msgPoster,long fatherID,long originalID){
 		Message newRepMessage = new Message(replyMsgData,msgPoster,fatherID,originalID);
 		_persistenceLayer.addMsg(newRepMessage);
 	}
+	
 	
 	public Collection<RegisteredUser> get_userContainer() {
 		return _loggedUsers;
@@ -123,11 +169,17 @@ public class TheController {
 		_loggedUsers = container;
 	}
 	
+	/**
+	 * Inner message that encrypts the input string using SHA algorithm and then
+	 * also Base64 in order to make sure it can be re read with XML.
+	 * @param msg
+	 * @return
+	 */
 	private static String encryptMessage(String msg){
 		MessageDigest md;
 		String encryptedMsg = null;
 		try {
-			md = MessageDigest.getInstance("MD5");
+			md = MessageDigest.getInstance("SHA");
 			Base64Encoder be = new Base64Encoder();
 			encryptedMsg = new String(be.encode(md.digest(msg.getBytes())));
 		} catch (NoSuchAlgorithmException e) {
