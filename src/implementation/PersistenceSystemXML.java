@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -292,5 +293,36 @@ public class PersistenceSystemXML implements PersistenceSystem {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	@Override
+	public Hashtable<String, Long> createHashTableofUserNametoUID() {
+		boolean endOfObject = false;
+		Hashtable<String,Long> ans = new Hashtable<String, Long>();
+		try{
+        	File inFile = new File(userFilePath);
+        	if (inFile.exists()){
+        		BufferedReader inputStream = 
+        			new BufferedReader(new FileReader(inFile));
+        		String l = "";
+        		String serializedObject ="";
+        		while ((l = inputStream.readLine()) != null) {
+        			endOfObject = l.contains("</" + userTag + ">");
+        			serializedObject +=l;
+        			if (endOfObject) {
+        				serializedObject = serializedObject.substring(2+userTag.length());
+        				serializedObject = serializedObject.substring(0,serializedObject.indexOf("</" + userTag + ">"));
+        				RegisteredUser desirializedObject = (RegisteredUser)deserializeObject(serializedObject);
+        				ans.put(desirializedObject.get_userName(),desirializedObject.get_uID());
+        				serializedObject = "";
+        			}
+        		}
+    			inputStream.close();
+        	}
+        }
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		return ans;		
 	}
 }
