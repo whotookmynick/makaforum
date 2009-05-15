@@ -1,6 +1,7 @@
 package domainLayer;
 
 import java.util.Collection;
+import java.util.Hashtable;
 
 import implementation.Message;
 import implementation.RegisteredUser;
@@ -31,4 +32,6 @@ public interface PersistenceSystem {
 	public Message deleteMessage(long mid);
 	
 	public Collection<Message> getMessagesWithFather(long fatherID);
+	
+	public Hashtable<String, Long> createHashTableofUserNametoUID();
 }

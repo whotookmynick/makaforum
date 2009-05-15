@@ -12,10 +12,8 @@ import Exceptions.UserAlreadyExistsException;
 import Exceptions.UserDoesNotExistException;
 
 import implementation.Message;
-import implementation.NonRegisteredUser;
 import implementation.PersistenceSystemXML;
 import implementation.RegisteredUser;
-import implementation.UserPassword;
 
 public class TheController {
 	
@@ -31,8 +29,7 @@ public class TheController {
 		_loggedUsers = new Vector<RegisteredUser>();
 		_persistenceLayer = new PersistenceSystemXML();
 		_userNameToUserId = new Hashtable<String, Long>();
-		long uid = 1;
-		_userNameToUserId.put("user1",uid);
+		_userNameToUserId = _persistenceLayer.createHashTableofUserNametoUID();
 		_currentUserID = 1;
 	}
 	
@@ -91,6 +88,7 @@ public class TheController {
 	public boolean registerNewUser(String userName,String password) throws UserAlreadyExistsException{
 		if (!_userNameToUserId.containsKey(userName)){
 			RegisteredUser theNewUser = new RegisteredUser(userName,_currentUserID);
+			_userNameToUserId.put(userName,_currentUserID);
 			_currentUserID++;
 			String encryptedPass = encryptMessage(password);
 			if (encryptedPass != null){
