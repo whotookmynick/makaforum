@@ -90,7 +90,22 @@ public class RegisteredUser{ //extends NonRegisteredUser {
 	/**
 	 * @author moti and roee
 	 */
-	public int getUserType(){
-		return _userType;
+	public boolean isMember(){
+		return _userType>=0;
 	}
+
+	/**
+	 * @author moti and roee
+	 */
+	public boolean isModerator(){
+		return _userType>0;
+	}
+
+	/**
+	 * @author moti and roee
+	 */
+	public boolean isAdministretor(){
+		return _userType>1;
+	}
+
 }
