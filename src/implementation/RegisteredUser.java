@@ -7,7 +7,15 @@ public class RegisteredUser{ //extends NonRegisteredUser {
 	protected int _numOfMessages;
 	protected long _uID;
 	protected String _userName;
-	
+
+	/**
+	 * @author moti and roee
+	 */
+	protected int _userType;		//  -1 = nonRegistered
+									//   0 = member
+									//	 1 = moderator
+									//	 2 = administrator
+
 	public RegisteredUser(String userName,long ID){
 		super();
 		_userName = userName;
@@ -48,12 +56,41 @@ public class RegisteredUser{ //extends NonRegisteredUser {
 	public void set_uID(long _uid) {
 		_uID = _uid;
 	}
-	
+
 	public String get_userName() {
 		return _userName;
 	}
 
 	public void set_userName(String name) {
 		_userName = name;
+	}
+
+	/**
+	 * @author moti and roee
+	 * @param type
+	 */
+	private void setUserType(int type){
+		_userType = type;
+	}
+
+	/**
+	 * @author moti and roee
+	 */
+	public void setModerator(){
+		setUserType(1);
+	}
+
+	/**
+	 * @author moti and roee
+	 */
+	public void setMember(){
+		setUserType(0);
+	}
+
+	/**
+	 * @author moti and roee
+	 */
+	public int getUserType(){
+		return _userType;
 	}
 }
