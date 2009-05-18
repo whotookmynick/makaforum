@@ -7,9 +7,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
+
+import searchEngine.SearchTable;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
@@ -18,7 +21,7 @@ import domainLayer.MessageData;
 import domainLayer.PersistenceSystem;
 import domainLayer.userData;
 
-public class PersistenceSystemXML implements PersistenceSystem {
+public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 
 	private static final String userFilePath = "users.xml";
 	private static final String userTag = "OurUserTag";
@@ -26,6 +29,12 @@ public class PersistenceSystemXML implements PersistenceSystem {
 	private static final String msgTag = "OurMessageTag";
 	private static final String passFilePath = "passes.xml";
 	private static final String passTag = "OurPassTag";
+	
+	/**
+	 * the files for the stable search engine. 
+	 */
+	private static final String wordToWIDFilePath= "searchWords.xml";
+	private static final String wIDToMsgIDFilePath= "searchMsgID.xml";
 	
 	
 	@Override
@@ -324,5 +333,54 @@ public class PersistenceSystemXML implements PersistenceSystem {
 			e.printStackTrace();
 		}
 		return ans;		
+	}
+
+	
+	public Collection<Long> Search_getMessageId(long wordId) {
+		HashMap<Long, Collection<Long>> wordIdToMsgIdTable = (HashMap<Long, Collection<Long>>)fromXMLFile(wIDToMsgIDFilePath);
+		return wordIdToMsgIdTable.get(new Long(wordId));
+	}
+
+	public long Search_getWordId(String word) {
+		HashMap<String, Long> wordTable = (HashMap<String, Long>)fromXMLFile(wordToWIDFilePath);
+		return wordTable.get(word);
+	}
+
+	public boolean Search_insertMessageFromWord(String word, Message message) {
+		//Search_insertWord(word); //make sure a tuple exists.
+		boolean bInserted = false;
+		long wordId = Search_getWordId(word);
+		long msgId = message.get_mID();
+		//get the table from the file :
+		HashMap<Long, Collection<Long>> wordIdToMsgIdTable = (HashMap<Long, Collection<Long>>)fromXMLFile(wIDToMsgIDFilePath);
+		//update the table :
+		if(wordIdToMsgIdTable.containsKey(wordId)){
+			Collection<Long> wordMsgs = wordIdToMsgIdTable.get(new Long(wordId));
+			if (!wordMsgs.contains(new Long(msgId))){
+				wordMsgs.add(new Long(msgId));
+			}
+			wordIdToMsgIdTable.put(wordId, wordMsgs);
+			toXMLFile(wordIdToMsgIdTable, wIDToMsgIDFilePath);
+			bInserted = true;
+		}
+		else{
+			System.out.println("SEARCH ERROR : agent didnt add the word to the word to massege table");
+		}
+		
+		
+		
+		return bInserted;
+	}
+
+	public boolean Search_insertWord(String word) {
+		boolean wrote = false;
+		HashMap<String, Long> wordTable = (HashMap<String, Long>)fromXMLFile(wordToWIDFilePath);
+		if(!wordTable.containsKey(word)){
+			Long newWordId = new Long(wordTable.size());
+			wordTable.put(word, newWordId);
+			toXMLFile(wordTable, wordToWIDFilePath);
+			wrote = true;
+		}
+		return wrote;
 	}
 }
