@@ -16,12 +16,12 @@ import implementation.PersistenceSystemXML;
 import implementation.RegisteredUser;
 
 public class TheController {
-	
+
 	protected Collection<RegisteredUser> _loggedUsers;
 	protected PersistenceSystem _persistenceLayer;
 	protected Hashtable<String, Long> _userNameToUserId;
 	protected long _currentUserID;
-	
+
 	/**
 	 * This constructor was created for testing purposes only
 	 */
@@ -32,7 +32,7 @@ public class TheController {
 		_userNameToUserId = _persistenceLayer.createHashTableofUserNametoUID();
 		_currentUserID = 1;
 	}
-	
+
 	/**
 	 * This method loggs the user to the system allowing that his password matches
 	 * the one specified in the persistence system.
@@ -62,9 +62,9 @@ public class TheController {
 		}
 		System.out.println("Username or password do not exist");
 		throw new UserDoesNotExistException();
-				
+
 	}
-	
+
 	/**
 	 * This method receive a registered user, checks if he is logged in
 	 * and if so loggs him out of the system. Furthermore the system also updates
@@ -76,7 +76,7 @@ public class TheController {
 		_loggedUsers.remove(ru);
 		return true;
 	}
-	
+
 	/**
 	 * Registers a new user and encrypts it's password using SHA algorithm
 	 * which is built in in java.
@@ -96,7 +96,7 @@ public class TheController {
 				_loggedUsers.add(theNewUser);
 				return true;
 			}
-			else 
+			else
 			{
 				System.out.println("Password was not encrypted");
 			}
@@ -107,21 +107,24 @@ public class TheController {
 			throw new UserAlreadyExistsException();
 		}
 		return false;
-		
+
 	}
-	
+
 	/**
 	 * This method takes care of adding a message to the system and the persistence system.
 	 * @param user
 	 * @param msg
 	 */
 	public void addNewMessage(RegisteredUser user,Message msg){
-		if (msg != null && _loggedUsers.contains(user)){
+		if (user.isMember() && msg != null && _loggedUsers.contains(user)){
 			_persistenceLayer.addMsg(msg);
 			user.set_numOfMessages(user.get_numOfMessages()+1);
 		}
+		else{
+			System.out.println("User can't add message");
+		}
 	}
-	
+
 	/**
 	 * This method checks that the given user is authorized to edit the message
 	 * and then replaces the old message data with the new one.
@@ -131,10 +134,12 @@ public class TheController {
 	 */
 	public void editMsg(RegisteredUser user,long mid,MessageData newMsgData){
 		Message oldMsg = _persistenceLayer.getMessage(mid);
-		if (oldMsg.get_msgPosterID() == user.get_uID()){
+		if ((user.isModerator() || oldMsg.get_msgPosterID() == user.get_uID()) && _loggedUsers.contains(user)){
 			_persistenceLayer.editMessage(mid, newMsgData);
 		}
-		System.out.println("Message does not belong to user");
+		else{
+			System.out.println("Message does not belong to user");
+		}
 	}
 
 	/**
@@ -149,16 +154,47 @@ public class TheController {
 	/**
 	 * Rights a new message to the persistence system where the father message is fatherID
 	 * @param replyMsgData
-	 * @param msgPoster
+	 * @param user
 	 * @param fatherID
 	 * @param originalID
 	 */
-	public void replyToMessage(MessageData replyMsgData,long msgPoster,long fatherID,long originalID){
-		Message newRepMessage = new Message(replyMsgData,msgPoster,fatherID,originalID);
-		_persistenceLayer.addMsg(newRepMessage);
+	public void replyToMessage(MessageData replyMsgData,RegisteredUser user,long fatherID,long originalID){
+		if (user.isMember() && _loggedUsers.contains(user)){
+			Message newRepMessage = new Message(replyMsgData,user.get_uID(),fatherID,originalID);
+			_persistenceLayer.addMsg(newRepMessage);
+		}
+		else{
+			System.out.println("User can't reply to message");
+		}
 	}
-	
-	
+
+	/**
+	 *
+	 * @author Moti and Roee
+	 */
+	public void assignModerator(RegisteredUser assigner,RegisteredUser assignee){
+		if (assigner.isAdministretor() && assignee.isMember()){
+			assignee.setModerator();
+		}
+		else{
+			System.out.println("can't assign moderator");
+		}
+	}
+
+	/**
+	 *
+	 * @author Moti and Roee
+	 */
+	public void assignMember(RegisteredUser assigner,RegisteredUser assignee){
+		if (assigner.isAdministretor() && assignee.isMember()){
+			assignee.setMember();
+		}
+		else{
+			System.out.println("can't assign member");
+		}
+	}
+
+
 	public Collection<RegisteredUser> get_userContainer() {
 		return _loggedUsers;
 	}
@@ -166,7 +202,7 @@ public class TheController {
 	public void set_userContainer(Collection<RegisteredUser> container) {
 		_loggedUsers = container;
 	}
-	
+
 	/**
 	 * Inner message that encrypts the input string using SHA algorithm and then
 	 * also Base64 in order to make sure it can be re read with XML.
