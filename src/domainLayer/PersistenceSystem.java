@@ -21,7 +21,8 @@ public interface PersistenceSystem {
 	
 	public boolean changeUserPassword(long uid,String newPass);
 	
-	public boolean deleteUser(long uid);
+	/* no need */
+	//public boolean deleteUser(long uid);
 	
 	public void addMsg(Message msg);
 	
