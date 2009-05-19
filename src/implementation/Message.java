@@ -13,7 +13,7 @@ public class Message {
 	 * This field is a reference to the _uid field in RegisteredUser
 	 */
 	protected long _msgPosterID;
-	protected long _fatherMessageID;
+	protected long _fatherMessageID;	// -1  for a new message
 	protected long _mID;
 	
 	public Message(MessageData msgBody,long msgposterID,long fatherID,long mID){
