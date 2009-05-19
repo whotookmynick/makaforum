@@ -30,8 +30,7 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 	private static final String passFilePath = "passes.xml";
 	private static final String passTag = "OurPassTag";
 	private static final String idFilePath = "ids.xml";
-	private static final String idPassTag = "idtag";
-	
+		
 	/**
 	 * the files for the stable search engine. 
 	 */
@@ -217,7 +216,8 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
         		while (inputStream.ready()){
         			Message ms;
         			ms = (Message)getObjectFromFile(inputStream, msgTag);
-        			ans.add(ms);
+        			if (ms.get_fatherMessageID() == fatherID)
+        				ans.add(ms);
         		}
         		return ans;
         	}
@@ -412,14 +412,14 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 	@Override
 	public void incMsgId(){
 		Vector<Integer> ids = (Vector<Integer>)fromXMLFile(idFilePath);
-		ids.add(ids.get(1) + 1, 0);
+		ids.set(1,ids.get(1) + 1);
 		toXMLFile(ids, idFilePath);
 	}
 	
 	@Override
 	public void incUserId(){
 		Vector<Integer> ids = (Vector<Integer>)fromXMLFile(idFilePath);
-		ids.add(ids.get(0) + 1, 0);
+		ids.set(0,ids.get(0) + 1);
 		toXMLFile(ids, idFilePath);
 	}
 	
