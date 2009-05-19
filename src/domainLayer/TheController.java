@@ -4,6 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Vector;
 
 import com.thoughtworks.xstream.core.util.Base64Encoder;
@@ -112,18 +113,48 @@ public class TheController {
 
 	/**
 	 * This method takes care of adding a message to the system and the persistence system.
+	 * @param msgData
 	 * @param user
-	 * @param msg
+	 * @param originalID
 	 */
-	public void addNewMessage(RegisteredUser user,Message msg){
-		if (user.isMember() && msg != null && _loggedUsers.contains(user)){
-			_persistenceLayer.addMsg(msg);
+	public void addNewMessage(MessageData msgData,RegisteredUser user,long originalID){
+		if (user.isMember() && _loggedUsers.contains(user)){
+			Message newMessage = new Message(msgData,user.get_uID(),originalID);
+			_persistenceLayer.addMsg(newMessage);
 			user.set_numOfMessages(user.get_numOfMessages()+1);
 		}
 		else{
 			System.out.println("User can't add message");
 		}
 	}
+	
+	/**
+	 * This method takes care of deleting a message form the system and the persistence system.
+	 * @author Roee
+	 * @param user
+	 * @param msg
+	 */
+	public void deleteMessage(RegisteredUser user,Message msg){
+		if (user.isModerator() && msg != null && _loggedUsers.contains(user)){
+			if (msg.get_fatherMessageID()<0){
+				Collection<Message> children = getAllMessagesChildren(msg.get_fatherMessageID());
+				Iterator<Message> iterator = children.iterator();
+				while (iterator.hasNext()) {
+					Message message = iterator.next();
+					deleteMessage(user,message);
+				}
+				
+			}
+			_persistenceLayer.deleteMessage(msg.get_mID());
+			RegisteredUser writer = _persistenceLayer.getUser(msg.get_msgPosterID());
+			writer.set_numOfMessages(user.get_numOfMessages()-1);
+		}
+		else{
+			System.out.println("User can't add message");
+		}
+	}
+	
+	
 
 	/**
 	 * This method checks that the given user is authorized to edit the message
@@ -162,6 +193,7 @@ public class TheController {
 		if (user.isMember() && _loggedUsers.contains(user)){
 			Message newRepMessage = new Message(replyMsgData,user.get_uID(),fatherID,originalID);
 			_persistenceLayer.addMsg(newRepMessage);
+			user.set_numOfMessages(user.get_numOfMessages()+1);
 		}
 		else{
 			System.out.println("User can't reply to message");
