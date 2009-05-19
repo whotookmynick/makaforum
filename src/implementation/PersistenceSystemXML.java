@@ -205,7 +205,24 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 	}
 	
 	public Collection<Message> getMessagesWithFather(long fatherID){
-		// TODO implement this;
+		try
+		{
+			Collection<Message> ans = new Vector<Message>();
+        	File inFile = new File(msgFilePath);
+        	if (inFile.exists()){
+        		BufferedReader inputStream = 
+        			new BufferedReader(new FileReader(inFile));
+        		while (inputStream.ready()){
+        			Message ms;
+        			ms = (Message)getObjectFromFile(inputStream, msgTag);
+        			ans.add(ms);
+        		}
+        		return ans;
+        	}
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
 		return null;
 	}
 	
