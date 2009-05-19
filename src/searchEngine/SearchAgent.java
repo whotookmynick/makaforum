@@ -1,11 +1,6 @@
 package searchEngine;
-
 import java.util.Vector;
-
-import domainLayer.PersistenceSystem;
-
 import implementation.Message;
-
 
 public class SearchAgent {
 	
