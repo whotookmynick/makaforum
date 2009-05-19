@@ -35,4 +35,12 @@ public interface PersistenceSystem {
 	public Collection<Message> getMessagesWithFather(long fatherID);
 	
 	public Hashtable<String, Long> createHashTableofUserNametoUID();
+	
+	public int getCurrentUserID();
+	
+	public int getCurrentMsgID();
+	
+	public void incMsgId();
+	
+	public void incUserId();
 }

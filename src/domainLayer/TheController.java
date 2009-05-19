@@ -22,6 +22,7 @@ public class TheController {
 	protected PersistenceSystem _persistenceLayer;
 	protected Hashtable<String, Long> _userNameToUserId;
 	protected long _currentUserID;
+	protected long _currentMsgID;
 
 	/**
 	 * This constructor was created for testing purposes only
@@ -31,7 +32,8 @@ public class TheController {
 		_persistenceLayer = new PersistenceSystemXML();
 		_userNameToUserId = new Hashtable<String, Long>();
 		_userNameToUserId = _persistenceLayer.createHashTableofUserNametoUID();
-		_currentUserID = 1;
+		_currentUserID = _persistenceLayer.getCurrentUserID();
+		_currentMsgID = _persistenceLayer.getCurrentMsgID();
 	}
 
 	/**
@@ -46,6 +48,8 @@ public class TheController {
 	public RegisteredUser logMeIn(String userName,String pass) throws UserDoesNotExistException{
 		RegisteredUser currentUser;
 		Long userId = _userNameToUserId.get(userName);
+		if (userId == null)
+			return null;
 		currentUser = _persistenceLayer.getUser(userId);
 		String encryptedPass = _persistenceLayer.getUserPassword(userId);
 		if (currentUser != null){
@@ -91,6 +95,7 @@ public class TheController {
 			RegisteredUser theNewUser = new RegisteredUser(userName,_currentUserID);
 			_userNameToUserId.put(userName,_currentUserID);
 			_currentUserID++;
+			_persistenceLayer.incUserId();
 			String encryptedPass = encryptMessage(password);
 			if (encryptedPass != null){
 				_persistenceLayer.addUser(theNewUser,encryptedPass);
@@ -121,7 +126,11 @@ public class TheController {
 		if (user == null)
 			return;
 		if (user.isMember() && _loggedUsers.contains(user)){
-			Message newMessage = new Message(msgData,user.get_uID(),originalID);
+			//Added by Noam
+			long msgId = _persistenceLayer.getCurrentMsgID();
+			Message newMessage = new Message(msgData,user.get_uID(),msgId);
+			_persistenceLayer.incMsgId();
+			//Message newMessage = new Message(msgData,user.get_uID(),originalID);
 			_persistenceLayer.addMsg(newMessage);
 			user.set_numOfMessages(user.get_numOfMessages()+1);
 		}
