@@ -1,36 +1,45 @@
 package searchEngine;
 
+import java.util.Vector;
+
+import domainLayer.PersistenceSystem;
+
 import implementation.Message;
 
 
 public class SearchAgent {
-	public boolean insertMessageToEngine(Message msg){
-		String[] msgWords =msg.get_msgBody().textToDisplay().split(" ");
-		for(int i=0;i<msgWords.length;i++){
-			if(!(msgWords[i].equals(""))){
-				//do work
-			}
-			
-		}
-		return false;
+	
+	SearchTable _searchTable;
+	
+	public SearchAgent(SearchTable searchTable){
+		_searchTable = searchTable;
 	}
 	
-	private String clearWord(String wordToClear){
-		char [] whiteChars = {'\\','\"','\t','\n','\b',':', ';','-','=','+','*','.','#'};
-		for(int i = 0 ; i < wordToClear.length();i++){
-			for(int j = 0;j < whiteChars.length;j++){	
-				if((i < (wordToClear.length() - 1)) && (wordToClear.charAt(i)==whiteChars[j])){
-					wordToClear = wordToClear.substring(0, i)+wordToClear.substring(i+1, wordToClear.length());
-					if(i != 0) i--;
-				}else {
-					if((wordToClear.charAt(i)==whiteChars[j]) && (i==wordToClear.length()-1)){
-						wordToClear = wordToClear.substring(0, wordToClear.length()-1);
-						i--;
-					}	
-				}
-			}						
+	public void insertMessageToEngine(Message msg){
+		//parsing the message :
+		Vector<String> msgWords = parseMsg(msg.get_msgBody().textToDisplay());
+		
+		//inserting message words to database :
+		for(int i=0; i<msgWords.size(); i++){
+			_searchTable.Search_insertWord(msgWords.get(i));
+			_searchTable.Search_insertMessageFromWord(msgWords.get(i), msg);
 		}
-		return wordToClear;
+	}
+	
+	private Vector<String> parseMsg(String msg){
+		//removing delimiters :
+		char [] whiteChars = {'\\','\"','\t','\n','\b',':', ';','-','=','+','*','.','#'};
+		for (int i=0; i<whiteChars.length; i++){
+				msg = msg.replace(whiteChars[i], ' ');
+		}
+		String[] temp = msg.split(" ");
+		Vector<String> msgWords = new Vector<String>();
+		//removing empty words :
+		for(int i=0; i<temp.length; i++){
+			if(!temp[i].equals(""))
+				msgWords.add(temp[i]);
+		}
+		return msgWords;
 	}
 	
 }
