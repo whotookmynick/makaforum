@@ -29,6 +29,8 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 	private static final String msgTag = "OurMessageTag";
 	private static final String passFilePath = "passes.xml";
 	private static final String passTag = "OurPassTag";
+	private static final String idFilePath = "ids.xml";
+	private static final String idPassTag = "idtag";
 	
 	/**
 	 * the files for the stable search engine. 
@@ -394,4 +396,31 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 		}
 		return wrote;
 	}
+
+	@Override
+	public int getCurrentMsgID() {
+		Vector<Integer> ids = (Vector<Integer>)fromXMLFile(idFilePath);
+		return ids.get(0);
+	}
+
+	@Override
+	public int getCurrentUserID() {
+		Vector<Integer> ids = (Vector<Integer>)fromXMLFile(idFilePath);
+		return ids.get(1);
+	}
+	
+	@Override
+	public void incMsgId(){
+		Vector<Integer> ids = (Vector<Integer>)fromXMLFile(idFilePath);
+		ids.add(ids.get(1) + 1, 0);
+		toXMLFile(ids, idFilePath);
+	}
+	
+	@Override
+	public void incUserId(){
+		Vector<Integer> ids = (Vector<Integer>)fromXMLFile(idFilePath);
+		ids.add(ids.get(0) + 1, 0);
+		toXMLFile(ids, idFilePath);
+	}
+	
 }
