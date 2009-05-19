@@ -37,8 +37,12 @@ public class TUI implements Runnable{
 			while ((msg = _userReader.readLine()) != null)
 			{
 				_socketWriter.println(msg);
-				String repliedMessage = _socketReader.readLine();
-				String displayString = repliedMessage.substring(6);
+				String repliedMessage = "";
+				while (repliedMessage.indexOf("\\e") < 0)
+					repliedMessage += _socketReader.readLine() + "\n";
+				repliedMessage = repliedMessage.substring(0,repliedMessage.length()-3);
+				//System.out.println(repliedMessage);
+				String displayString = repliedMessage.substring("print".length()+1);
 				System.out.println(displayString);
 				System.out.println("Waiting for user input");
 			}
