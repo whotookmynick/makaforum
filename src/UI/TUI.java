@@ -8,11 +8,12 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 /**
- * Messages that the clienty can send:
+ * Commands that the clienty can send:
  * login userName password //login to system
  * register username password //register a new username
  * message username messagedata messageisreplytomessage //write a new message
  * display fatherid
+ * logMeOut // log user off
  * @author Noam
  *
  */
