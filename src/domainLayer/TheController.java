@@ -122,7 +122,7 @@ public class TheController {
 	 * @param user
 	 * @param originalID
 	 */
-	public void addNewMessage(MessageData msgData,RegisteredUser user,long originalID){
+	public void addNewMessage(MessageData msgData,RegisteredUser user){
 		if (user == null)
 			return;
 		if (user.isMember() && _loggedUsers.contains(user)){
@@ -200,9 +200,11 @@ public class TheController {
 	 * @param fatherID
 	 * @param originalID
 	 */
-	public void replyToMessage(MessageData replyMsgData,RegisteredUser user,long fatherID,long originalID){
+	public void replyToMessage(MessageData replyMsgData,RegisteredUser user,long fatherID){
 		if (user.isMember() && _loggedUsers.contains(user)){
-			Message newRepMessage = new Message(replyMsgData,user.get_uID(),fatherID,originalID);
+			long msgId = _persistenceLayer.getCurrentMsgID();
+			Message newRepMessage = new Message(replyMsgData,user.get_uID(),fatherID,msgId);
+			_persistenceLayer.incMsgId();
 			_persistenceLayer.addMsg(newRepMessage);
 			user.set_numOfMessages(user.get_numOfMessages()+1);
 		}
