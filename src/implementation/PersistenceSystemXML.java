@@ -400,13 +400,13 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 	@Override
 	public int getCurrentMsgID() {
 		Vector<Integer> ids = (Vector<Integer>)fromXMLFile(idFilePath);
-		return ids.get(0);
+		return ids.get(1);
 	}
 
 	@Override
 	public int getCurrentUserID() {
 		Vector<Integer> ids = (Vector<Integer>)fromXMLFile(idFilePath);
-		return ids.get(1);
+		return ids.get(0);
 	}
 	
 	@Override
