@@ -109,12 +109,6 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 	}
 
 	@Override
-	public boolean deleteUser(long uid) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	public void editMessage(long mid, MessageData newMsg) {
 		Message editedMessage = deleteMessage(mid);
 		editedMessage.set_msgBody(newMsg);
