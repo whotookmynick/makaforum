@@ -21,9 +21,10 @@ public class ServerProtocolImp implements ServerProtocol {
 
 	@Override
 	public boolean isEnd(String msg) {
-		boolean ans;
-		ans = msg.contentEquals("bye");
-		return ans;
+		return false;
+//		boolean ans;
+//		ans = msg.contentEquals("bye");
+//		return ans;
 	}
 
 	/**
@@ -89,6 +90,16 @@ public class ServerProtocolImp implements ServerProtocol {
 				}
 				return returnString;
 			}
+		}
+		if (parsedString[0].contentEquals("logoff"))
+		{
+			if (_connectedUser == null)
+			{
+				return "print you are not logged in";
+			}
+			_controller.logMeOut(_connectedUser);
+			_connectedUser = null;
+			return "print user logged out successfully";
 		}
 		return "print unknown command";
 	}
