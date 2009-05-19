@@ -19,8 +19,8 @@ public class TheControllerTest {
 	@Test
 	public void testLogMeIn() {
 		try {
-			assertTrue(_controler.logMeIn("user1", "pass1"));
-			assertFalse(_controler.logMeIn("user1", "fake pass"));
+			assertTrue(_controler.logMeIn("user1", "pass1") != null);
+			assertFalse(_controler.logMeIn("user1", "fake pass") != null);
 		} catch (UserDoesNotExistException e) {
 			e.printStackTrace();
 		}
