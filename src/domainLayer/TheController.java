@@ -43,7 +43,7 @@ public class TheController {
 	 * @return
 	 * @throws UserDoesNotExistException
 	 */
-	public boolean logMeIn(String userName,String pass) throws UserDoesNotExistException{
+	public RegisteredUser logMeIn(String userName,String pass) throws UserDoesNotExistException{
 		RegisteredUser currentUser;
 		Long userId = _userNameToUserId.get(userName);
 		currentUser = _persistenceLayer.getUser(userId);
@@ -54,11 +54,11 @@ public class TheController {
 			{
 				_loggedUsers.add(currentUser);
 				System.out.println("User " + currentUser.get_userName() + " is logged in");
-				return true;
+				return currentUser;
 			}
 			else
 			{
-				return false;// user was not authenticated.
+				return null;// user was not authenticated.
 			}
 		}
 		System.out.println("Username or password do not exist");
@@ -118,6 +118,8 @@ public class TheController {
 	 * @param originalID
 	 */
 	public void addNewMessage(MessageData msgData,RegisteredUser user,long originalID){
+		if (user == null)
+			return;
 		if (user.isMember() && _loggedUsers.contains(user)){
 			Message newMessage = new Message(msgData,user.get_uID(),originalID);
 			_persistenceLayer.addMsg(newMessage);
