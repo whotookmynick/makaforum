@@ -181,13 +181,15 @@ public class TheController {
 	 * @param mid
 	 * @param newMsgData
 	 */
-	public void editMsg(RegisteredUser user,long mid,MessageData newMsgData){
+	public boolean editMsg(RegisteredUser user,long mid,MessageData newMsgData){
 		Message oldMsg = _persistenceLayer.getMessage(mid);
 		if ((user.isModerator() || oldMsg.get_msgPosterID() == user.get_uID()) && _loggedUsers.contains(user)){
 			_persistenceLayer.editMessage(mid, newMsgData);
+			return true;
 		}
 		else{
 			System.out.println("Message does not belong to user");
+			return false;
 		}
 	}
 
