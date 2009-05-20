@@ -1,7 +1,11 @@
 package webServer;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
+import java.util.Vector;
+
+import searchEngine.Search;
 
 import implementation.Message;
 import implementation.MessageDataImp;
@@ -14,9 +18,11 @@ public class ServerProtocolImp implements ServerProtocol {
 
 	TheController _controller;
 	RegisteredUser _connectedUser;
+	Search _searchEngine;
 
 	public ServerProtocolImp(TheController controller){
 		_controller = controller;
+		_searchEngine = _controller.get_searchEngine();
 	}
 
 	@Override
@@ -73,6 +79,19 @@ public class ServerProtocolImp implements ServerProtocol {
 		if (parsedString[0].contentEquals("delete"))
 		{
 			return deleteMessage(parsedString);
+		}
+		
+		if (parsedString[0].contentEquals("search")){
+			String searchType = parsedString[1];
+			if (searchType.contentEquals("author"))
+			{
+				String authorName = msg.substring(msg.indexOf(parsedString[1]));
+				Collection<Message> allMessages;
+				allMessages = _searchEngine.searchByAuthor(authorName);
+				String returnString = "print ";
+				returnString += createStringFromMessagesCollection(allMessages);
+				return returnString + "\\e";
+			}
 		}
 		return "print unknown command \\e";
 	}
@@ -135,11 +154,7 @@ public class ServerProtocolImp implements ServerProtocol {
 		}
 		else
 		{
-			Iterator<Message> it = allMessages.iterator();
-			while (it.hasNext()){
-				Message currentMsg = it.next();
-				returnString += currentMsg.get_mID() + ": " + currentMsg.get_msgBody().displayMessageData() + "\n";
-			}
+			returnString += createStringFromMessagesCollection(allMessages);
 			return returnString + " \\e";
 		}
 	}
@@ -207,6 +222,17 @@ public class ServerProtocolImp implements ServerProtocol {
 		} catch (UserDoesNotExistException e) {
 			return "print username and/or password are incorrect \\e";
 		}
+	}
+	
+	private String createStringFromMessagesCollection(Collection<Message> allMessages)
+	{
+		String returnString = "";
+		Iterator<Message> it = allMessages.iterator();
+		while (it.hasNext()){
+			Message currentMsg = it.next();
+			returnString += currentMsg.get_mID() + ": " + currentMsg.get_msgBody().displayMessageData() + "\n";
+		}
+		return returnString;
 	}
 
 }
