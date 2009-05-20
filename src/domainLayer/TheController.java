@@ -7,6 +7,10 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
 
+import searchEngine.Search;
+import searchEngine.SearchImp;
+import searchEngine.SearchTable;
+
 import com.thoughtworks.xstream.core.util.Base64Encoder;
 
 import Exceptions.UserAlreadyExistsException;
@@ -23,6 +27,7 @@ public class TheController {
 	protected Hashtable<String, Long> _userNameToUserId;
 	protected long _currentUserID;
 	protected long _currentMsgID;
+	protected Search _searchEngine;
 
 	/**
 	 * This constructor was created for testing purposes only
@@ -34,6 +39,7 @@ public class TheController {
 		_userNameToUserId = _persistenceLayer.createHashTableofUserNametoUID();
 		_currentUserID = _persistenceLayer.getCurrentUserID();
 		_currentMsgID = _persistenceLayer.getCurrentMsgID();
+		_searchEngine = new SearchImp((SearchTable)_persistenceLayer);
 	}
 
 	/**
@@ -133,12 +139,13 @@ public class TheController {
 			//Message newMessage = new Message(msgData,user.get_uID(),originalID);
 			_persistenceLayer.addMsg(newMessage);
 			user.set_numOfMessages(user.get_numOfMessages()+1);
+			_searchEngine.insertMessageToEngine(newMessage);
 		}
 		else{
 			System.out.println("User can't add message");
 		}
 	}
-	
+
 	/**
 	 * This method takes care of deleting a message form the system and the persistence system.
 	 * @author Roee
@@ -154,7 +161,7 @@ public class TheController {
 					Message message = iterator.next();
 					deleteMessage(user,message);
 				}
-				
+
 			}
 			_persistenceLayer.deleteMessage(msg.get_mID());
 			RegisteredUser writer = _persistenceLayer.getUser(msg.get_msgPosterID());
@@ -164,8 +171,8 @@ public class TheController {
 			System.out.println("User can't add message");
 		}
 	}
-	
-	
+
+
 
 	/**
 	 * This method checks that the given user is authorized to edit the message
