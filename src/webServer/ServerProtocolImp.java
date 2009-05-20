@@ -1,5 +1,7 @@
 package webServer;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -82,18 +84,49 @@ public class ServerProtocolImp implements ServerProtocol {
 		}
 		
 		if (parsedString[0].contentEquals("search")){
-			String searchType = parsedString[1];
-			if (searchType.contentEquals("author"))
-			{
-				String authorName = msg.substring(msg.indexOf(parsedString[1]));
+			return searchMethod(msg, parsedString);
+		}
+		return "print unknown command \\e";
+	}
+
+	private String searchMethod(String msg, String[] parsedString) {
+		String searchType = parsedString[1];
+		if (searchType.contentEquals("author"))
+		{
+			String authorName = msg.substring(msg.indexOf(searchType + searchType.length()));
+			Collection<Message> allMessages;
+			allMessages = _searchEngine.searchByAuthor(authorName);
+			String returnString = "print ";
+			returnString += createStringFromMessagesCollection(allMessages);
+			return returnString + "\\e";
+		}
+		if (searchType.contentEquals("content"))
+		{
+			String sentence = msg.substring(msg.indexOf(searchType) + searchType.length());
+			Collection<Message> allMessages;
+			allMessages = _searchEngine.searchByContent(sentence);
+			String returnString = "print ";
+			returnString += createStringFromMessagesCollection(allMessages);
+			return returnString + "\\e";
+		}
+		if (searchType.contentEquals("date"))
+		{
+			String fromDateString = parsedString[2];
+			String toDateString = parsedString[3];
+			DateFormat dt = DateFormat.getDateInstance();
+			try {
+				Date fromDate = dt.parse(fromDateString);
+				Date toDate = dt.parse(toDateString);
 				Collection<Message> allMessages;
-				allMessages = _searchEngine.searchByAuthor(authorName);
+				allMessages = _searchEngine.searchByDate(fromDate, toDate);
 				String returnString = "print ";
 				returnString += createStringFromMessagesCollection(allMessages);
 				return returnString + "\\e";
-			}
+			} catch (ParseException e) {
+				return "print date format is incorrect \\e";
+			}	
 		}
-		return "print unknown command \\e";
+		return "print illegal search type \\e";
 	}
 
 	private String deleteMessage(String[] parsedString) {
