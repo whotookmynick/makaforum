@@ -226,12 +226,14 @@ public class TheController {
 	 *
 	 * @author Moti and Roee
 	 */
-	public void assignModerator(RegisteredUser assigner,RegisteredUser assignee){
+	public boolean assignModerator(RegisteredUser assigner,RegisteredUser assignee){
 		if (assigner.isAdministretor() && assignee.isMember()){
 			assignee.setModerator();
+			return true;
 		}
 		else{
 			System.out.println("can't assign moderator");
+			return false;
 		}
 	}
 
@@ -239,15 +241,21 @@ public class TheController {
 	 *
 	 * @author Moti and Roee
 	 */
-	public void assignMember(RegisteredUser assigner,RegisteredUser assignee){
+	public boolean assignMember(RegisteredUser assigner,RegisteredUser assignee){
 		if (assigner.isAdministretor() && assignee.isMember()){
 			assignee.setMember();
+			return true;
 		}
 		else{
 			System.out.println("can't assign member");
+			return false;
 		}
 	}
 
+	public RegisteredUser getUser(String userName){
+		long uid = _userNameToUserId.get(userName);
+		return _persistenceLayer.getUser(uid);
+	}
 
 	public Collection<RegisteredUser> get_userContainer() {
 		return _loggedUsers;
@@ -275,4 +283,5 @@ public class TheController {
 		}
 		return encryptedMsg;
 	}
+	
 }
