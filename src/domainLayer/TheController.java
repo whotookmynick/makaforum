@@ -268,6 +268,10 @@ public class TheController {
 		_loggedUsers = container;
 	}
 
+	public Search get_searchEngine() {
+		return _searchEngine;
+	}
+
 	/**
 	 * Inner message that encrypts the input string using SHA algorithm and then
 	 * also Base64 in order to make sure it can be re read with XML.
