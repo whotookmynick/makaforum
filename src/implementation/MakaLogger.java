@@ -13,26 +13,26 @@ import java.util.logging.Logger;
 
 
 public class MakaLogger {
-	private Logger logger ;
+	private static final  Logger logger = Logger.getLogger("my_log");
 	private Date now=new Date();
 	public MakaLogger(boolean append){
 
-	this.logger = Logger.getLogger("my_log");
-	Handler fh= null;
-	try{
-	fh = new FileHandler("Maka_log.txt",append);
-	}catch(IOException e){System.out.println("error");}
-	fh.setFormatter(new Formatter(){
-		public String format(LogRecord record){
-			final String result  = record.getMessage();
+		//this.logger = Logger.getLogger("my_log");
+		Handler fh= null;
+		try{
+			fh = new FileHandler("Maka_log.txt",append);
+		}catch(IOException e){System.out.println("error");}
+		fh.setFormatter(new Formatter(){
+			public String format(LogRecord record){
+				final String result  = record.getMessage();
 
 
-			return result;
-		}
+				return result;
+			}
 
-	});
-	logger.addHandler(fh);
-	logger.setLevel(Level.FINEST);
+		});
+		logger.addHandler(fh);
+		logger.setLevel(Level.FINEST);
 
 	}
 
