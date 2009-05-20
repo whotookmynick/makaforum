@@ -16,9 +16,9 @@ public class SearchAgent {
 		Vector<String> msgWords = parseMsg(msg.get_msgBody().textToDisplay());
 
 		//inserting message words to database :
-		Vector<Long> emptyVec = new Vector<Long>();
 		for(int i=0; i<msgWords.size(); i++){
 			_searchTable.Search_insertWord(msgWords.get(i));
+			Vector<Long> emptyVec = new Vector<Long>();
 			_searchTable.Search_insertMessageFromWord(msgWords.get(i), msg, emptyVec);
 		}
 	}
