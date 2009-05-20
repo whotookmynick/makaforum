@@ -171,7 +171,7 @@ public class TheController {
 		}
 		else{
 			System.out.println("User can't add message");
-			return true;
+			return false;
 		}
 	}
 
