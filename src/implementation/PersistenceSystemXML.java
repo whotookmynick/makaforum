@@ -25,19 +25,19 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 
 	private static final String userFilePath = "users.xml";
 	private static final String userTag = "OurUserTag";
-	private static final String msgFilePath = "messages.xml"; 
+	private static final String msgFilePath = "messages.xml";
 	private static final String msgTag = "OurMessageTag";
 	private static final String passFilePath = "passes.xml";
 	private static final String passTag = "OurPassTag";
 	private static final String idFilePath = "ids.xml";
-		
+
 	/**
-	 * the files for the stable search engine. 
+	 * the files for the stable search engine.
 	 */
 	private static final String wordToWIDFilePath= "searchWords.xml";
 	private static final String wIDToMsgIDFilePath= "searchMsgID.xml";
-	
-	
+
+
 	@Override
 	public void addMsg(Message msg) {
 		writeObjectToFile(msg, msgFilePath, msgTag);
@@ -68,7 +68,7 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 			Collection<Message> allMessages = new Vector<Message>();
         	File inFile = new File(msgFilePath);
         	if (inFile.exists()){
-        		BufferedReader inputStream = 
+        		BufferedReader inputStream =
         			new BufferedReader(new FileReader(inFile));
         		String l = "";
         		String serializedObject ="";
@@ -98,7 +98,7 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 		}
     	return returnMessage;
 	}
-	
+
 	private void writeCollectionToFile(Collection<?> c,String filePath,String tagToAdd) throws IOException{
 		PrintWriter pw = new PrintWriter(new FileWriter(filePath),false);
 		Iterator<?> it = c.iterator();
@@ -122,7 +122,7 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 		try{
         	File inFile = new File(msgFilePath);
         	if (inFile.exists()){
-        		BufferedReader inputStream = 
+        		BufferedReader inputStream =
         			new BufferedReader(new FileReader(inFile));
         		String l = "";
         		String serializedObject ="";
@@ -146,7 +146,7 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * VERY IMPORTANT: Note that this method is a copy paste of the getMsg method.
 	 * If you change this message probably the other one needs to be changed.
@@ -156,7 +156,7 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 			try{
 	        	File inFile = new File(userFilePath);
 	        	if (inFile.exists()){
-	        		BufferedReader inputStream = 
+	        		BufferedReader inputStream =
 	        			new BufferedReader(new FileReader(inFile));
 	        		String l = "";
 	        		String serializedObject ="";
@@ -180,14 +180,14 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 			}
 			return null;
 	}
-	
+
 	public String getUserPassword(long uid){
 		try
 		{
 			boolean foundUser = false;
         	File inFile = new File(passFilePath);
         	if (inFile.exists()){
-        		BufferedReader inputStream = 
+        		BufferedReader inputStream =
         			new BufferedReader(new FileReader(inFile));
         		while (!foundUser && inputStream.ready()){
         			UserPassword up;
@@ -204,14 +204,14 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 		}
 		return null;
 	}
-	
+
 	public Collection<Message> getMessagesWithFather(long fatherID){
 		try
 		{
 			Collection<Message> ans = new Vector<Message>();
         	File inFile = new File(msgFilePath);
         	if (inFile.exists()){
-        		BufferedReader inputStream = 
+        		BufferedReader inputStream =
         			new BufferedReader(new FileReader(inFile));
         		while (inputStream.ready()){
         			Message ms;
@@ -227,14 +227,14 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 		}
 		return null;
 	}
-	
+
 	public Object fromXMLFile(String filePath) {
 
 		System.out.println("Loading from: " + filePath);
         try{
         	File inFile = new File(filePath);
         	if (inFile.exists()){
-        		BufferedReader inputStream = 
+        		BufferedReader inputStream =
         			new BufferedReader(new FileReader(inFile));
         		String l = "";
         		String serializedObject ="";
@@ -251,7 +251,7 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
         }
         return null;
     }
-	
+
 	/**
 	 * A simple serializer that serializes all the league data and then writes
 	 * it to an ouput file. This function uses JDOM and XSTREAM external packages.
@@ -259,7 +259,7 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 	public void toXMLFile(Object whatToWriteToFile,String outfilePath) {
         System.out.println("Writing to XML, file " + outfilePath) ;
         try {
-			PrintWriter outputStream = 
+			PrintWriter outputStream =
 			    new PrintWriter(new FileWriter(outfilePath));
 			String serializedLeague = serializeObject(whatToWriteToFile);
 			outputStream.println(serializedLeague);
@@ -268,13 +268,13 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 			e.printStackTrace();
 		}
     }
-	
+
 	public static String serializeObject(Object o)
 	{
 		XStream xstream = new XStream(new DomDriver());
 		return xstream.toXML(o);
 	}
-	
+
 	public static Object deserializeObject(String s)
 	{
 		XStream xstream = new XStream(new DomDriver());
@@ -285,7 +285,7 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 		String serializedObject = serializeObject(o);
 		serializedObject ="<" + tagToAdd + ">" + serializedObject +"</" + tagToAdd + ">";
 		try {
-			PrintWriter outputStream = 
+			PrintWriter outputStream =
 			    new PrintWriter(new FileWriter(filePath,true));
 			outputStream.println(serializedObject);
 			outputStream.close();
@@ -293,7 +293,7 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private static Object getObjectFromFile(BufferedReader inputStream,String tagToFind){
 		boolean endOfObject = false;
 		try{
@@ -324,7 +324,7 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 		try{
         	File inFile = new File(userFilePath);
         	if (inFile.exists()){
-        		BufferedReader inputStream = 
+        		BufferedReader inputStream =
         			new BufferedReader(new FileReader(inFile));
         		String l = "";
         		String serializedObject ="";
@@ -345,10 +345,8 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 		catch(Exception e){
 			e.printStackTrace();
 		}
-		return ans;		
+		return ans;
 	}
-
-	
 	public Collection<Long> Search_getMessageId(long wordId) {
 		HashMap<Long, Collection<Long>> wordIdToMsgIdTable = (HashMap<Long, Collection<Long>>)fromXMLFile(wIDToMsgIDFilePath);
 		return wordIdToMsgIdTable.get(new Long(wordId));
@@ -356,16 +354,20 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 
 	public long Search_getWordId(String word) {
 		HashMap<String, Long> wordTable = (HashMap<String, Long>)fromXMLFile(wordToWIDFilePath);
+		if(wordTable == null) return -1;
+		if(!wordTable.containsKey(word)) return -2;
 		return wordTable.get(word);
 	}
 
-	public boolean Search_insertMessageFromWord(String word, Message message) {
+	public boolean Search_insertMessageFromWord(String word, Message message, Collection<Long> emptyCollection) {
 		//Search_insertWord(word); //make sure a tuple exists.
 		boolean bInserted = false;
 		long wordId = Search_getWordId(word);
 		long msgId = message.get_mID();
 		//get the table from the file :
 		HashMap<Long, Collection<Long>> wordIdToMsgIdTable = (HashMap<Long, Collection<Long>>)fromXMLFile(wIDToMsgIDFilePath);
+		if(wordIdToMsgIdTable == null)
+			wordIdToMsgIdTable = new HashMap<Long, Collection<Long>>();
 		//update the table :
 		if(wordIdToMsgIdTable.containsKey(wordId)){
 			Collection<Long> wordMsgs = wordIdToMsgIdTable.get(new Long(wordId));
@@ -377,18 +379,21 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 			bInserted = true;
 		}
 		else{
-			System.out.println("SEARCH ERROR : agent didnt add the word to the word to massege table");
+			emptyCollection.add(new Long(msgId));
+			wordIdToMsgIdTable.put(wordId, emptyCollection);
+			toXMLFile(wordIdToMsgIdTable, wIDToMsgIDFilePath);
+			bInserted = true;
 		}
-		
-		
-		
 		return bInserted;
 	}
 
 	public boolean Search_insertWord(String word) {
 		boolean wrote = false;
 		HashMap<String, Long> wordTable = (HashMap<String, Long>)fromXMLFile(wordToWIDFilePath);
+		if(wordTable == null) wordTable = new HashMap<String, Long>();
+
 		if(!wordTable.containsKey(word)){
+
 			Long newWordId = new Long(wordTable.size());
 			wordTable.put(word, newWordId);
 			toXMLFile(wordTable, wordToWIDFilePath);
@@ -396,6 +401,66 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 		}
 		return wrote;
 	}
+
+	public Vector<Message> Search_getAllMessages() {
+		Vector<Message> allMessages = new Vector<Message>();
+		boolean endOfObject = false;
+		try{
+        	File inFile = new File(msgFilePath);
+        	if (inFile.exists()){
+        		BufferedReader inputStream =
+        			new BufferedReader(new FileReader(inFile));
+        		String l = "";
+        		String serializedObject ="";
+        		while ((l = inputStream.readLine()) != null) {
+        			endOfObject = l.contains("</" + msgTag + ">");
+        			serializedObject +=l;
+        			if (endOfObject) {
+        				serializedObject = serializedObject.substring(2+msgTag.length());
+        				serializedObject = serializedObject.substring(0,serializedObject.indexOf("</" + msgTag + ">"));
+        				Message desirializedObject = (Message)deserializeObject(serializedObject);
+        				allMessages.add(desirializedObject);
+        				serializedObject = "";
+        			}
+        		}
+    			inputStream.close();
+        	}
+        }
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		return allMessages;
+	}
+
+	public long Search_getUserId(String userName){
+		boolean endOfObject = false;
+		try{
+        	File inFile = new File(userFilePath);
+        	if (inFile.exists()){
+        		BufferedReader inputStream =
+        			new BufferedReader(new FileReader(inFile));
+        		String l = "";
+        		String serializedObject ="";
+        		while ((l = inputStream.readLine()) != null) {
+        			endOfObject = l.contains("</" + userTag + ">");
+        			serializedObject +=l;
+        			if (endOfObject) {
+        				serializedObject = serializedObject.substring(2+userTag.length());
+        				serializedObject = serializedObject.substring(0,serializedObject.indexOf("</" + userTag + ">"));
+        				RegisteredUser desirializedObject = (RegisteredUser)deserializeObject(serializedObject);
+        				if (desirializedObject.get_userName() == userName)
+        					return desirializedObject.get_uID();
+        				serializedObject = "";
+        			}
+        		}
+    			inputStream.close();
+        	}
+        }
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		return -1;
+}
 
 	@Override
 	public int getCurrentMsgID() {
@@ -408,19 +473,19 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 		Vector<Integer> ids = (Vector<Integer>)fromXMLFile(idFilePath);
 		return ids.get(0);
 	}
-	
+
 	@Override
 	public void incMsgId(){
 		Vector<Integer> ids = (Vector<Integer>)fromXMLFile(idFilePath);
 		ids.set(1,ids.get(1) + 1);
 		toXMLFile(ids, idFilePath);
 	}
-	
+
 	@Override
 	public void incUserId(){
 		Vector<Integer> ids = (Vector<Integer>)fromXMLFile(idFilePath);
 		ids.set(0,ids.get(0) + 1);
 		toXMLFile(ids, idFilePath);
 	}
-	
+
 }

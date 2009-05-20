@@ -1,29 +1,31 @@
 package searchEngine;
 import java.util.Vector;
+
 import implementation.Message;
 
 public class SearchAgent {
-	
-	SearchTable _searchTable;
-	
+
+	private SearchTable _searchTable;
+
 	public SearchAgent(SearchTable searchTable){
 		_searchTable = searchTable;
 	}
-	
+
 	public void insertMessageToEngine(Message msg){
 		//parsing the message :
 		Vector<String> msgWords = parseMsg(msg.get_msgBody().textToDisplay());
-		
+
 		//inserting message words to database :
+		Vector<Long> emptyVec = new Vector<Long>();
 		for(int i=0; i<msgWords.size(); i++){
 			_searchTable.Search_insertWord(msgWords.get(i));
-			_searchTable.Search_insertMessageFromWord(msgWords.get(i), msg);
+			_searchTable.Search_insertMessageFromWord(msgWords.get(i), msg, emptyVec);
 		}
 	}
-	
-	private Vector<String> parseMsg(String msg){
+
+	public Vector<String> parseMsg(String msg){
 		//removing delimiters :
-		char [] whiteChars = {'\\','\"','\t','\n','\b',':', ';','-','=','+','*','.','#'};
+		char [] whiteChars = {'\\','\"','\t','\n','\b',':', ';','-','=','+','*','.','#','!', '&', '(', ')'};
 		for (int i=0; i<whiteChars.length; i++){
 				msg = msg.replace(whiteChars[i], ' ');
 		}
@@ -36,5 +38,9 @@ public class SearchAgent {
 		}
 		return msgWords;
 	}
-	
+
+	public SearchTable getSearchTable(){
+		return _searchTable;
+	}
+
 }
