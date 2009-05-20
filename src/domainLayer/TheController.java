@@ -152,23 +152,26 @@ public class TheController {
 	 * @param user
 	 * @param msg
 	 */
-	public void deleteMessage(RegisteredUser user,Message msg){
+	public boolean deleteMessage(RegisteredUser user,long mID){
+		Message msg = _persistenceLayer.getMessage(mID);
 		if (user.isModerator() && msg != null && _loggedUsers.contains(user)){
 			if (msg.get_fatherMessageID()<0){
 				Collection<Message> children = getAllMessagesChildren(msg.get_fatherMessageID());
 				Iterator<Message> iterator = children.iterator();
 				while (iterator.hasNext()) {
 					Message message = iterator.next();
-					deleteMessage(user,message);
+					deleteMessage(user,message.get_mID());
 				}
 
 			}
 			_persistenceLayer.deleteMessage(msg.get_mID());
 			RegisteredUser writer = _persistenceLayer.getUser(msg.get_msgPosterID());
 			writer.set_numOfMessages(user.get_numOfMessages()-1);
+			return true;
 		}
 		else{
 			System.out.println("User can't add message");
+			return true;
 		}
 	}
 
