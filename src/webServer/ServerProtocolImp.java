@@ -40,7 +40,7 @@ public class ServerProtocolImp implements ServerProtocol {
 				{
 					return "print user logged in succesfully \\e";
 				}
-				else 
+				else
 				{
 					return "print username and/or password are incorrect \\e";
 				}
@@ -77,11 +77,11 @@ public class ServerProtocolImp implements ServerProtocol {
 			}
 			String msgFather = parsedString[parsedString.length-1];
 			String messageContent = msg.substring(parsedString[0].length());
-			messageContent.substring(0, messageContent.indexOf(msgFather));
+			messageContent.substring(0, messageContent.indexOf(msgFather)-1);
 			_controller.replyToMessage(new MessageDataImp(messageContent), _connectedUser, Long.parseLong(msgFather));
 			return "print message added \\e";
 		}
-		
+
 		if (parsedString[0].contentEquals("display"))
 		{
 			Collection<Message> allMessages;
