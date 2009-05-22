@@ -33,7 +33,7 @@ public class SearchImp implements Search{ //will extract the messages from the d
 
 	public Vector <Message> searchByContent(String sentence) {
 		sentence = sentence.trim();
-		Vector<Message> allMessages = _searchAgent.getSearchTable().Search_getAllMessages();
+		//Vector<Message> allMessages = _searchAgent.getSearchTable().Search_getAllMessages();
 		Vector<Message> contentMsgs = new Vector<Message>();
 		Vector<Long> firstWordMsgIDVec = new Vector<Long>();
 		Vector<Long> currWordMsgIDVec;

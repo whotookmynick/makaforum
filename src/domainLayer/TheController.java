@@ -256,6 +256,8 @@ public class TheController {
 	}
 
 	public RegisteredUser getUser(String userName){
+		if (!_userNameToUserId.containsKey(userName))
+			return null;
 		long uid = _userNameToUserId.get(userName);
 		return _persistenceLayer.getUser(uid);
 	}
