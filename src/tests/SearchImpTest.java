@@ -8,20 +8,17 @@ import java.util.Iterator;
 
 import implementation.Message;
 import implementation.MessageDataImp;
-import implementation.PersistenceSystemXML;
+
 import implementation.RegisteredUser;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import Exceptions.UserAlreadyExistsException;
-import Exceptions.UserDoesNotExistException;
+
 
 import domainLayer.TheController;
 
 import searchEngine.Search;
-import searchEngine.SearchImp;
-import searchEngine.SearchTable;
 
 public class SearchImpTest {
 
