@@ -42,19 +42,13 @@ public class SearchImp implements Search{ //will extract the messages from the d
 		for(int i = 0 ;i < sentenceWords.size();i++){
 			long wordId =_searchAgent.getSearchTable().Search_getWordId(sentenceWords.elementAt(i));
 			if(i == 0){//first word
-				//System.out.println(firstWordMsgIDVec == null);
-				//_searchAgent.getSearchTable().Search_insertMessageFromWord(sentenceWords.elementAt(i), message, new Vector<Long>())
 				firstWordMsgIDVec = (Vector <Long>)_searchAgent.getSearchTable().Search_getMessageId(wordId);
-				//if(firstWordMsgIDVec == null) firstWordMsgIDVec = new Vector<Long>();
-				//System.out.println(firstWordMsgIDVec == null);
 			}else{
 				currWordMsgIDVec = (Vector <Long>)_searchAgent.getSearchTable().Search_getMessageId(wordId);
-				//if(currWordMsgIDVec == null) currWordMsgIDVec = new Vector<Long>();
 				firstWordMsgIDVec.retainAll(currWordMsgIDVec);
 			}
 
 		}
-		//System.out.println(firstWordMsgIDVec == null);
 		//add the messages from message IDs.
 		for(int j = 0;j < firstWordMsgIDVec.size();j++){
 			long msgID = firstWordMsgIDVec.get(j).longValue();

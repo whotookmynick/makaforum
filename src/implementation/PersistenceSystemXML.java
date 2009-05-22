@@ -448,7 +448,7 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
         				serializedObject = serializedObject.substring(2+userTag.length());
         				serializedObject = serializedObject.substring(0,serializedObject.indexOf("</" + userTag + ">"));
         				RegisteredUser desirializedObject = (RegisteredUser)deserializeObject(serializedObject);
-        				if (desirializedObject.get_userName() == userName)
+        				if (desirializedObject.get_userName().equals(userName))
         					return desirializedObject.get_uID();
         				serializedObject = "";
         			}
