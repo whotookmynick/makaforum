@@ -3,9 +3,9 @@ package domainLayer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 
 import searchEngine.Search;
 import searchEngine.SearchImp;
@@ -24,7 +24,7 @@ public class TheController {
 
 	protected Collection<RegisteredUser> _loggedUsers;
 	protected PersistenceSystem _persistenceLayer;
-	protected Hashtable<String, Long> _userNameToUserId;
+	protected ConcurrentHashMap<String, Long> _userNameToUserId;
 	protected long _currentUserID;
 	protected long _currentMsgID;
 	protected Search _searchEngine;
@@ -35,7 +35,7 @@ public class TheController {
 	public TheController(){
 		_loggedUsers = new Vector<RegisteredUser>();
 		_persistenceLayer = new PersistenceSystemXML();
-		_userNameToUserId = new Hashtable<String, Long>();
+		_userNameToUserId = new ConcurrentHashMap<String, Long>();
 		_userNameToUserId = _persistenceLayer.createHashTableofUserNametoUID();
 		_currentUserID = _persistenceLayer.getCurrentUserID();
 		_currentMsgID = _persistenceLayer.getCurrentMsgID();
@@ -62,7 +62,10 @@ public class TheController {
 			String passToTest = encryptMessage(pass);
 			if (encryptedPass.contentEquals(passToTest))
 			{
-				_loggedUsers.add(currentUser);
+				synchronized (_loggedUsers)
+				{
+					_loggedUsers.add(currentUser);
+				}
 				System.out.println("User " + currentUser.get_userName() + " is logged in");
 				return currentUser;
 			}
@@ -84,7 +87,10 @@ public class TheController {
 	 * @return
 	 */
 	public boolean logMeOut(RegisteredUser ru){
-		_loggedUsers.remove(ru);
+		synchronized(_loggedUsers)
+		{
+			_loggedUsers.remove(ru);
+		}
 		return true;
 	}
 
@@ -105,7 +111,10 @@ public class TheController {
 			String encryptedPass = encryptMessage(password);
 			if (encryptedPass != null){
 				_persistenceLayer.addUser(theNewUser,encryptedPass);
-				_loggedUsers.add(theNewUser);
+				synchronized(_loggedUsers)
+				{
+					_loggedUsers.add(theNewUser);
+				}
 				return true;
 			}
 			else
@@ -156,7 +165,7 @@ public class TheController {
 		Message msg = _persistenceLayer.getMessage(mID);
 		if (user.isModerator() && msg != null && _loggedUsers.contains(user)){
 			if (msg.get_fatherMessageID()<0){
-				Collection<Message> children = getAllMessagesChildren(msg.get_fatherMessageID());
+				Collection<Message> children = getAllMessagesChildren(msg.get_mID());
 				Iterator<Message> iterator = children.iterator();
 				while (iterator.hasNext()) {
 					Message message = iterator.next();

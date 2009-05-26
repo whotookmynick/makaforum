@@ -8,9 +8,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 
 import searchEngine.SearchTable;
 
@@ -19,7 +19,6 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 
 import domainLayer.MessageData;
 import domainLayer.PersistenceSystem;
-import domainLayer.userData;
 
 public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 
@@ -100,13 +99,11 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 	}
 
 	private void writeCollectionToFile(Collection<?> c,String filePath,String tagToAdd) throws IOException{
-		PrintWriter pw = new PrintWriter(new FileWriter(filePath),false);
 		Iterator<?> it = c.iterator();
 		while (it.hasNext()){
 			Object current = it.next();
 			writeObjectToFile(current, filePath, tagToAdd);
 		}
-		pw.close();
 	}
 
 	@Override
@@ -257,15 +254,17 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 	 * it to an ouput file. This function uses JDOM and XSTREAM external packages.
 	 */
 	public void toXMLFile(Object whatToWriteToFile,String outfilePath) {
-        System.out.println("Writing to XML, file " + outfilePath) ;
-        try {
-			PrintWriter outputStream =
-			    new PrintWriter(new FileWriter(outfilePath));
-			String serializedLeague = serializeObject(whatToWriteToFile);
-			outputStream.println(serializedLeague);
-			outputStream.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+        synchronized (outfilePath) {
+			System.out.println("Writing to XML, file " + outfilePath);
+			try {
+				PrintWriter outputStream = new PrintWriter(new FileWriter(
+						outfilePath));
+				String serializedLeague = serializeObject(whatToWriteToFile);
+				outputStream.println(serializedLeague);
+				outputStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
     }
 
@@ -282,15 +281,18 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 	}
 
 	private static void writeObjectToFile(Object o,String filePath,String tagToAdd){
-		String serializedObject = serializeObject(o);
-		serializedObject ="<" + tagToAdd + ">" + serializedObject +"</" + tagToAdd + ">";
-		try {
-			PrintWriter outputStream =
-			    new PrintWriter(new FileWriter(filePath,true));
-			outputStream.println(serializedObject);
-			outputStream.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+		synchronized (filePath) {
+			String serializedObject = serializeObject(o);
+			serializedObject = "<" + tagToAdd + ">" + serializedObject + "</"
+					+ tagToAdd + ">";
+			try {
+				PrintWriter outputStream = new PrintWriter(new FileWriter(
+						filePath, true));
+				outputStream.println(serializedObject);
+				outputStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -318,9 +320,9 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 	}
 
 	@Override
-	public Hashtable<String, Long> createHashTableofUserNametoUID() {
+	public ConcurrentHashMap<String, Long> createHashTableofUserNametoUID() {
 		boolean endOfObject = false;
-		Hashtable<String,Long> ans = new Hashtable<String, Long>();
+		ConcurrentHashMap<String,Long> ans = new ConcurrentHashMap<String, Long>();
 		try{
         	File inFile = new File(userFilePath);
         	if (inFile.exists()){

@@ -43,57 +43,62 @@ public class ServerProtocolImp implements ServerProtocol {
 	 */
 	@Override
 	public String processMessage(String msg) {
-		String parsedString[] = msg.split(" ");
-		if (parsedString[0].contentEquals("login")){
-			return userLogIn(parsedString);
+		try {
+			String parsedString[] = msg.split(" ");
+			if (parsedString[0].contentEquals("login")){
+				return userLogIn(parsedString);
+			}
+			if (parsedString[0].contentEquals("register"))
+			{
+				return registerNewUser(parsedString);
+			}
+			if (parsedString[0].contentEquals("message"))
+			{
+				return addNewMessage(msg, parsedString);
+			}
+			if (parsedString[0].contentEquals("reply"))
+			{
+				return replyToMessage(msg, parsedString);
+			}
+			if (parsedString[0].contentEquals("edit")){
+				return editMessage(msg, parsedString);
+			}
+			if (parsedString[0].contentEquals("display"))
+			{
+				return displayMessagesOfFather(parsedString);
+			}
+			if (parsedString[0].contentEquals("logoff"))
+			{
+				return logoffUser();
+			}
+			if (parsedString[0].contentEquals("moderator"))
+			{
+				return giveModeratorPrivellages(parsedString);
+			}
+			if (parsedString[0].contentEquals("member"))
+			{
+				return assignMember(parsedString);
+			}
+			if (parsedString[0].contentEquals("delete"))
+			{
+				return deleteMessage(parsedString);
+			}
+			
+			if (parsedString[0].contentEquals("search")){
+				return searchMethod(msg, parsedString);
+			}
+			return "print unknown command \\e";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "server error please try again \\e";
 		}
-		if (parsedString[0].contentEquals("register"))
-		{
-			return registerNewUser(parsedString);
-		}
-		if (parsedString[0].contentEquals("message"))
-		{
-			return addNewMessage(msg, parsedString);
-		}
-		if (parsedString[0].contentEquals("reply"))
-		{
-			return replyToMessage(msg, parsedString);
-		}
-		if (parsedString[0].contentEquals("edit")){
-			return editMessage(msg, parsedString);
-		}
-		if (parsedString[0].contentEquals("display"))
-		{
-			return displayMessagesOfFather(parsedString);
-		}
-		if (parsedString[0].contentEquals("logoff"))
-		{
-			return logoffUser();
-		}
-		if (parsedString[0].contentEquals("moderator"))
-		{
-			return giveModeratorPrivellages(parsedString);
-		}
-		if (parsedString[0].contentEquals("member"))
-		{
-			return assignMember(parsedString);
-		}
-		if (parsedString[0].contentEquals("delete"))
-		{
-			return deleteMessage(parsedString);
-		}
-		
-		if (parsedString[0].contentEquals("search")){
-			return searchMethod(msg, parsedString);
-		}
-		return "print unknown command \\e";
 	}
 
 	private String searchMethod(String msg, String[] parsedString) {
 		String searchType = parsedString[1];
 		if (searchType.contentEquals("author"))
 		{
-			String authorName = msg.substring(msg.indexOf(searchType + searchType.length()));
+			String authorName = msg.substring(msg.indexOf(searchType) + searchType.length() + 1);
 			Collection<Message> allMessages;
 			allMessages = _searchEngine.searchByAuthor(authorName);
 			String returnString = "print ";
@@ -102,7 +107,7 @@ public class ServerProtocolImp implements ServerProtocol {
 		}
 		if (searchType.contentEquals("content"))
 		{
-			String sentence = msg.substring(msg.indexOf(searchType) + searchType.length());
+			String sentence = msg.substring(msg.indexOf(searchType) + searchType.length() + 1);
 			Collection<Message> allMessages;
 			allMessages = _searchEngine.searchByContent(sentence);
 			String returnString = "print ";

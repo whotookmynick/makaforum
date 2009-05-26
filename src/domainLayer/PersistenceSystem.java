@@ -1,7 +1,7 @@
 package domainLayer;
 
 import java.util.Collection;
-import java.util.Hashtable;
+import java.util.concurrent.ConcurrentHashMap;
 
 import implementation.Message;
 import implementation.RegisteredUser;
@@ -34,7 +34,7 @@ public interface PersistenceSystem {
 	
 	public Collection<Message> getMessagesWithFather(long fatherID);
 	
-	public Hashtable<String, Long> createHashTableofUserNametoUID();
+	public ConcurrentHashMap<String, Long> createHashTableofUserNametoUID();
 	
 	public int getCurrentUserID();
 	

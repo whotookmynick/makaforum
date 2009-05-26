@@ -59,7 +59,7 @@ public class SearchImpTest {
 
 	@Test
 	public void testSearchByContent() {
-		Collection<Message> retMsgs = _searchEngine.searchByContent("test message for search1");
+		Collection<Message> retMsgs = _searchEngine.searchByContent(_messageData);
 		Iterator<Message> it = retMsgs.iterator();
 		boolean found = false;
 		while (it.hasNext() && !found){

@@ -11,9 +11,16 @@ import java.net.UnknownHostException;
  * Commands that the client can send:
  * login userName password //login to system
  * register username password //register a new username
- * message username messagedata messageisreplytomessage //write a new message
- * display fatherid
- * logMeOut // log user off
+ * message messagedata messageisreplytomessage //write a new message
+ * reply message content(string) msgFatherId
+ * display fatherid  //displays all the messages that the father is fatherid
+ * moderator userName //give moderator privellages to userName
+ * member userName // turn userName into regular member
+ * delete msgId  //deletes the message with id msgId
+ * search method dataToSearchFor // uses the search enngine to search while using
+ *                               // the requested method to search.
+ * logoff // log user off
+ * 
  * @author Noam
  *
  */
