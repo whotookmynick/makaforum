@@ -17,8 +17,10 @@ import java.net.UnknownHostException;
  * moderator userName //give moderator privellages to userName
  * member userName // turn userName into regular member
  * delete msgId  //deletes the message with id msgId
- * search method dataToSearchFor // uses the search enngine to search while using
- *                               // the requested method to search.
+ * search content content to search for // Searches for messages with the content specified
+ * search author authorName // searches for messages with the specified author
+ * search date fromdate todate // searches for messages written between these dates.
+ * 							   // IMPORTANT: date must be in format of M/D/YYYY
  * logoff // log user off
  * 
  * @author Noam

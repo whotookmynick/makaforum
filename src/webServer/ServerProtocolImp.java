@@ -118,7 +118,7 @@ public class ServerProtocolImp implements ServerProtocol {
 		{
 			String fromDateString = parsedString[2];
 			String toDateString = parsedString[3];
-			DateFormat dt = DateFormat.getDateInstance();
+			DateFormat dt = DateFormat.getDateInstance(DateFormat.SHORT);
 			try {
 				Date fromDate = dt.parse(fromDateString);
 				Date toDate = dt.parse(toDateString);
