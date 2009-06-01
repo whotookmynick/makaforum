@@ -5,7 +5,6 @@ import java.text.ParseException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.Vector;
 
 import searchEngine.Search;
 
