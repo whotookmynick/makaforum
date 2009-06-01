@@ -51,8 +51,38 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 
 	@Override
 	public boolean changeUserPassword(long uid, String newPass) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean endOfObject = false;
+		try{
+
+			Collection<UserPassword> allMessages = new Vector<UserPassword>();
+        	File inFile = new File(passFilePath);
+        	if (inFile.exists()){
+        		BufferedReader inputStream =
+        			new BufferedReader(new FileReader(inFile));
+        		String l = "";
+        		String serializedObject ="";
+        		while ((l = inputStream.readLine()) != null) {
+        			endOfObject = l.contains("</" + passTag + ">");
+        			serializedObject +=l;
+        			if (endOfObject) {
+        				serializedObject = serializedObject.substring(2+passTag.length());
+        				serializedObject = serializedObject.substring(0,serializedObject.indexOf("</" + passTag + ">"));
+        				UserPassword desirializedObject = (UserPassword)deserializeObject(serializedObject);
+        				if (desirializedObject.get_userID() == uid){
+        					desirializedObject.set_password(newPass);
+        				}
+        				allMessages.add(desirializedObject);
+        				serializedObject = "";
+        			}
+        		}
+    			inputStream.close();
+    			writeCollectionToFile(allMessages,passFilePath,passTag);
+        	}
+        }
+		catch(Exception e){
+			e.printStackTrace();
+		}
+    	return false;
 	}
 
 	@Override
@@ -99,6 +129,7 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 	}
 
 	private void writeCollectionToFile(Collection<?> c,String filePath,String tagToAdd) throws IOException{
+		deleteFileContents(filePath);
 		Iterator<?> it = c.iterator();
 		while (it.hasNext()){
 			Object current = it.next();
@@ -349,6 +380,19 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 		}
 		return ans;
 	}
+	
+	public void deleteFileContents(String filePath){
+		//This next line deletes the data in the file
+		try{
+			PrintWriter outputStream = new PrintWriter(new FileWriter(filePath, false));
+			outputStream.close();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
 	public Collection<Long> Search_getMessageId(long wordId) {
 		HashMap<Long, Collection<Long>> wordIdToMsgIdTable = (HashMap<Long, Collection<Long>>)fromXMLFile(wIDToMsgIDFilePath);
 		return wordIdToMsgIdTable.get(new Long(wordId));
