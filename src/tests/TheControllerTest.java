@@ -2,11 +2,18 @@ package tests;
 
 import static org.junit.Assert.*;
 
+import java.util.Iterator;
+
+import implementation.Message;
+import implementation.MessageDataImp;
+
 import org.junit.Before;
 import org.junit.Test;
 
+import Exceptions.UserAlreadyExistsException;
 import Exceptions.UserDoesNotExistException;
 
+import domainLayer.MessageData;
 import domainLayer.TheController;
 
 public class TheControllerTest {
@@ -14,14 +21,18 @@ public class TheControllerTest {
 	@Before
 	public void setUp() throws Exception {
 		_controler = new TheController();
+		
 	}
 
 	@Test
 	public void testLogMeIn() {
 		try {
+			_controler.registerNewUser("user1", "pass1");
 			assertTrue(_controler.logMeIn("user1", "pass1") != null);
-			assertFalse(_controler.logMeIn("user1", "fake pass") != null);
+			assertFalse(_controler.logMeIn("user1", "fake pass") == null);
 		} catch (UserDoesNotExistException e) {
+			e.printStackTrace();
+		} catch (UserAlreadyExistsException e) {
 			e.printStackTrace();
 		}
 		
@@ -29,12 +40,36 @@ public class TheControllerTest {
 
 	@Test
 	public void testRegisterNewUser() {
-		fail("Not yet implemented");
+		try {
+			_controler.registerNewUser("user1", "pass1");
+			assertTrue(_controler.logMeIn("user1", "pass1") != null);
+			assertFalse(_controler.logMeIn("user1", "fake pass") == null);
+		} catch (UserDoesNotExistException e) {
+			e.printStackTrace();
+		} catch (UserAlreadyExistsException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test
 	public void testAddNewMessage() {
-		fail("Not yet implemented");
+		String messageContent = "test message";
+		MessageData msgData = new MessageDataImp(messageContent);
+		try {
+			_controler.registerNewUser("user1", "pass1");
+		} catch (UserAlreadyExistsException e) {
+			e.printStackTrace();
+		}
+		_controler.addNewMessage(msgData,_controler.getUser("user1") );
+		Iterator<Message> it = _controler.getAllMessagesChildren(-1).iterator();
+		while (it.hasNext())
+		{
+			Message curr = it.next();
+			if (curr.get_msgBody().toString().contentEquals(messageContent))
+			{
+				assertTrue(curr.get_msgBody().toString().contentEquals(messageContent));
+			}
+		}
 	}
 
 	@Test
