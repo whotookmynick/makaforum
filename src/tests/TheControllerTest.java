@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import implementation.Message;
 import implementation.MessageDataImp;
+import implementation.RegisteredUser;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -74,7 +75,34 @@ public class TheControllerTest {
 
 	@Test
 	public void testEditMsg() {
-		fail("Not yet implemented");
+		String messageContent = "test message";
+		String newMessageContent = "edited test message";
+		MessageData msgData = new MessageDataImp(messageContent);
+		try {
+			_controler.registerNewUser("user1", "pass1");
+		} catch (UserAlreadyExistsException e) {
+			e.printStackTrace();
+		}
+		RegisteredUser ru = _controler.getUser("user1");
+		_controler.addNewMessage(msgData, ru);
+		
+		Iterator<Message> it = _controler.getAllMessagesChildren(-1).iterator();
+		while (it.hasNext())
+		{
+			Message curr = it.next();
+			if (curr.get_msgBody().toString().contentEquals(messageContent))
+			{
+				_controler.editMsg(ru, curr.get_mID(), new MessageDataImp(newMessageContent));
+			}
+		}
+		while (it.hasNext())
+		{
+			Message curr = it.next();
+			if (curr.get_msgBody().toString().contentEquals(messageContent))
+			{
+				assertTrue(curr.get_msgBody().toString().contentEquals(newMessageContent));
+			}
+		}
 	}
 
 	@Test
