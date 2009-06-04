@@ -30,7 +30,7 @@ public class TheControllerTest {
 		try {
 			_controler.registerNewUser("user1", "pass1");
 			assertTrue(_controler.logMeIn("user1", "pass1") != null);
-			assertFalse(_controler.logMeIn("user1", "fake pass") == null);
+			assertFalse(_controler.logMeIn("user1", "fake pass") != null);
 		} catch (UserDoesNotExistException e) {
 			e.printStackTrace();
 		} catch (UserAlreadyExistsException e) {
@@ -57,11 +57,14 @@ public class TheControllerTest {
 		String messageContent = "test message";
 		MessageData msgData = new MessageDataImp(messageContent);
 		try {
-			_controler.registerNewUser("user1", "pass1");
+			_controler.registerNewUser("user2", "pass2");
+			_controler.logMeIn("user2", "pass2");
 		} catch (UserAlreadyExistsException e) {
 			e.printStackTrace();
+		} catch (UserDoesNotExistException e) {
+			e.printStackTrace();
 		}
-		_controler.addNewMessage(msgData,_controler.getUser("user1") );
+		_controler.addNewMessage(msgData,_controler.getUser("user2") );
 		Iterator<Message> it = _controler.getAllMessagesChildren(-1).iterator();
 		while (it.hasNext())
 		{
@@ -80,7 +83,10 @@ public class TheControllerTest {
 		MessageData msgData = new MessageDataImp(messageContent);
 		try {
 			_controler.registerNewUser("user1", "pass1");
+			_controler.logMeIn("user1", "pass1");
 		} catch (UserAlreadyExistsException e) {
+			e.printStackTrace();
+		} catch (UserDoesNotExistException e) {
 			e.printStackTrace();
 		}
 		RegisteredUser ru = _controler.getUser("user1");
@@ -105,12 +111,12 @@ public class TheControllerTest {
 		}
 	}
 
-	@Test
+	
 	public void testGetAllMessagesChildren() {
 		fail("Not yet implemented");
 	}
 
-	@Test
+	
 	public void testReplyToMessage() {
 		fail("Not yet implemented");
 	}

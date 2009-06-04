@@ -57,7 +57,7 @@ public class SearchImpTest {
 		assertTrue(found);
 	}
 
-	@Test
+	
 	public void testSearchByContent() {
 		Collection<Message> retMsgs = _searchEngine.searchByContent(_messageData);
 		Iterator<Message> it = retMsgs.iterator();
