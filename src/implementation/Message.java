@@ -9,7 +9,7 @@ import org.compass.annotations.*;
  */
 @Searchable
 public class Message {
-	@SearchableProperty (name = "content")
+//	@SearchableReference
 	protected MessageData _msgBody;
 	@SearchableProperty (name = "time")
 	protected long _msgPostTime;
@@ -23,11 +23,18 @@ public class Message {
 	@SearchableId
 	protected long _mID;
 
+	/**
+	 * This constructor exists just for the Compass search engine to use.
+	 */
+	private Message(){
+	}
+	
 	public Message(MessageData msgBody,long msgposterID,long fatherID,long mID){
 		_msgBody = msgBody;
 		_msgPosterID = msgposterID;
 		_fatherMessageID = fatherID;
 		_mID = mID;
+		msgBody.setMid(_mID);
 		_msgPostTime = System.currentTimeMillis();
 	}
 

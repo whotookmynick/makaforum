@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 
+import searchEngine.CompassSearchEngine;
 import searchEngine.Search;
 import searchEngine.SearchImp;
 import searchEngine.SearchTable;
@@ -39,7 +40,11 @@ public class TheController {
 		_userNameToUserId = _persistenceLayer.createHashTableofUserNametoUID();
 		_currentUserID = _persistenceLayer.getCurrentUserID();
 		_currentMsgID = _persistenceLayer.getCurrentMsgID();
-		_searchEngine = new SearchImp((SearchTable)_persistenceLayer);
+		/*
+		 * Change made by Noam and Dikla to test the new search engine
+		 */
+		//_searchEngine = new SearchImp((SearchTable)_persistenceLayer);
+		_searchEngine = new CompassSearchEngine(this);
 	}
 
 	/**

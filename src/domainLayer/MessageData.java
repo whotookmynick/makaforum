@@ -1,10 +1,14 @@
 package domainLayer;
 
+import org.compass.annotations.Searchable;
+import org.compass.annotations.SearchableProperty;
+
 /**
  * This interface defines the Message data which does not have to be a String.
  * @author aradno
  *
  */
+@Searchable
 public interface MessageData {
 
 	/**
@@ -12,6 +16,7 @@ public interface MessageData {
 	 * Contains.
 	 * @return
 	 */
+	@SearchableProperty (name = "content")
 	public String textToDisplay();
 	
 	/**
@@ -20,4 +25,5 @@ public interface MessageData {
 	 */
 	public Object displayMessageData();
 	
+	public void setMid(long mid);
 }
