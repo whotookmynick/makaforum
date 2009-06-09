@@ -1,19 +1,14 @@
 package searchEngine;
-import java.util.*;
 import java.text.*;
-
 import implementation.Message;
-
 import java.util.Date;
 import java.util.Vector;
-
 import org.compass.core.Compass;
 import org.compass.core.CompassHit;
 import org.compass.core.CompassHits;
 import org.compass.core.CompassSession;
 import org.compass.core.config.CompassConfiguration;
 import org.compass.core.config.CompassConfigurationFactory;
-
 import domainLayer.TheController;
 
 public class CompassSearchEngine implements Search {
@@ -58,29 +53,43 @@ public class CompassSearchEngine implements Search {
 
 	}
 
+//	@Override
+//	public Vector<Message> searchByDate(Date from, Date to) {
+//		Vector<Message> finalAns = null;
+//		long day = (1000*3600*24);
+//		long fromDate = from.getTime();
+//		long toDate = to.getTime();
+//		//get all results of dates in the specific period
+//		while(fromDate < toDate){
+//			String dateString = this.getDateFromLong(fromDate);
+//			Vector<Message> dayAns = searchByGeneric("time", dateString);
+//			for(int i=0; i<dayAns.size();i++){
+//				finalAns.add(dayAns.get(i));
+//			}
+//			fromDate = fromDate + day;
+//		}//End while
+//
+//		return finalAns;
+//	}
+	
 	@Override
-	public Vector<Message> searchByDate(Date from, Date to) {
-		Vector<Message> finalAns = null;
-		long day = (1000*3600*24);
-		long fromDate = from.getTime();
-		long toDate = to.getTime();
-		//get all results of dates in the specific period
-		while(fromDate < toDate){
-			String dateString = this.getDateFromLong(fromDate);
-			Vector<Message> dayAns = searchByGeneric("time", dateString);
-			for(int i=0; i<dayAns.size();i++){
-				finalAns.add(dayAns.get(i));
-			}
-			fromDate = fromDate + day;
-		}//End while
-
-		return finalAns;
+	public Vector<Message> searchByDate(Date fromDate, Date toDate)
+	{
+		Vector<Message> ans = new Vector<Message>();
+		if (fromDate == null | toDate == null)
+		{
+			return ans;
+		}
+		long fromLong = fromDate.getTime();
+		long toLong = toDate.getTime();
+		ans = searchByGeneric("time", "[" + fromLong + " TO " + toLong + "]");
+		return ans;
 	}
 
 	/*convert long to date and then to string*/
 	private String getDateFromLong(long fromDate) {
 	      DateFormat dataformat =  DateFormat.
-	      getDateInstance(DateFormat.LONG);
+	      							getDateInstance(DateFormat.LONG);
 	      return dataformat.format(fromDate);
 	       //System.out.println(dataformat.format(date));
 	}
