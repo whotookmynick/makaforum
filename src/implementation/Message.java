@@ -7,10 +7,12 @@ import org.compass.annotations.*;
  * @author aradno
  *
  */
-@Searchable
+@Searchable (alias = "message")
+@SearchConverter (name = "messagedataimp", type=MessageDataImpConverter.class)
 public class Message {
-//	@SearchableReference
-	protected MessageData _msgBody;
+	@SearchableProperty
+	@SearchableMetaData (name = "content", converter = "messagedataimp")
+	protected MessageDataImp _msgBody;
 	@SearchableProperty (name = "time")
 	protected long _msgPostTime;
 	/**
@@ -20,8 +22,11 @@ public class Message {
 	protected long _msgPosterID;
 
 	protected long _fatherMessageID;	// -1  for a new message
-	@SearchableId
+	@SearchableId (name = "MID")
 	protected long _mID;
+	
+//	@SearchableProperty (name = "content")
+//	protected String _messageContent;
 
 	/**
 	 * This constructor exists just for the Compass search engine to use.
@@ -30,7 +35,7 @@ public class Message {
 	}
 	
 	public Message(MessageData msgBody,long msgposterID,long fatherID,long mID){
-		_msgBody = msgBody;
+		_msgBody = (MessageDataImp)msgBody;
 		_msgPosterID = msgposterID;
 		_fatherMessageID = fatherID;
 		_mID = mID;
@@ -54,7 +59,7 @@ public class Message {
 	}
 
 	public void set_msgBody(MessageData body) {
-		_msgBody = body;
+		_msgBody = (MessageDataImp)body;
 	}
 
 	public long get_msgPostTime() {
