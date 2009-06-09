@@ -1,21 +1,28 @@
 package implementation;
 
 import domainLayer.MessageData;
+import org.compass.annotations.*;
 /**
  * This class is mainly meant to help right things to the persistence system
  * @author aradno
  *
  */
+@Searchable
 public class Message {
+	@SearchableProperty (name = "content")
 	protected MessageData _msgBody;
+	@SearchableProperty (name = "time")
 	protected long _msgPostTime;
 	/**
 	 * This field is a reference to the _uid field in RegisteredUser
 	 */
+	@SearchableProperty (name = "author")
 	protected long _msgPosterID;
+
 	protected long _fatherMessageID;	// -1  for a new message
+	@SearchableId
 	protected long _mID;
-	
+
 	public Message(MessageData msgBody,long msgposterID,long fatherID,long mID){
 		_msgBody = msgBody;
 		_msgPosterID = msgposterID;
@@ -23,7 +30,7 @@ public class Message {
 		_mID = mID;
 		_msgPostTime = System.currentTimeMillis();
 	}
-	
+
 	/**
 	 * @author Roee
 	 * @param msgBody
@@ -34,7 +41,7 @@ public class Message {
 	public Message(MessageData msgBody,long msgposterID,long mID){
 		this(msgBody,msgposterID,-1,mID);
 	}
-	
+
 	public MessageData get_msgBody() {
 		return _msgBody;
 	}
