@@ -8,7 +8,7 @@ import org.compass.annotations.SearchableProperty;
  * @author aradno
  *
  */
-@Searchable
+@Searchable (root = true)
 public interface MessageData {
 
 	/**
@@ -16,7 +16,7 @@ public interface MessageData {
 	 * Contains.
 	 * @return
 	 */
-	@SearchableProperty (name = "content")
+	//@SearchableProperty (name = "content")
 	public String textToDisplay();
 	
 	/**

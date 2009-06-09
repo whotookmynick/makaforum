@@ -24,7 +24,6 @@ public class CompassSearchEngine implements Search {
                 .newConfiguration()
                 .setConnection("genData");
         conf.addClass(Message.class);
-
         _compass = conf.buildCompass();
 	}
 
@@ -33,6 +32,7 @@ public class CompassSearchEngine implements Search {
         /* Open a session (not thread safe!) for this thread */
         CompassSession session = _compass.openSession();
         session.save(msg);
+        session.close();
 	}
 
 	@Override
@@ -106,6 +106,7 @@ public class CompassSearchEngine implements Search {
             Message m2 = (Message)(detachedHits[i].data());
             ans.add(m2);
         }
+        session.close();
         return ans;
 	}
 

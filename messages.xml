@@ -1,0 +1,20 @@
+<OurMessageTag><implementation.Message>
+  <__msgBody>
+    <__mID>1</__mID>
+    <__msgElement> first message</__msgElement>
+  </__msgBody>
+  <__msgPostTime>1244575846007</__msgPostTime>
+  <__msgPosterID>1</__msgPosterID>
+  <__fatherMessageID>-1</__fatherMessageID>
+  <__mID>1</__mID>
+</implementation.Message></OurMessageTag>
+<OurMessageTag><implementation.Message>
+  <__msgBody>
+    <__mID>2</__mID>
+    <__msgElement> second message</__msgElement>
+  </__msgBody>
+  <__msgPostTime>1244575854533</__msgPostTime>
+  <__msgPosterID>1</__msgPosterID>
+  <__fatherMessageID>-1</__fatherMessageID>
+  <__mID>2</__mID>
+</implementation.Message></OurMessageTag>

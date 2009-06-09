@@ -1,17 +1,23 @@
 package implementation;
 
-import org.compass.annotations.Searchable;
-import org.compass.annotations.SearchableId;
-import org.compass.annotations.SearchableProperty;
+import org.compass.annotations.*;
 
 import domainLayer.MessageData;
 
-@Searchable
+@Searchable (root = false)
 public class MessageDataImp implements MessageData {
+	
+	@SearchableId (name = "messagedataID")
+	protected long _mID;
 	@SearchableProperty (name = "contentMessageDataImp")
 	protected String _msgElement;
-	@SearchableId
-	protected long _mID;
+	
+	/**
+	 * This constructor exists for the compass to work with
+	 */
+	private MessageDataImp(){
+		
+	}
 	
 	public MessageDataImp(String msgElement){
 		_msgElement = msgElement;
