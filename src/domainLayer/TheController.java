@@ -283,6 +283,15 @@ public class TheController {
 		return _searchEngine;
 	}
 
+	public long get_uidFromUserName(String userName)
+	{
+		Long uid =_userNameToUserId.get(userName);
+		if (uid == null)
+			return -1;
+		else
+			return uid;
+	}
+
 	/**
 	 * Inner message that encrypts the input string using SHA algorithm and then
 	 * also Base64 in order to make sure it can be re read with XML.
@@ -301,5 +310,5 @@ public class TheController {
 		}
 		return encryptedMsg;
 	}
-	
+
 }
