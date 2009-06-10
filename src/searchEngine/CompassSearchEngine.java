@@ -36,6 +36,14 @@ public class CompassSearchEngine implements Search {
 	}
 
 	@Override
+	public void removeMessageFromEngine(long mid) {
+		CompassSession session = _compass.openSession();
+        session.delete(Message.class,mid);
+        session.close();
+		
+	}
+	
+	@Override
 	public Vector<Message> searchByAuthor(String authorName) {
 		/* Open a session (not thread safe!) for this thread */
         long authorId = _controller.get_uidFromUserName(authorName);

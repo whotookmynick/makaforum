@@ -179,6 +179,7 @@ public class TheController {
 
 			}
 			_persistenceLayer.deleteMessage(msg.get_mID());
+			_searchEngine.removeMessageFromEngine(msg.get_mID());
 			RegisteredUser writer = _persistenceLayer.getUser(msg.get_msgPosterID());
 			writer.set_numOfMessages(user.get_numOfMessages()-1);
 			return true;
@@ -202,6 +203,8 @@ public class TheController {
 		Message oldMsg = _persistenceLayer.getMessage(mid);
 		if ((user.isModerator() || oldMsg.get_msgPosterID() == user.get_uID()) && _loggedUsers.contains(user)){
 			_persistenceLayer.editMessage(mid, newMsgData);
+			oldMsg.set_msgBody(newMsgData);
+			_searchEngine.insertMessageToEngine(oldMsg);
 			return true;
 		}
 		else{
@@ -233,6 +236,7 @@ public class TheController {
 			_persistenceLayer.incMsgId();
 			_persistenceLayer.addMsg(newRepMessage);
 			user.set_numOfMessages(user.get_numOfMessages()+1);
+			_searchEngine.insertMessageToEngine(newRepMessage);
 		}
 		else{
 			System.out.println("User can't reply to message");
