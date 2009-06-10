@@ -12,7 +12,7 @@ import org.compass.annotations.*;
 public class Message {
 	@SearchableProperty
 	@SearchableMetaData (name = "content", converter = "messagedataimp")
-	protected MessageDataImp _msgBody;
+	protected MessageData _msgBody;
 	@SearchableProperty (name = "time")
 	protected long _msgPostTime;
 	/**
@@ -35,7 +35,7 @@ public class Message {
 	}
 	
 	public Message(MessageData msgBody,long msgposterID,long fatherID,long mID){
-		_msgBody = (MessageDataImp)msgBody;
+		_msgBody = msgBody;
 		_msgPosterID = msgposterID;
 		_fatherMessageID = fatherID;
 		_mID = mID;
@@ -59,7 +59,8 @@ public class Message {
 	}
 
 	public void set_msgBody(MessageData body) {
-		_msgBody = (MessageDataImp)body;
+		//_msgBody = (MessageDataImp)body;
+		_msgBody = body;
 	}
 
 	public long get_msgPostTime() {

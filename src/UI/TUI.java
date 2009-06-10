@@ -13,6 +13,7 @@ import java.net.UnknownHostException;
  * register username password //register a new username
  * message messagedata messageisreplytomessage //write a new message
  * reply message content(string) msgFatherId
+ * edit new content(string) msgID // edits the message msgID to the new content
  * display fatherid  //displays all the messages that the father is fatherid
  * moderator userName //give moderator privellages to userName
  * member userName // turn userName into regular member

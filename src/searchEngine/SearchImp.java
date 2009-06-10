@@ -115,4 +115,13 @@ public class SearchImp implements Search{ //will extract the messages from the d
 		return timedMsgs;
 	}
 
+	/**
+	 * Was added only after implementation changed to Compass
+	 */
+	@Override
+	public void removeMessageFromEngine(long mid) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
