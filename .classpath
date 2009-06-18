@@ -6,7 +6,6 @@
 	<classpathentry kind="lib" path="jdom.jar"/>
 	<classpathentry kind="lib" path="junit-4.6.jar"/>
 	<classpathentry kind="lib" path="xstream-1.3.jar"/>
-	<classpathentry kind="lib" path="compass-2.2.0.jar"/>
 	<classpathentry kind="lib" path="commons-logging.jar"/>
 	<classpathentry kind="lib" path="lucene-core.jar"/>
 	<classpathentry kind="output" path="bin"/>
