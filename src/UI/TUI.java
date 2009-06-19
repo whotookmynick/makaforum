@@ -11,8 +11,8 @@ import java.net.UnknownHostException;
  * Commands that the client can send:
  * login userName password //login to system
  * register username password //register a new username
- * message messagedata messageisreplytomessage //write a new message
- * reply message content(string) msgFatherId
+ * message messagedata //write a new message
+ * reply message_content(string) msgFatherId
  * edit new content(string) msgID // edits the message msgID to the new content
  * display fatherid  //displays all the messages that the father is fatherid
  * moderator userName //give moderator privellages to userName
@@ -46,13 +46,7 @@ public class TUI implements Runnable{
 			System.out.println("Waiting for user input");
 			while ((msg = _userReader.readLine()) != null)
 			{
-				_socketWriter.println(msg);
-				String repliedMessage = "";
-				while (repliedMessage.indexOf("\\e") < 0)
-					repliedMessage += _socketReader.readLine() + "\n";
-				repliedMessage = repliedMessage.substring(0,repliedMessage.length()-3);
-				//System.out.println(repliedMessage);
-				String displayString = repliedMessage.substring("print".length()+1);
+				String displayString = sendMessageAndWaitForReply(msg);
 				System.out.println(displayString);
 				System.out.println("Waiting for user input");
 			}
@@ -65,6 +59,23 @@ public class TUI implements Runnable{
 		}
 
 		
+	}
+
+	/**
+	 * This is the function that needs to be called from the GUI.
+	 * @param msg
+	 * @return
+	 * @throws IOException
+	 */
+	public String sendMessageAndWaitForReply(String msg) throws IOException {
+		_socketWriter.println(msg);
+		String repliedMessage = "";
+		while (repliedMessage.indexOf("\\e") < 0)
+			repliedMessage += _socketReader.readLine() + "\n";
+		repliedMessage = repliedMessage.substring(0,repliedMessage.length()-3);
+		//System.out.println(repliedMessage);
+		String displayString = repliedMessage.substring("print".length()+1);
+		return displayString;
 	}
 	
 	private void connectSocketsToServer(String host,int port){
