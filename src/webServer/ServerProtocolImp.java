@@ -181,6 +181,12 @@ public class ServerProtocolImp implements ServerProtocol {
 		return "print user logged out successfully \\e";
 	}
 
+	/**
+	 * Returns the messages to display in the next format:
+	 * +1msgid+2msgposter+3content+4posterTime
+	 * @param parsedString
+	 * @return
+	 */
 	private String displayMessagesOfFather(String[] parsedString) {
 		Collection<Message> allMessages;
 		allMessages = _controller.getAllMessagesChildren(Long.parseLong(parsedString[1]));
@@ -267,7 +273,8 @@ public class ServerProtocolImp implements ServerProtocol {
 		Iterator<Message> it = allMessages.iterator();
 		while (it.hasNext()){
 			Message currentMsg = it.next();
-			returnString += currentMsg.get_mID() + ": " + currentMsg.get_msgBody().displayMessageData() + "\n";
+			returnString += "+1" + currentMsg.get_mID() + "+2" + currentMsg.get_msgPosterID() + "+3" + currentMsg.get_msgBody().displayMessageData() + "+4" + currentMsg.get_msgPostTime() + "\n";
+//			returnString += currentMsg.get_mID() + ": " + currentMsg.get_msgBody().displayMessageData() + "\n";
 		}
 		return returnString;
 	}
