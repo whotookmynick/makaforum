@@ -18,6 +18,7 @@ import Exceptions.UserAlreadyExistsException;
 import Exceptions.UserDoesNotExistException;
 
 import implementation.Message;
+import implementation.PersistenceSystemSQL;
 import implementation.PersistenceSystemXML;
 import implementation.RegisteredUser;
 
@@ -35,7 +36,7 @@ public class TheController {
 	 */
 	public TheController(){
 		_loggedUsers = new Vector<RegisteredUser>();
-		_persistenceLayer = new PersistenceSystemXML();
+		_persistenceLayer = new PersistenceSystemSQL();
 		_userNameToUserId = new ConcurrentHashMap<String, Long>();
 		_userNameToUserId = _persistenceLayer.createHashTableofUserNametoUID();
 		_currentUserID = _persistenceLayer.getCurrentUserID();

@@ -1,24 +1,8 @@
 <OurUserTag><implementation.RegisteredUser>
   <__lastLogInTime>0</__lastLogInTime>
-  <__signUpTime>1245781539656</__signUpTime>
+  <__signUpTime>1245796107921</__signUpTime>
   <__numOfMessages>0</__numOfMessages>
   <__uID>1</__uID>
   <__userName>user1</__userName>
-  <__userType>0</__userType>
-</implementation.RegisteredUser></OurUserTag>
-<OurUserTag><implementation.RegisteredUser>
-  <__lastLogInTime>0</__lastLogInTime>
-  <__signUpTime>1245781540750</__signUpTime>
-  <__numOfMessages>0</__numOfMessages>
-  <__uID>3</__uID>
-  <__userName>user2</__userName>
-  <__userType>0</__userType>
-</implementation.RegisteredUser></OurUserTag>
-<OurUserTag><implementation.RegisteredUser>
-  <__lastLogInTime>0</__lastLogInTime>
-  <__signUpTime>1245781540968</__signUpTime>
-  <__numOfMessages>0</__numOfMessages>
-  <__uID>4</__uID>
-  <__userName>searchTestUser1</__userName>
   <__userType>0</__userType>
 </implementation.RegisteredUser></OurUserTag>
