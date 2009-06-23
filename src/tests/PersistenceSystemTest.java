@@ -3,24 +3,26 @@ package tests;
 import java.util.Collection;
 
 import domainLayer.MessageData;
+import domainLayer.PersistenceSystem;
 import domainLayer.TheController;
 import implementation.Message;
 import implementation.MessageDataImp;
+import implementation.PersistenceSystemSQL;
 import implementation.PersistenceSystemXML;
 import implementation.RegisteredUser;
 import junit.framework.TestCase;
 
 public class PersistenceSystemTest extends TestCase {
 	
-	private PersistenceSystemXML _ps;
+	private PersistenceSystem _ps;
 	
 	protected void setUp() throws Exception {
 		super.setUp();
-		_ps = new PersistenceSystemXML();
+		_ps = new PersistenceSystemSQL();
 	}
 
 	public void testAddMsg() {
-		_ps.deleteFileContents("messages.xml");
+		//_ps.deleteFileContents("messages.xml");
 		MessageData msgData = new MessageDataImp("test message");
 		Message msg = new Message(msgData,1,1);
 		_ps.addMsg(msg);
@@ -29,7 +31,7 @@ public class PersistenceSystemTest extends TestCase {
 	}
 
 	public void testAddUser() {
-		_ps.deleteFileContents("users.xml");
+		//_ps.deleteFileContents("users.xml");
 		RegisteredUser newUser = new RegisteredUser("user1",1);
 		_ps.addUser(newUser, "pass1");
 		RegisteredUser userFromDb = _ps.getUser(1);
@@ -38,8 +40,8 @@ public class PersistenceSystemTest extends TestCase {
 	}
 
 	public void testChangeUserPassword() {
-		_ps.deleteFileContents("users.xml");
-		_ps.deleteFileContents("passes.xml");
+		//_ps.deleteFileContents("users.xml");
+		//_ps.deleteFileContents("passes.xml");
 		String newUserPass = "pass2";
 		RegisteredUser newUser = new RegisteredUser("user1",1);
 		_ps.addUser(newUser, "pass1");
@@ -50,7 +52,7 @@ public class PersistenceSystemTest extends TestCase {
 	}
 
 	public void testDeleteMessage() {
-		_ps.deleteFileContents("messages.xml");		
+		//_ps.deleteFileContents("messages.xml");		
 		MessageData msgData = new MessageDataImp("test message");
 		Message msg = new Message(msgData,1,1);
 		_ps.addMsg(msg);
@@ -62,7 +64,7 @@ public class PersistenceSystemTest extends TestCase {
 
 	public void testEditMessage() {
 		String newMessageContent = "new test message content";
-		_ps.deleteFileContents("messages.xml");
+		//_ps.deleteFileContents("messages.xml");
 		MessageData msgData = new MessageDataImp("test message");
 		Message msg = new Message(msgData,1,1);
 		_ps.addMsg(msg);
@@ -72,7 +74,7 @@ public class PersistenceSystemTest extends TestCase {
 	}
 
 	public void testGetMessage() {
-		_ps.deleteFileContents("messages.xml");
+		//_ps.deleteFileContents("messages.xml");
 		MessageData msgData = new MessageDataImp("test message");
 		Message msg = new Message(msgData,1,1);
 		_ps.addMsg(msg);
@@ -81,7 +83,7 @@ public class PersistenceSystemTest extends TestCase {
 	}
 
 	public void testGetUser() {
-		_ps.deleteFileContents("users.xml");
+		//_ps.deleteFileContents("users.xml");
 		RegisteredUser newUser = new RegisteredUser("user1",1);
 		_ps.addUser(newUser, "pass1");
 		RegisteredUser userFromDb = _ps.getUser(1);
@@ -89,8 +91,8 @@ public class PersistenceSystemTest extends TestCase {
 	}
 
 	public void testGetUserPassword() {
-		_ps.deleteFileContents("users.xml");
-		_ps.deleteFileContents("passes.xml");
+		//_ps.deleteFileContents("users.xml");
+		//_ps.deleteFileContents("passes.xml");
 		RegisteredUser newUser = new RegisteredUser("user1",1);
 		_ps.addUser(newUser, "pass1");
 		String newUserPassFromDB = _ps.getUserPassword(newUser.get_uID());
@@ -98,7 +100,7 @@ public class PersistenceSystemTest extends TestCase {
 	}
 
 	public void testGetMessagesWithFather() {
-		_ps.deleteFileContents("messages.xml");
+		//_ps.deleteFileContents("messages.xml");
 		MessageData msgData = new MessageDataImp("test message");
 		Message msg1 = new Message(msgData,1,1);
 		Message msg2 = new Message(msgData,1,1,2);

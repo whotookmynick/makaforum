@@ -16,6 +16,8 @@ public class RegisteredUser{ //extends NonRegisteredUser {
 									//	 1 = moderator
 									//	 2 = administrator
 
+
+	
 	public RegisteredUser(String userName,long ID){
 		super();
 		_userName = userName;
@@ -27,6 +29,18 @@ public class RegisteredUser{ //extends NonRegisteredUser {
 
 	
 	
+	public RegisteredUser(long lastLogInTime, long signUpTime, int numOfMessages, long _uid, String name, int type) {
+		super();
+		_lastLogInTime = lastLogInTime;
+		_signUpTime = signUpTime;
+		_numOfMessages = numOfMessages;
+		_uID = _uid;
+		_userName = name;
+		_userType = type;
+	}
+
+
+
 	public int get_userType() {
 		return _userType;
 	}

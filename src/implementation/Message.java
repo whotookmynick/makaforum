@@ -43,6 +43,11 @@ public class Message {
 		_msgPostTime = System.currentTimeMillis();
 	}
 
+	public Message(MessageData msgBody,long msgposterID,long fatherID,long mID, long msgPostTime){
+		this(msgBody, msgposterID, fatherID, mID);
+		_msgPostTime = msgPostTime;
+	}
+	
 	/**
 	 * @author Roee
 	 * @param msgBody
