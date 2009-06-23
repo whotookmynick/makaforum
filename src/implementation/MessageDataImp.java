@@ -49,4 +49,9 @@ public class MessageDataImp implements MessageData {
 	{
 		_mID = mid;
 	}
+	
+	public long getMid()
+	{
+		return _mID;
+	}
 }

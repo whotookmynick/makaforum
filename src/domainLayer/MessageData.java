@@ -26,4 +26,6 @@ public interface MessageData {
 	public Object displayMessageData();
 	
 	public void setMid(long mid);
+	
+	public long getMid();
 }
