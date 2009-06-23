@@ -8,13 +8,23 @@ import java.sql.ResultSet;
 import java.util.Collection;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
-
-import searchEngine.SearchTable;
 import domainLayer.MessageData;
 import domainLayer.PersistenceSystem;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PersistenceSystemSQL.
+ */
 public class PersistenceSystemSQL implements PersistenceSystem{
 	
+	/**
+	 * Creates the connection.
+	 * 
+	 * @return the connection
+	 * 
+	 * @throws ClassNotFoundException the class not found exception
+	 * @throws SQLException the SQL exception
+	 */
 	private Connection createConnection() throws ClassNotFoundException, SQLException{
 		String driver = "net.sourceforge.jtds.jdbc.Driver";
 		Class.forName(driver);
@@ -23,6 +33,9 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 		return conn;
 	}
 
+	/* (non-Javadoc)
+	 * @see domainLayer.PersistenceSystem#addMsg(implementation.Message)
+	 */
 	@Override
 	public void addMsg(Message msg) {
 		try{
@@ -36,6 +49,9 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 		catch (Exception e) {e.printStackTrace();}
 	}
 
+	/* (non-Javadoc)
+	 * @see domainLayer.PersistenceSystem#addUser(implementation.RegisteredUser, java.lang.String)
+	 */
 	@Override
 	public void addUser(RegisteredUser ud, String password) {
 		try{
@@ -55,6 +71,9 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see domainLayer.PersistenceSystem#changeUserPassword(long, java.lang.String)
+	 */
 	@Override
 	public boolean changeUserPassword(long uid, String newPass) {
 		try{
@@ -69,6 +88,9 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see domainLayer.PersistenceSystem#createHashTableofUserNametoUID()
+	 */
 	@Override
 	public ConcurrentHashMap<String, Long> createHashTableofUserNametoUID() {
 		ConcurrentHashMap<String, Long> UserNametoUidTable = new ConcurrentHashMap<String, Long>();
@@ -87,6 +109,9 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 		return UserNametoUidTable;
 	}
 
+	/* (non-Javadoc)
+	 * @see domainLayer.PersistenceSystem#deleteMessage(long)
+	 */
 	@Override
 	public Message deleteMessage(long mid) {
 		Message msg = getMessage(mid);
@@ -101,6 +126,9 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 		return msg;
 	}
 
+	/* (non-Javadoc)
+	 * @see domainLayer.PersistenceSystem#editMessage(long, domainLayer.MessageData)
+	 */
 	@Override
 	public void editMessage(long mid, MessageData newMsg) {
 		try{
@@ -114,6 +142,9 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 			catch (Exception e) {e.printStackTrace();}
 	}
 
+	/* (non-Javadoc)
+	 * @see domainLayer.PersistenceSystem#getCurrentMsgID()
+	 */
 	@Override
 	public int getCurrentMsgID() {
 		int mid = 0;
@@ -141,6 +172,9 @@ public class PersistenceSystemSQL implements PersistenceSystem{
     }
 
 
+	/* (non-Javadoc)
+	 * @see domainLayer.PersistenceSystem#getCurrentUserID()
+	 */
 	@Override
 	public int getCurrentUserID() {
         int uid = 0;
@@ -165,6 +199,9 @@ public class PersistenceSystemSQL implements PersistenceSystem{
         return uid+1;
     }
 
+	/* (non-Javadoc)
+	 * @see domainLayer.PersistenceSystem#getMessage(long)
+	 */
 	@Override
 	public Message getMessage(long mid) {
 		Message msg = null;
@@ -188,6 +225,9 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 		return msg;
 	}
 
+	/* (non-Javadoc)
+	 * @see domainLayer.PersistenceSystem#getMessagesWithFather(long)
+	 */
 	@Override
 	public Collection<Message> getMessagesWithFather(long fatherID) {
 		Collection<Message> msgVector = new Vector<Message>();
@@ -215,6 +255,9 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 		return msgVector;
 	}
 
+	/* (non-Javadoc)
+	 * @see domainLayer.PersistenceSystem#getUser(long)
+	 */
 	@Override
 	public RegisteredUser getUser(long uid) {
 		RegisteredUser registeredUser = null;
@@ -236,6 +279,9 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 		return registeredUser;
 	}
 
+	/* (non-Javadoc)
+	 * @see domainLayer.PersistenceSystem#getUserPassword(long)
+	 */
 	@Override
 	public String getUserPassword(long uid) {
         String pass = "";
@@ -257,12 +303,18 @@ public class PersistenceSystemSQL implements PersistenceSystem{
         return pass;
     }
 
+	/* (non-Javadoc)
+	 * @see domainLayer.PersistenceSystem#incMsgId()
+	 */
 	@Override
 	public void incMsgId() {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see domainLayer.PersistenceSystem#incUserId()
+	 */
 	@Override
 	public void incUserId() {
 		// TODO Auto-generated method stub
