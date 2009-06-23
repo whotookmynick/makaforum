@@ -1,20 +1,50 @@
 <OurMessageTag><implementation.Message>
-  <__msgBody>
-    <__mID>1</__mID>
-    <__msgElement> first message</__msgElement>
+  <__msgBody class="implementation.MessageDataImp">
+    <__mID>3</__mID>
+    <__msgElement>test message</__msgElement>
   </__msgBody>
-  <__msgPostTime>1244575846007</__msgPostTime>
+  <__msgPostTime>1245781539687</__msgPostTime>
   <__msgPosterID>1</__msgPosterID>
   <__fatherMessageID>-1</__fatherMessageID>
   <__mID>1</__mID>
 </implementation.Message></OurMessageTag>
 <OurMessageTag><implementation.Message>
-  <__msgBody>
-    <__mID>2</__mID>
-    <__msgElement> second message</__msgElement>
+  <__msgBody class="implementation.MessageDataImp">
+    <__mID>3</__mID>
+    <__msgElement>test message</__msgElement>
   </__msgBody>
-  <__msgPostTime>1244575854533</__msgPostTime>
+  <__msgPostTime>1245781539687</__msgPostTime>
   <__msgPosterID>1</__msgPosterID>
-  <__fatherMessageID>-1</__fatherMessageID>
+  <__fatherMessageID>1</__fatherMessageID>
   <__mID>2</__mID>
+</implementation.Message></OurMessageTag>
+<OurMessageTag><implementation.Message>
+  <__msgBody class="implementation.MessageDataImp">
+    <__mID>3</__mID>
+    <__msgElement>test message</__msgElement>
+  </__msgBody>
+  <__msgPostTime>1245781539687</__msgPostTime>
+  <__msgPosterID>1</__msgPosterID>
+  <__fatherMessageID>1</__fatherMessageID>
+  <__mID>3</__mID>
+</implementation.Message></OurMessageTag>
+<OurMessageTag><implementation.Message>
+  <__msgBody class="implementation.MessageDataImp">
+    <__mID>5</__mID>
+    <__msgElement>test message for search1</__msgElement>
+  </__msgBody>
+  <__msgPostTime>1245781541046</__msgPostTime>
+  <__msgPosterID>4</__msgPosterID>
+  <__fatherMessageID>-1</__fatherMessageID>
+  <__mID>5</__mID>
+</implementation.Message></OurMessageTag>
+<OurMessageTag><implementation.Message>
+  <__msgBody class="implementation.MessageDataImp">
+    <__mID>6</__mID>
+    <__msgElement>test message for search1</__msgElement>
+  </__msgBody>
+  <__msgPostTime>1245781541812</__msgPostTime>
+  <__msgPosterID>4</__msgPosterID>
+  <__fatherMessageID>-1</__fatherMessageID>
+  <__mID>6</__mID>
 </implementation.Message></OurMessageTag>

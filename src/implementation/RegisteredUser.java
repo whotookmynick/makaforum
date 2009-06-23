@@ -25,6 +25,14 @@ public class RegisteredUser{ //extends NonRegisteredUser {
 		_signUpTime = System.currentTimeMillis();
 	}
 
+	
+	
+	public int get_userType() {
+		return _userType;
+	}
+
+
+
 	public long get_lastLogInTime() {
 		return _lastLogInTime;
 	}

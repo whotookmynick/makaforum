@@ -39,7 +39,7 @@ public class Message {
 		_msgPosterID = msgposterID;
 		_fatherMessageID = fatherID;
 		_mID = mID;
-		msgBody.setMid(_mID);
+		_msgBody.setMid(mID);
 		_msgPostTime = System.currentTimeMillis();
 	}
 
