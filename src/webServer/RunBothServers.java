@@ -21,9 +21,12 @@ public class RunBothServers {
 			ourServerThread.start();
 			
 			int jaxcentPort = 80;
-			String htmlFolder = "C:\\workspace\\Maka\\bin\\webServer\\jaxcent";
-			String classFolder = "C:\\workspace\\Maka\\bin";
-			String configFile = "C:\\workspace\\Maka\\bin\\webServer\\jaxcent\\JaxcentConfig.xml";
+			//String htmlFolder = "C:\\workspace\\Maka\\bin\\webServer\\jaxcent";
+			String htmlFolder = ".\\bin\\webServer\\jaxcent";
+//			String classFolder = "C:\\workspace\\Maka\\bin";
+			String classFolder = ".\\bin";
+//			String configFile = "C:\\workspace\\Maka\\bin\\webServer\\jaxcent\\JaxcentConfig.xml";
+			String configFile = ".\\bin\\webServer\\jaxcent\\JaxcentConfig.xml";
 //			ServerMain jaxcentServer = new ServerMain(jaxcentPort, htmlFolder, configFile, classFolder);
 			ServerMain jaxcentServer = new ServerMain(jaxcentPort, htmlFolder, configFile, null);
 			jaxcentServer.start();
