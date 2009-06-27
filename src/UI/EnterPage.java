@@ -496,7 +496,7 @@ int selctedRow=selectionModel.getMinSelectionIndex();
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         System.out.println(this.selectedFatherMsg);
-        if (this._selectedPrevMsg!=this._selectedPrevMsg){
+        if (this._selectedPrevMsg != this._selectedPrevMsg){
         intialFatherMessag(this._selectedPrevMsg);
         }else{
             this.selectedFatherMsg=-1;

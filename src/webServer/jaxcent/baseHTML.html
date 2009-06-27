@@ -3,7 +3,7 @@
 		<title> MAKA FORUM </title>	
 	</head>
 	<SCRIPT TYPE="text/javascript" SRC="/jaxcent21.js"></SCRIPT>
-	<body>
+	<body link="blue" vlink="blue" alink="blue">
 		<table id="mainTable" cellpadding="10">
 			<caption align="center">
 				<font align="center" size="5">MAKA FORUM</font>
@@ -20,11 +20,11 @@
 				</td>
 				<td id="mainCell">
 					<p><b>Status:  </b><span id="status">User not logged in</span></p>
-					<form id="login">
+					<form id="loginForm">
 						<p>Username:<input type="text" id="usernamelogin" name="usernamelogin"/>
 						Password:<input type="password" id="userpasswordlogin" name="userpasswordlogin" />
-						<input type="submit" value="Login" />
-						<input type="submit" value="Register" />
+						<input type="submit" id="loginSubmit" value="Login" />
+						<input type="submit" id="registerSubmit" value="Register" />
 					</form>
 					<br><br><br><br>
 					<table border="1" align="center" width="700" id="messageTable">
@@ -34,15 +34,13 @@
 							<td id="messageTableColumContent">Content</td>
 							<td id="messageTableColumTime">Time</td>
 						</tr>
-						<!-- <tr>
-							<td>1</td>
-							<td>2</td>
-							<td>This is the first test message</td>
-							<td>today sometime</td>
-						</tr> -->
 					</table>
+					<br><br><br>
+					<textarea id="newMessageArea" rows="6" cols="100">Add new Message</textarea>
 					<br><br>
-					<input type="text" id="moderatorName" />
+					<input type="submit" id="newMessageSubmit" value="Add Message" />
+					<br><br>
+					<p>User-Name: <input type="text" id="moderatorName" /></p>
 					<input type="submit" id="moderatorSubmit" value="Add Moderator" />
 					<input type="submit" id="adminSubmit" value="Add Admin" />
 				</td>
