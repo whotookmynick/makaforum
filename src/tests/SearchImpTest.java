@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 
+import implementation.ControlerFactory;
 import implementation.Message;
 import implementation.MessageDataImp;
 
@@ -30,7 +31,7 @@ public class SearchImpTest {
 	@Before
 	public void setUp() throws Exception {
 		TheController _contorller;
-		_contorller = new TheController();
+		_contorller = ControlerFactory.getControler();
 		_searchEngine = _contorller.get_searchEngine();
 		RegisteredUser currentUser;
 		currentUser = _contorller.getUser("searchTestUser1");

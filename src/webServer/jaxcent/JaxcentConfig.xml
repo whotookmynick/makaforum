@@ -1,0 +1,7 @@
+<?xml version="1.0" ?> 
+<JaxcentConfiguration>
+ <Page>
+    <PagePath>/baseHTML.html</PagePath>
+    <PageClass>webServer.jaxcent.MainPageHandler</PageClass>
+ </Page>
+</JaxcentConfiguration>

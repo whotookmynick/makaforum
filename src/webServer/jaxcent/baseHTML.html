@@ -1,0 +1,62 @@
+<html>
+	<head>
+		<title> MAKA FORUM </title>	
+	</head>
+	<SCRIPT TYPE="text/javascript" SRC="/jaxcent21.js"></SCRIPT>
+	<body>
+		<table id="mainTable" cellpadding="10">
+			<caption align="center">
+				<font align="center" size="5">MAKA FORUM</font>
+			</caption>
+			<tr>
+				<td width="100" id="searchCell">
+					<b><u>Search by</u></b><br>
+					<input type="radio" name="searchType" id="searchTypeContent" value="content" />Content<br>
+					<input type="radio" name="searchType" id="searchTypeAuthor" value="Author" />Author<br>
+					<input type="radio" name="searchType" id="searchTypeDate" value="Date" />Date<br>
+					<input type="text" id="searchContent" /><br><br>
+					<input type="submit" id="searchSubmit" value="Search" />
+
+				</td>
+				<td id="mainCell">
+					<p><b>Status:  </b><span id="status">User not logged in</span></p>
+					<form id="login">
+						<p>Username:<input type="text" id="usernamelogin" name="usernamelogin"/>
+						Password:<input type="password" id="userpasswordlogin" name="userpasswordlogin" />
+						<input type="submit" value="Login" />
+						<input type="submit" value="Register" />
+					</form>
+					<br><br><br><br>
+					<table border="1" align="center" width="700" id="messageTable">
+						<tr id="messageTableFirstRow">
+							<td id="messageTableColumMessageID">Message-ID</td>
+							<td id="messageTableColumPoster">Poster</td>
+							<td id="messageTableColumContent">Content</td>
+							<td id="messageTableColumTime">Time</td>
+						</tr>
+						<!-- <tr>
+							<td>1</td>
+							<td>2</td>
+							<td>This is the first test message</td>
+							<td>today sometime</td>
+						</tr> -->
+					</table>
+					<br><br>
+					<input type="text" id="moderatorName" />
+					<input type="submit" id="moderatorSubmit" value="Add Moderator" />
+					<input type="submit" id="adminSubmit" value="Add Admin" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+				</td>
+				<td id="poweredByCell" align="center">
+					Powered by: 
+					<font size="3" color="Green">M</font>
+					<font size="2" color="Brown">A</font>
+					<font size="5" color="Red">K</font>
+					<font size="1" color="Blue">A</font> Group
+				</td>
+			</tr>
+		</table>
+	</body>

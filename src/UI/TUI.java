@@ -78,7 +78,7 @@ public class TUI implements Runnable{
 		return displayString;
 	}
 	
-	private void connectSocketsToServer(String host,int port){
+	public void connectSocketsToServer(String host,int port){
 		try {
 			_clientSocket = new Socket(host, port); // host and port
 	  		_socketWriter = new PrintWriter(_clientSocket.getOutputStream(), true);
