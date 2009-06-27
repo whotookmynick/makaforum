@@ -9,14 +9,15 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import searchEngine.CompassSearchEngine;
 import searchEngine.Search;
-import searchEngine.SearchImp;
-import searchEngine.SearchTable;
+//import searchEngine.SearchImp;
+//import searchEngine.SearchTable;
 
 import com.thoughtworks.xstream.core.util.Base64Encoder;
 
 import Exceptions.UserAlreadyExistsException;
 import Exceptions.UserDoesNotExistException;
 
+//import implementation.ControlerFactory;
 import implementation.Message;
 import implementation.PersistenceSystemSQL;
 import implementation.PersistenceSystemXML;
@@ -36,7 +37,8 @@ public class TheController {
 	 */
 	public TheController(){
 		_loggedUsers = new Vector<RegisteredUser>();
-		_persistenceLayer = new PersistenceSystemSQL();
+//		_persistenceLayer = new PersistenceSystemSQL();
+		_persistenceLayer = new PersistenceSystemXML();
 		_userNameToUserId = new ConcurrentHashMap<String, Long>();
 		_userNameToUserId = _persistenceLayer.createHashTableofUserNametoUID();
 		_currentUserID = _persistenceLayer.getCurrentUserID();

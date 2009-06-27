@@ -24,7 +24,8 @@ public class RunBothServers {
 			String htmlFolder = "C:\\workspace\\Maka\\bin\\webServer\\jaxcent";
 			String classFolder = "C:\\workspace\\Maka\\bin";
 			String configFile = "C:\\workspace\\Maka\\bin\\webServer\\jaxcent\\JaxcentConfig.xml";
-			ServerMain jaxcentServer = new ServerMain(jaxcentPort, htmlFolder, configFile, classFolder);
+//			ServerMain jaxcentServer = new ServerMain(jaxcentPort, htmlFolder, configFile, classFolder);
+			ServerMain jaxcentServer = new ServerMain(jaxcentPort, htmlFolder, configFile, null);
 			jaxcentServer.start();
 //			Process jaxcentServer = Runtime.getRuntime().exec("java -jar src\\webServer\\jaxcent\\jaxtut.jar");
 			ourServerThread.join();

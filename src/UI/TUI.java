@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Date;
 
 /**
  * Commands that the client can send:
@@ -96,7 +97,55 @@ public class TUI implements Runnable{
 		}
 
 	}
+	
+	/**
+	 * This method receives a string of format
+	 * +1msgid+2msgposter+3content+4posterTime
+	 * and returns it clean to display
+	 * @param displayString
+	 * @return
+	 */
+	private String formatDisplayString(String recvdString) {
+		String displayString = "";
+		String []seperated = recvdString.split("\n");
+		for (int i = 0; i < seperated.length-1; i++)
+		{
+			String currMsg = seperated[i];
+			String []parsedMsg = parseIncomingReceivedMessages(currMsg);
+			displayString += "Message id: " + parsedMsg[0] +"\n";
+			displayString += "Posted by: " + parsedMsg[1] + "\n";
+			displayString += "Posted At: " + parsedMsg[3] + "\n";
+			displayString += "Content: " + parsedMsg[2] + "\n";
+		}
+		return displayString;
+	}
 
+	/**
+	 * This function receives a String in the format
+	 * +1msgid+2msgposter+3content+4posterTime
+	 * and retuns an array of Strings where each place in the array
+	 * holds a different value. In the same order of the original String
+	 * @param currMsg
+	 * @return
+	 * result[0] = msgID
+	 * result[1] = msgPosterID
+	 * result[2] = content
+	 * result[3] = postTime
+	 */
+	public static String[] parseIncomingReceivedMessages(String currMsg)
+	{
+		String []res = new String[4];
+		String currMsgID = currMsg.substring(currMsg.indexOf("+1")+2,currMsg.indexOf("+2"));
+		String currMsgPosterID = currMsg.substring(currMsg.indexOf("+2")+2,currMsg.indexOf("+3"));
+		String currMsgData = currMsg.substring(currMsg.indexOf("+3")+2,currMsg.indexOf("+4"));
+		String currMsgTime = currMsg.substring(currMsg.indexOf("+4")+2);
+		Date currMsgDate = new Date(Long.parseLong(currMsgTime));
+		res[0] = currMsgID;
+		res[1] = currMsgPosterID;
+		res[2] = currMsgData;
+		res[3] = currMsgDate.toString();
+		return res;
+	}
 	private void closeConnetion(){
 	// Close all I/O
 		try {
