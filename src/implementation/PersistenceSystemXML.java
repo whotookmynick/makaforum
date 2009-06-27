@@ -253,7 +253,7 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 		catch(Exception e){
 			e.printStackTrace();
 		}
-		return null;
+		return new Vector<Message>();
 	}
 
 	public Object fromXMLFile(String filePath) {
