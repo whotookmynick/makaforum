@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.Iterator;
 
+import implementation.ControlerFactory;
 import implementation.Message;
 import implementation.MessageDataImp;
 import implementation.RegisteredUser;
@@ -21,8 +22,7 @@ public class TheControllerTest {
 	TheController _controler;
 	@Before
 	public void setUp() throws Exception {
-		_controler = new TheController();
-		
+		_controler = ControlerFactory.getControler();	
 	}
 
 	@Test

@@ -1,5 +1,7 @@
 package webServer;
 
+import implementation.ControlerFactory;
+
 import java.io.*;
 import java.net.*;
 
@@ -37,18 +39,5 @@ public class MultipleClientProtocolServer implements Runnable {
 	public void close() throws IOException {
 		_serverSocket.close();
 	}
-
-	public static void main(String[] args) throws IOException {
-		// Get port
-		int port = 1234;
-		MultipleClientProtocolServer server = new MultipleClientProtocolServer(port,new TheController());
-		Thread serverThread = new Thread(server);
-		serverThread.start();
-		try {
-			serverThread.join();
-		} catch (InterruptedException e) {
-			System.out.println("Server stopped");
-		}
-	}
-
+	
 }
