@@ -2,8 +2,7 @@ package webServer.jaxcent;
 
 import java.util.Arrays;
 import java.util.Map;
-
-import org.w3c.dom.html.HTMLElement;
+import java.util.Vector;
 
 import UI.TUI;
 import webServer.ServerProtocolImp;
@@ -16,6 +15,7 @@ public class MainPageHandler extends jaxcent.JaxcentPage{
 
 	ServerProtocolImp _protocolHandler;
 	HtmlTable _messageTable;
+	Vector<String> _msgIDs;
 
 	public MainPageHandler() {
 		TheController controller = ControlerFactory.getControler();
@@ -38,6 +38,7 @@ public class MainPageHandler extends jaxcent.JaxcentPage{
 				addMessageClicked();
 			}
 		};
+		_msgIDs = new Vector<String>();
 		_messageTable = new HtmlTable(this, "messageTable"){
 			protected void onRowDeleted(int rowIndex){
 				deleteRowInMessageTable(rowIndex);
@@ -55,6 +56,7 @@ public class MainPageHandler extends jaxcent.JaxcentPage{
 		try {
 			//			_messageTable.deleteAllRows();
 			//_messageTable.insertRow(-1, tempRow);
+			_msgIDs.clear();
 			if (!isOnLoad)
 			{
 				_messageTable.deleteFromBottom(_messageTable.getNumRows()-1);
@@ -66,22 +68,22 @@ public class MainPageHandler extends jaxcent.JaxcentPage{
 			{
 				String []currRow = TUI.parseIncomingReceivedMessages(seperated[i]);
 				final String msgID = currRow[0];
+				currRow[2] = "<a href=\"\" id=\"msglink"+msgID+"\">" + currRow[2] + "</a>";
+				_msgIDs.add(msgID);
 				String []currRowWithReply = Arrays.copyOf(currRow, currRow.length+1);
 				currRowWithReply[currRowWithReply.length-1] = "<a " + "\" id=\"reply" + msgID +"\" href=\"\">reply</a>";
 				_messageTable.insertRow(-1, currRowWithReply);
+				final int rowNum = i;
 				HtmlElement replyElement = new HtmlElement(this,"reply" + currRow[0])
 				{
 					protected void onClick()
 					{
-						replyTo(msgID);
+						replyTo(msgID,rowNum);
 					}
 				};
-				if (isOnLoad)
-				{
-					_messageTable.addDeleteButtons(1, -1, "delete", null);
-				}
-				_messageTable.enableCellEditing(1, 2, -1, 2, true, false, null);
 			}
+			_messageTable.addDeleteButtons(1, -1, "delete", null);
+			_messageTable.enableCellEditing(1, 2, -1, 2, true, false, null);
 		} catch (Jaxception e) {
 			e.printStackTrace();
 		}
@@ -91,14 +93,10 @@ public class MainPageHandler extends jaxcent.JaxcentPage{
 	
 	protected void deleteRowInMessageTable(int rowIndex)
 	{
-		try {
-			String msgIDString = _messageTable.getCellContent(rowIndex, 0);
-			String answer = _protocolHandler.processMessage("delete "+msgIDString);
-			updateStatus(formatServerAnswer(answer));
-			
-		} catch (Jaxception e) {
-			e.printStackTrace();
-		}
+		String msgIDString = _msgIDs.get(rowIndex-1);
+		_msgIDs.remove(rowIndex-1);
+		String answer = _protocolHandler.processMessage("delete "+msgIDString);
+		updateStatus(formatServerAnswer(answer));
 	}
 	
 	protected void editCellInMessageTable(int rowIndex,int colIndex,String oldContent,String newContent)
@@ -171,10 +169,43 @@ public class MainPageHandler extends jaxcent.JaxcentPage{
 		}
 	}
 	
-	protected void replyTo(String msgID)
+	protected void replyTo(final String msgID,int rowIndex)
 	{
-		System.out.println("replied");
-		//TODO complete method reply 
+		try{
+//		System.out.println("replied");
+		String replyCell = 
+			"<tr>" +
+			"<td>" +
+				"<textarea id=\"replyMessageArea" + msgID +"\" +" +
+				" rows=\"4\" cols=\"40\">Reply To Message</textarea>" +
+				"<br><input type=\"submit\""+
+							"id=\"replySubmit"+ msgID +"\" value=\"Submit\">" +
+				"</td></tr>";
+		String []rowToInsert = {replyCell};
+		_messageTable.insertRow(rowIndex+2, rowToInsert);
+		HtmlInputSubmit replySubmit = new HtmlInputSubmit(this, "replySubmit"+msgID){
+			protected void onClick()
+			{
+				replySubmitClicked(msgID);
+			}
+		};
+		}
+		catch (Jaxception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	protected void replySubmitClicked(String msgID)
+	{
+		try {
+			HtmlTextArea replyTextArea = new HtmlTextArea(this, "replyMessageArea"+msgID);
+			String actionString = "reply " + replyTextArea.getValue() +" " + msgID;
+			String answer = _protocolHandler.processMessage(actionString);
+			updateStatus(formatServerAnswer(answer));
+			initTable(false);
+		} catch (Jaxception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	protected void updateStatus(String newStatus)

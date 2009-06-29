@@ -17,6 +17,17 @@ import domainLayer.PersistenceSystem;
  */
 public class PersistenceSystemSQL implements PersistenceSystem{
 	
+	private Connection _conn;
+	public PersistenceSystemSQL()
+	{
+		try {
+			_conn = createConnection();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 	/**
 	 * Creates the connection.
 	 * 
@@ -39,11 +50,11 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 	@Override
 	public void addMsg(Message msg) {
 		try{
-		Connection conn = createConnection();
+//		Connection conn = createConnection();
 		String MsgSQL = "INSERT INTO [MAKAFORUM].[dbo].[Messages] (mID,msgPosterID,fatherMessageID,msgPostTime,msgElement,msgData_ID) " +
 					" VALUES (" + msg.get_mID()+"," + msg.get_msgPosterID() +"," + msg.get_fatherMessageID()
 					+"," + msg.get_msgPostTime() +",'" + msg.get_msgBody().toString() +"'," + msg.get_msgBody().getMid()+");";
-		PreparedStatement ps = conn.prepareStatement(MsgSQL);
+		PreparedStatement ps = _conn.prepareStatement(MsgSQL);
 		ps.execute();
 		}
 		catch (Exception e) {e.printStackTrace();}
@@ -55,15 +66,15 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 	@Override
 	public void addUser(RegisteredUser ud, String password) {
 		try{
-			Connection conn = createConnection();
+//			Connection conn = createConnection();
 			String addUserSQL = "INSERT INTO [MAKAFORUM].[dbo].[Users] (LastLoginTime,SignupTime,NumberOfMessages,uID,UserName,UserType) " +
 						" VALUES (" + ud.get_lastLogInTime()+"," + ud.get_signUpTime() +"," + ud.get_numOfMessages()
 						+"," + ud.get_uID() +",'" + ud.get_userName() +"'," + ud.get_userType()+");";
 			String addPassSQL = "INSERT INTO [MAKAFORUM].[dbo].[Passwords] (UserId, password) " +
 			" VALUES (" + ud.get_uID() +",'" + password +"');";
 			
-			PreparedStatement addUserPS = conn.prepareStatement(addUserSQL);
-			PreparedStatement addPassPS = conn.prepareStatement(addPassSQL);
+			PreparedStatement addUserPS = _conn.prepareStatement(addUserSQL);
+			PreparedStatement addPassPS = _conn.prepareStatement(addPassSQL);
 			addUserPS.execute();
 			addPassPS.execute();
 			}
@@ -77,11 +88,11 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 	@Override
 	public boolean changeUserPassword(long uid, String newPass) {
 		try{
-			Connection conn = createConnection();
+//			Connection conn = createConnection();
 			String changePassSQL = "UPDATE [MAKAFORUM].[dbo].[Passwords] SET password = '" + newPass +
 			"' WHERE UserId =" + uid + ";";
 			
-			PreparedStatement changePassPS = conn.prepareStatement(changePassSQL);
+			PreparedStatement changePassPS = _conn.prepareStatement(changePassSQL);
 			changePassPS.execute();
 			}
 			catch (Exception e) {e.printStackTrace();}
@@ -95,9 +106,9 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 	public ConcurrentHashMap<String, Long> createHashTableofUserNametoUID() {
 		ConcurrentHashMap<String, Long> UserNametoUidTable = new ConcurrentHashMap<String, Long>();
 		try{
-			Connection conn = createConnection();
+//			Connection conn = createConnection();
 			String UserNametoUidSQL = "SELECT uID,UserName FROM [MAKAFORUM].[dbo].[Users];";
-			PreparedStatement ps = conn.prepareStatement(UserNametoUidSQL);
+			PreparedStatement ps = _conn.prepareStatement(UserNametoUidSQL);
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()){
 				long uId = rs.getInt("uID");
@@ -116,9 +127,9 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 	public Message deleteMessage(long mid) {
 		Message msg = getMessage(mid);
 		try{
-			Connection conn = createConnection();
+//			Connection conn = createConnection();
 			String deleteMsgSQL = "Delete FROM [MAKAFORUM].[dbo].[Messages] WHERE mID = " + mid+ ";";
-			PreparedStatement deleteMsgSQLPS = conn.prepareStatement(deleteMsgSQL);
+			PreparedStatement deleteMsgSQLPS = _conn.prepareStatement(deleteMsgSQL);
 			deleteMsgSQLPS.execute();
 			
 		}
@@ -132,11 +143,11 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 	@Override
 	public void editMessage(long mid, MessageData newMsg) {
 		try{
-			Connection conn = createConnection();
+//			Connection conn = createConnection();
 			String editMsgSQL = "UPDATE [MAKAFORUM].[dbo].[Messages] SET msgElement = '" + newMsg.toString() +
 			"' ,msgData_ID = " + newMsg.getMid() + "WHERE mID =" + mid + ";";
 			
-			PreparedStatement editMsgPS = conn.prepareStatement(editMsgSQL);
+			PreparedStatement editMsgPS = _conn.prepareStatement(editMsgSQL);
 			editMsgPS.execute();
 			}
 			catch (Exception e) {e.printStackTrace();}
@@ -149,10 +160,10 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 	public int getCurrentMsgID() {
 		int mid = 0;
         try{
-            Connection conn = createConnection();
+//            Connection conn = createConnection();
             String currMsgSQL = "SELECT * FROM [MAKAFORUM].[dbo].[Messages];";
            
-            PreparedStatement editMsgPS = conn.prepareStatement(currMsgSQL);
+            PreparedStatement editMsgPS = _conn.prepareStatement(currMsgSQL);
             ResultSet rs = editMsgPS.executeQuery();
             
             if (rs!=null){
@@ -179,9 +190,9 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 	public int getCurrentUserID() {
         int uid = 0;
         try{
-            Connection conn = createConnection();
+//            Connection conn = createConnection();
             String currMsgSQL = "SELECT * FROM [MAKAFORUM].[dbo].[Users];";
-            PreparedStatement editMsgPS = conn.prepareStatement(currMsgSQL);
+            PreparedStatement editMsgPS = _conn.prepareStatement(currMsgSQL);
             ResultSet rs = editMsgPS.executeQuery();
             if (rs!=null){
                 int j = 1;
@@ -206,9 +217,9 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 	public Message getMessage(long mid) {
 		Message msg = null;
 		try{
-			Connection conn = createConnection();
+//			Connection conn = createConnection();
 			String getMsgSQL = "SELECT * FROM [MAKAFORUM].[dbo].[Messages] WHERE mID = " + mid+ ";";
-			PreparedStatement ps = conn.prepareStatement(getMsgSQL);
+			PreparedStatement ps = _conn.prepareStatement(getMsgSQL);
 			ResultSet rs = ps.executeQuery();
 			rs.next();
 			long msgPosterID = rs.getLong("msgPosterID");
@@ -232,9 +243,9 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 	public Collection<Message> getMessagesWithFather(long fatherID) {
 		Collection<Message> msgVector = new Vector<Message>();
 		try{
-			Connection conn = createConnection();
+//			Connection conn = createConnection();
 			String UserNametoUidSQL = "SELECT * FROM [MAKAFORUM].[dbo].[Messages];";
-			PreparedStatement ps = conn.prepareStatement(UserNametoUidSQL);
+			PreparedStatement ps = _conn.prepareStatement(UserNametoUidSQL);
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()){
 				long currentFatherID = rs.getLong("fatherMessageID");
@@ -262,9 +273,9 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 	public RegisteredUser getUser(long uid) {
 		RegisteredUser registeredUser = null;
 		try{
-			Connection conn = createConnection();
+//			Connection conn = createConnection();
 			String getUserSQL = "SELECT * FROM [MAKAFORUM].[dbo].[Users] WHERE uID = " + uid+ ";";
-			PreparedStatement ps = conn.prepareStatement(getUserSQL);
+			PreparedStatement ps = _conn.prepareStatement(getUserSQL);
 			ResultSet rs = ps.executeQuery();
 			rs.next();
 			long LastLoginTime = rs.getLong("LastLoginTime");
@@ -286,10 +297,10 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 	public String getUserPassword(long uid) {
         String pass = "";
         try{
-            Connection conn = createConnection();
+//            Connection conn = createConnection();
             String userPassSQL = "SELECT password FROM [MAKAFORUM].[dbo].[Passwords] WHERE UserId = " +
                                                                                             uid +";";
-            PreparedStatement userPassPS = conn.prepareStatement(userPassSQL);
+            PreparedStatement userPassPS = _conn.prepareStatement(userPassSQL);
             ResultSet rs = userPassPS.executeQuery();
             if (rs!=null){
                 while(rs.next()){
