@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE compass-core-mapping PUBLIC
+"-//Compass/Compass Core Mapping DTD 2.2//EN"
+"http://www.compass-project.org/dtd/compass-core-mapping-2.2.dtd">
+<compass-core-mapping package="implementation">
+	<class name="Message" alias="message">
+		<id name="_mID" />
+		<property name="_msgPosterID"/>
+		<!-- <property name="_msgBody"/> -->
+		<reference name="_msgBody"/>
+		<property name="_msgPostTime"/>
+	</class>
+	<class name="MessageDataImp" alias="messagedata">
+		<id name="_mID" />
+		<property name="_msgElement"/>
+	</class>
+</compass-core-mapping>
