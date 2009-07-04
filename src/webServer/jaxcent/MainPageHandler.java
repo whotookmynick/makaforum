@@ -47,12 +47,12 @@ public class MainPageHandler extends jaxcent.JaxcentPage{
 				editCellInMessageTable(rowIndex, colIndex, oldContent, newContent);
 			}
 		};
-		initTable(true);
+		initTable(true,"-1");
 	}
 
 
 
-	protected void initTable(boolean isOnLoad) {
+	protected void initTable(boolean isOnLoad,String fatherMsgID) {
 		try {
 			//			_messageTable.deleteAllRows();
 			//_messageTable.insertRow(-1, tempRow);
@@ -61,24 +61,31 @@ public class MainPageHandler extends jaxcent.JaxcentPage{
 			{
 				_messageTable.deleteFromBottom(_messageTable.getNumRows()-1);
 			}
-			String getAllMessagesString = "display -1";
+			String getAllMessagesString = "display " + fatherMsgID;
 			String messages = _protocolHandler.processMessage(getAllMessagesString);
 			String []seperated = messages.split("\n");
 			for (int i = 0; i < seperated.length-1; i++)
 			{
 				String []currRow = TUI.parseIncomingReceivedMessages(seperated[i]);
 				final String msgID = currRow[0];
-				currRow[2] = "<a href=\"\" id=\"msglink"+msgID+"\">" + currRow[2] + "</a>";
+				currRow[0] = "<a href=\"\" id=\"msglink"+msgID+"\">" + currRow[0] + "</a>";
 				_msgIDs.add(msgID);
 				String []currRowWithReply = Arrays.copyOf(currRow, currRow.length+1);
 				currRowWithReply[currRowWithReply.length-1] = "<a " + "\" id=\"reply" + msgID +"\" href=\"\">reply</a>";
 				_messageTable.insertRow(-1, currRowWithReply);
 				final int rowNum = i;
-				HtmlElement replyElement = new HtmlElement(this,"reply" + currRow[0])
+				HtmlElement replyElement = new HtmlElement(this,"reply" + msgID)
 				{
 					protected void onClick()
 					{
 						replyTo(msgID,rowNum);
+					}
+				};
+				HtmlElement msgElement = new HtmlElement(this, "msglink" + msgID)
+				{
+					protected void onClick()
+					{
+						msgLinkClicked(msgID);
 					}
 				};
 			}
@@ -162,7 +169,7 @@ public class MainPageHandler extends jaxcent.JaxcentPage{
 			String msgContent = newMessageArea.getInnerText();
 			String answer = _protocolHandler.processMessage("message " + msgContent);
 			newMessageArea.setValue("");
-			initTable(false);
+			initTable(false,"-1");
 			updateStatus(formatServerAnswer(answer));
 		} catch (Jaxception e) {
 			e.printStackTrace();
@@ -202,10 +209,14 @@ public class MainPageHandler extends jaxcent.JaxcentPage{
 			String actionString = "reply " + replyTextArea.getValue() +" " + msgID;
 			String answer = _protocolHandler.processMessage(actionString);
 			updateStatus(formatServerAnswer(answer));
-			initTable(false);
+			initTable(false,"-1");
 		} catch (Jaxception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	protected void msgLinkClicked(String msgID){
+		initTable(false,msgID);
 	}
 	
 	protected void updateStatus(String newStatus)
