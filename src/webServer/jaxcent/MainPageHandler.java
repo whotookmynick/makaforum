@@ -16,10 +16,12 @@ public class MainPageHandler extends jaxcent.JaxcentPage{
 	ServerProtocolImp _protocolHandler;
 	HtmlTable _messageTable;
 	Vector<String> _msgIDs;
+	Vector<String> _siteMap;
 
 	public MainPageHandler() {
 		TheController controller = ControlerFactory.getControler();
 		_protocolHandler = new ServerProtocolImp(controller);
+		_siteMap = new Vector<String>();
 		HtmlInputSubmit loginButton = new HtmlInputSubmit(this,"loginSubmit"){
 			protected void onClick(Map pageData)
 			{
@@ -47,6 +49,7 @@ public class MainPageHandler extends jaxcent.JaxcentPage{
 				editCellInMessageTable(rowIndex, colIndex, oldContent, newContent);
 			}
 		};
+		_siteMap.add("-1");
 		initTable(true,"-1");
 	}
 
@@ -91,6 +94,7 @@ public class MainPageHandler extends jaxcent.JaxcentPage{
 			}
 			_messageTable.addDeleteButtons(1, -1, "delete", null);
 			_messageTable.enableCellEditing(1, 2, -1, 2, true, false, null);
+			initSiteMap();
 		} catch (Jaxception e) {
 			e.printStackTrace();
 		}
@@ -216,7 +220,45 @@ public class MainPageHandler extends jaxcent.JaxcentPage{
 	}
 	
 	protected void msgLinkClicked(String msgID){
+		_siteMap.add(msgID);
 		initTable(false,msgID);
+	}
+	
+	protected void initSiteMap()
+	{
+		try {
+			HtmlElement siteMap = new HtmlElement(this, "sitemap");
+//			siteMap.setData("");
+			String newContent = "";
+			for (int i =0;i < _siteMap.size();i++){
+				newContent += "<b>>></b><a href=\"\"" + 
+				"id=\"sitemaplink"+i+"\">" + _siteMap.elementAt(i)+
+				"</a>";
+			}
+			siteMap.setInnerHTML(newContent);
+			for (int i = 0; i < _siteMap.size();i++)
+			{
+				final int currIndex = i;
+				HtmlElement sitemapLink = new HtmlElement(this, "sitemaplink" + i){
+					protected void onClick()
+					{
+						siteMapLinkClicked(currIndex);
+					}
+				};
+			}
+		} catch (Jaxception e) {
+			e.printStackTrace();
+		}
+
+	}
+	
+	protected void siteMapLinkClicked(int index)
+	{
+		for (int i = index+1; i < _siteMap.size();i++)
+		{
+			_siteMap.remove(i);
+		}
+		initTable(false, _siteMap.elementAt(index));
 	}
 	
 	protected void updateStatus(String newStatus)
