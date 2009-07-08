@@ -43,13 +43,17 @@
 						</tr>
 					</table>
 					<br><br><br>
+					<div id="addMessageDiv" style="visibility:hidden">
 					<textarea id="newMessageArea" rows="6" cols="100">Add new Message</textarea>
 					<br><br>
 					<input type="submit" id="newMessageSubmit" value="Add Message" />
+					</div>
 					<br><br>
-					<p>User-Name: <input type="text" id="moderatorName" /></p>
-					<input type="submit" id="moderatorSubmit" value="Add Moderator" />
-					<input type="submit" id="adminSubmit" value="Add Admin" />
+					<div id="moderatordiv" style="visibility:hidden">
+					<p>User-Name: <input type="text" id="moderatorName"/></p>
+					<input type="submit" id="moderatorSubmit" value="Add Moderator"/>
+					</div>
+					<input type="submit" id="adminSubmit" value="Add Admin" style="visibility:hidden"/>
 				</td>
 			</tr>
 			<tr>
