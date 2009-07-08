@@ -278,5 +278,10 @@ public class ServerProtocolImp implements ServerProtocol {
 		}
 		return returnString;
 	}
+	
+	public RegisteredUser get_connectedUser()
+	{
+		return _connectedUser;
+	}
 
 }
