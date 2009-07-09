@@ -12,6 +12,8 @@ import searchEngine.Search;
 //import searchEngine.SearchImp;
 //import searchEngine.SearchTable;
 
+import UI.UIObserver;
+
 import com.thoughtworks.xstream.core.util.Base64Encoder;
 
 import Exceptions.UserAlreadyExistsException;
@@ -31,6 +33,7 @@ public class TheController {
 	protected long _currentUserID;
 	protected long _currentMsgID;
 	protected Search _searchEngine;
+	protected Collection<UIObserver> _observersCollection;
 
 	/**
 	 * This constructor was created for testing purposes only
@@ -48,6 +51,7 @@ public class TheController {
 		 */
 		//_searchEngine = new SearchImp((SearchTable)_persistenceLayer);
 		_searchEngine = new CompassSearchEngine(this);
+		_observersCollection = new Vector<UIObserver>();
 	}
 
 	/**
@@ -157,6 +161,7 @@ public class TheController {
 			_persistenceLayer.addMsg(newMessage);
 			user.set_numOfMessages(user.get_numOfMessages()+1);
 			_searchEngine.insertMessageToEngine(newMessage);
+			updateObservers("message " + msgId);
 		}
 		else{
 			System.out.println("User can't add message");
@@ -193,7 +198,9 @@ public class TheController {
 			}
 
 		}
-		_persistenceLayer.deleteMessage(msg.get_mID());
+		long deletedMid = msg.get_mID();
+		_persistenceLayer.deleteMessage(deletedMid);
+		updateObservers("delete " + deletedMid);
 		_searchEngine.removeMessageFromEngine(msg.get_mID());
 		RegisteredUser writer = _persistenceLayer.getUser(msg.get_msgPosterID());
 		writer.set_numOfMessages(user.get_numOfMessages()-1);
@@ -214,6 +221,7 @@ public class TheController {
 			_persistenceLayer.editMessage(mid, newMsgData);
 			oldMsg.set_msgBody(newMsgData);
 			_searchEngine.insertMessageToEngine(oldMsg);
+			updateObservers("edit " + mid);
 			return true;
 		}
 		else{
@@ -246,6 +254,7 @@ public class TheController {
 			_persistenceLayer.addMsg(newRepMessage);
 			user.set_numOfMessages(user.get_numOfMessages()+1);
 			_searchEngine.insertMessageToEngine(newRepMessage);
+			updateObservers("reply " + fatherID);
 		}
 		else{
 			System.out.println("User can't reply to message");
@@ -329,4 +338,18 @@ public class TheController {
 		return encryptedMsg;
 	}
 
+	public void registerObserver(UIObserver newUIObserver)
+	{
+		_observersCollection.add(newUIObserver);
+	}
+	
+	private void updateObservers(String updateString)
+	{
+		Iterator<UIObserver> obsit = _observersCollection.iterator();
+		while (obsit.hasNext())
+		{
+			UIObserver currObs = obsit.next();
+			currObs.updateUI(updateString);
+		}
+	}
 }

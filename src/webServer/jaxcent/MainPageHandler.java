@@ -5,13 +5,14 @@ import java.util.Map;
 import java.util.Vector;
 
 import UI.TUI;
+import UI.UIObserver;
 import webServer.ServerProtocolImp;
 import implementation.ControlerFactory;
 import domainLayer.TheController;
 
 import jaxcent.*;
 
-public class MainPageHandler extends jaxcent.JaxcentPage{
+public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 
 	ServerProtocolImp _protocolHandler;
 	HtmlTable _messageTable;
@@ -25,6 +26,7 @@ public class MainPageHandler extends jaxcent.JaxcentPage{
 		_currUserType = -1;
 		TheController controller = ControlerFactory.getControler();
 		_protocolHandler = new ServerProtocolImp(controller);
+		controller.registerObserver(this);
 		_siteMap = new Vector<String>();
 		HtmlInputSubmit loginButton = new HtmlInputSubmit(this,"loginSubmit"){
 			protected void onClick(Map pageData)
@@ -139,7 +141,6 @@ public class MainPageHandler extends jaxcent.JaxcentPage{
 			_messageTable.deleteRow(rowIndex);
 			updateStatus(formatServerAnswer(answer));
 		} catch (Jaxception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -340,6 +341,11 @@ public class MainPageHandler extends jaxcent.JaxcentPage{
 		//System.out.println(repliedMessage);
 		String displayString = serverAnswer.substring("print".length()+1);
 		return displayString;
+	}
+
+	@Override
+	public void updateUI(String updateString) {
+		siteMapLinkClicked(_siteMap.size()-1);
 	}
 
 }
