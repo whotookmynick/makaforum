@@ -34,6 +34,20 @@ public class Message {
 	private Message(){
 	}
 	
+	/**
+	 * This constructor was created in order to allow sending search scores
+	 * with minimal change to existing code.
+	 * @param m
+	 */
+	public Message(Message m)
+	{
+		_msgBody = m._msgBody;
+		_mID = m._mID;
+		_fatherMessageID = m._fatherMessageID;
+		_msgPosterID = m._msgPosterID;
+		_msgPostTime = m._msgPostTime;
+	}
+	
 	public Message(MessageData msgBody,long msgposterID,long fatherID,long mID){
 		_msgBody = msgBody;
 		_msgPosterID = msgposterID;
@@ -59,6 +73,11 @@ public class Message {
 		this(msgBody,msgposterID,-1,mID);
 	}
 
+	public String toString()
+	{
+		return _msgBody.textToDisplay();
+	}
+	
 	public MessageData get_msgBody() {
 		return _msgBody;
 	}

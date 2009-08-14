@@ -1,6 +1,8 @@
 package searchEngine;
 import java.text.*;
 import implementation.Message;
+import implementation.MessageSearchAnswer;
+
 import java.util.Date;
 import java.util.Vector;
 import org.compass.core.Compass;
@@ -85,7 +87,8 @@ public class CompassSearchEngine implements Search {
         for (int i = 0; i < detachedHits.length; i++) {
             //System.out.println("score: "+detachedHits[i].getScore());
             Message m2 = (Message)(detachedHits[i].data());
-            ans.add(m2);
+            MessageSearchAnswer messageWithScore = new MessageSearchAnswer(m2,detachedHits[i].getScore());
+            ans.add(messageWithScore);
         }
         session.close();
         return ans;
