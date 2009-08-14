@@ -16,6 +16,7 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 
 	ServerProtocolImp _protocolHandler;
 	HtmlTable _messageTable;
+	HtmlTable _searchTable;
 	Vector<String> _msgIDs;
 	Vector<String> _siteMap;
 	String _currUserID;
@@ -46,6 +47,13 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 				addMessageClicked();
 			}
 		};
+		HtmlInputSubmit searchButton = new HtmlInputSubmit(this, "searchSubmit")
+		{
+			protected void onClick(Map pageData)
+			{
+				searchMessageClicked(pageData);
+			}
+		};
 		_msgIDs = new Vector<String>();
 		_messageTable = new HtmlTable(this, "messageTable"){
 			protected void onRowDeleted(int rowIndex){
@@ -55,6 +63,8 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 				editCellInMessageTable(rowIndex, colIndex, oldContent, newContent);
 			}
 		};
+/********************* SHOULD I ADD DELETE AND/OR EDIT CAPABILITY TO SEARCH TABLE?*/		
+		_searchTable = new HtmlTable(this, "searchTable");
 		_siteMap.add("home");
 		initTable(true,"-1");
 	}
@@ -313,6 +323,12 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 	
 	protected void siteMapLinkClicked(int index)
 	{
+		try {
+			_searchTable.setVisible(false);
+			_messageTable.setVisible(true);
+		} catch (Jaxception e) {
+			e.printStackTrace();
+		}
 		for (int i = index+1; i < _siteMap.size();i++)
 		{
 			_siteMap.remove(i);
@@ -347,5 +363,98 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 	public void updateUI(String updateString) {
 		siteMapLinkClicked(_siteMap.size()-1);
 	}
-
+	
+	private void searchMessageClicked(Map pageData) {
+		try {
+			String searchType="content",searchContent="";
+			HtmlInputRadio contentRadio = new HtmlInputRadio(this,"searchTypeContent");
+			if (contentRadio.getChecked())
+				searchType = contentRadio.getValue();
+			contentRadio = new HtmlInputRadio(this,"searchTypeAuthor");
+			if (contentRadio.getChecked())
+				searchType = contentRadio.getValue();
+			contentRadio = new HtmlInputRadio(this,"searchTypeDate");
+			if (contentRadio.getChecked())
+				searchType = contentRadio.getValue();
+			//HtmlInputText contentText = new HtmlInputText(this,"searchContent");
+			searchContent = (String)pageData.get("searchContent");
+			initSearchTable(searchType.toLowerCase(),searchContent);
+		} catch (Jaxception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private void initSearchTable(String searcType,String searchContent)
+	{
+		try {
+			_messageTable.setVisible(false);
+			_searchTable.setVisible(true);
+			_msgIDs.clear();
+			String getAllMessagesString = "search " + searcType + " " + searchContent;
+			String messages = _protocolHandler.processMessage(getAllMessagesString);
+			String []seperated = messages.split("\n");
+			for (int i = 0; i < seperated.length-1; i++)
+			{
+				String []currRow = TUI.parseIncomingReceivedMessages(seperated[i]);
+				final String msgID = currRow[0];
+				String msgIDCellString ="<input id=\"msgIDRow"+(i+1)+
+										"\" type=\"hidden\" value=\""+msgID+"\"/>"+
+										"<a href=\"\" id=\"msglink"+msgID+"\">" +msgID + "</a>"; 
+				currRow[0] = msgIDCellString;
+				_msgIDs.add(msgID);
+				//String []currRowWithReply = Arrays.copyOf(currRow, currRow.length+2);
+				//currRowWithReply[currRowWithReply.length-2] = "<a " + "\" id=\"reply" + msgID +"\" href=\"\">reply</a>";
+				//currRowWithReply[currRowWithReply.length-1] = "<a " + "\" id=\"delete" + msgID +"\" href=\"\">delete</a>";
+				String []currRowWithScore = Arrays.copyOf(currRow,currRow.length+1);
+				String contentOfMsg = currRowWithScore[2];
+				String currMsgScore = contentOfMsg.substring(contentOfMsg.indexOf("%score")+6);
+				currRowWithScore[2] = contentOfMsg.substring(0,contentOfMsg.indexOf("%score"));
+				currRowWithScore[currRowWithScore.length-1] = currMsgScore;
+				_searchTable.insertRow(-1, currRowWithScore);
+				final int rowNum = i;
+/*				HtmlElement replyElement = new HtmlElement(this,"reply" + msgID)
+				{
+					protected void onClick()
+					{
+						replyTo(msgID,rowNum);
+					}
+				};
+				HtmlElement deleteElement = new HtmlElement(this,"delete" + msgID)
+				{
+					protected void onClick()
+					{
+						deleteRowInMessageTable(rowNum+1);
+					}
+				};
+				*/
+				HtmlElement msgElement = new HtmlElement(this, "msglink" + msgID)
+				{
+					protected void onClick()
+					{
+						msgLinkClicked(msgID);
+					}
+				};
+				/*
+				if (_currUserType < 0 )
+				{
+					replyElement.setVisible(false);
+				}
+				if (!currRowWithReply[1].contentEquals(_currUserID) & !(_currUserType>0))
+				{
+					deleteElement.setVisible(false);
+				}
+				else
+				{
+					_messageTable.enableCellEditing(i+1, 2, i+1, 2, true, false, null);
+				}
+				*/
+			}
+//			_messageTable.addDeleteButtons(1, -1, "delete", null);
+//			_messageTable.enableCellEditing(1, 2, -1, 2, true, false, null);
+			initSiteMap();
+		} catch (Jaxception e) {
+			e.printStackTrace();
+		}
+	}
 }

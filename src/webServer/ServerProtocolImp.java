@@ -273,7 +273,7 @@ public class ServerProtocolImp implements ServerProtocol {
 		Iterator<Message> it = allMessages.iterator();
 		while (it.hasNext()){
 			Message currentMsg = it.next();
-			returnString += "+1" + currentMsg.get_mID() + "+2" + currentMsg.get_msgPosterID() + "+3" + currentMsg.get_msgBody().displayMessageData() + "+4" + currentMsg.get_msgPostTime() + "\n";
+			returnString += "+1" + currentMsg.get_mID() + "+2" + currentMsg.get_msgPosterID() + "+3" + currentMsg.toString() + "+4" + currentMsg.get_msgPostTime() + "\n";
 //			returnString += currentMsg.get_mID() + ": " + currentMsg.get_msgBody().displayMessageData() + "\n";
 		}
 		return returnString;
