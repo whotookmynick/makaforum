@@ -89,7 +89,7 @@ public class ServerProtocolImp implements ServerProtocol {
 			return "print unknown command \\e";
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "server error please try again \\e";
+			return "print server error please try again \\e";
 		}
 	}
 

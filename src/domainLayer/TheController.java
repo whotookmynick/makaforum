@@ -349,7 +349,7 @@ public class TheController {
 		while (obsit.hasNext())
 		{
 			UIObserver currObs = obsit.next();
-			currObs.updateUI(updateString);
+			//currObs.updateUI(updateString);
 		}
 	}
 }
