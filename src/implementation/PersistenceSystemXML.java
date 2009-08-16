@@ -52,6 +52,7 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 	@Override
 	public boolean changeUserPassword(long uid, String newPass) {
 		boolean endOfObject = false;
+		boolean ans = false;
 		try{
 
 			Collection<UserPassword> allMessages = new Vector<UserPassword>();
@@ -70,6 +71,7 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
         				UserPassword desirializedObject = (UserPassword)deserializeObject(serializedObject);
         				if (desirializedObject.get_userID() == uid){
         					desirializedObject.set_password(newPass);
+        					ans = true;
         				}
         				allMessages.add(desirializedObject);
         				serializedObject = "";
@@ -82,7 +84,7 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 		catch(Exception e){
 			e.printStackTrace();
 		}
-    	return false;
+    	return ans;
 	}
 
 	@Override

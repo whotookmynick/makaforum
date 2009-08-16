@@ -52,7 +52,7 @@ public  class EnterPage extends javax.swing.JFrame implements UIc {
 
        curShowLog=1;
        this.NewMessage.setVisible(false);
-    this.delete.setVisible(false);
+     this.delete.setVisible(false);
        this.Edit.setVisible(false);
        this.client.connectSocketsToServer("localhost", 1234);
        intialFatherMessag(-1);
@@ -69,11 +69,17 @@ public  class EnterPage extends javax.swing.JFrame implements UIc {
 
           Object [][] data=null;
         try {
+            System.out.println("testing 1....");
+            System.out.println(fatherID);
+            System.out.println(this.client.sendMessageAndWaitForReply("display " + fatherID));
             data = displayMessage(this.client.sendMessageAndWaitForReply("display " + fatherID));
         } catch (IOException ex) {
             Logger.getLogger(EnterPage.class.getName()).log(Level.SEVERE, null, ex);
         }
-          
+        
+          if (data==null){
+              System.out.println("i get an empty value.....");
+          }
          MessageTable.setModel(new javax.swing.table.DefaultTableModel(data,columnNames));
 
     }
@@ -91,6 +97,12 @@ public  void intialSearchMessag(Object [][] data){
            MessageTable.setModel(new javax.swing.table.DefaultTableModel(data,columnNames));
 }
 public Object [][] displayMessage(String answer){
+    if ((answer.compareTo("No messages found")==0) || 
+            (answer.compareTo("print " )==0)){
+        Object [][] ans =new Object[0][4];
+        return ans;
+    }
+
     String [] seperated = answer.split("\n");
       Object [][] ans =new Object[seperated.length][4];
       if (seperated.length==1){
@@ -98,29 +110,37 @@ public Object [][] displayMessage(String answer){
                    System.out.println( currMsg.substring(currMsg.indexOf("+1")+2,currMsg.indexOf("+2")));
                   String currMsgID = currMsg.substring(currMsg.indexOf("+1")+2,currMsg.indexOf("+2"));
                   String currMsgPosterID = currMsg.substring(currMsg.indexOf("+2")+2,currMsg.indexOf("+3"));
-                  String currMsgData = currMsg.substring(currMsg.indexOf("+3")+2,currMsg.indexOf("+4"));
+                  String currMsgData = DestroyPre(currMsg.substring(currMsg.indexOf("+3")+2,currMsg.indexOf("+4")));
                   String currMsgTime = currMsg.substring(currMsg.indexOf("+4")+2);
                   Date temp = new Date(Long.parseLong(currMsgTime));
                   ans[0][0]=currMsgID;
                   ans[0][1]=currMsgPosterID;
                   ans[0][2]=currMsgData;
-                  ans[0][3]=currMsgTime;
+                 // ans[0][3]=currMsgTime;
+                   ans[0][3]=temp;
       }else{
             for (int i = 0; i < seperated.length-1; i++)
             {
                   String currMsg = seperated[i];
                   String currMsgID = currMsg.substring(currMsg.indexOf("+1")+2,currMsg.indexOf("+2"));
                   String currMsgPosterID = currMsg.substring(currMsg.indexOf("+2")+2,currMsg.indexOf("+3"));
-                  String currMsgData = currMsg.substring(currMsg.indexOf("+3")+2,currMsg.indexOf("+4"));
+                  String currMsgData = DestroyPre(currMsg.substring(currMsg.indexOf("+3")+2,currMsg.indexOf("+4")));
                   String currMsgTime = currMsg.substring(currMsg.indexOf("+4")+2);
                   Date temp = new Date(Long.parseLong(currMsgTime));
                   ans[i][0]=currMsgID;
                   ans[i][1]=currMsgPosterID;
                   ans[i][2]=currMsgData;
-                  ans[i][3]=currMsgTime;
+                  //ans[i][3]=currMsgTime;
+                   ans[i][3]=temp;
             }
       }
       return ans;
+}
+private String DestroyPre(String sent){
+    if (sent.contains("%")){
+    return sent.substring(0,sent.indexOf("%"));
+    }
+    return sent;
 }
 
     /** This method is called from within the constructor to
@@ -347,14 +367,12 @@ public Object [][] displayMessage(String answer){
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(InsertSubMessage)
-                            .addComponent(jCheckBox1))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                            .addComponent(jCheckBox1)))
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton2)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -413,7 +431,7 @@ public Object [][] displayMessage(String answer){
         this.logIn.setText("LogIn");
         this.curShowLog=1;
         this.NewMessage.setVisible(false);
-     
+     this.delete.setVisible(false);
        this.Edit.setVisible(false);
       this.jTextField1.enable();
        this.pass.enable();
@@ -449,7 +467,6 @@ int selctedRow=selectionModel.getMinSelectionIndex();
                       long curId= Long.parseLong( ((String)cur).trim());
                       if (this.jCheckBox1.isSelected()){
                           this.MessageIdSelctd=curId;
-
                       }else{
                       
                   if (!this.InsertSubMessage.isSelected()){
@@ -464,8 +481,8 @@ int selctedRow=selectionModel.getMinSelectionIndex();
                   {
                   this._selectedPrevMsg=this.selectedFatherMsg;
                   this.selectedFatherMsg=curId;
+                  System.out.println("i am print from hereeeeee--------------------");
                 intialFatherMessag(curId);
-
                   }
                       }
                       }

@@ -46,12 +46,22 @@ private TUI _cur;
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setFont(new java.awt.Font("David", 1, 24)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("David", 1, 24));
         jLabel1.setText("Please choose one option:");
 
         jCheckBox1.setText("change to moderator");
+        jCheckBox1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jCheckBox1MouseClicked(evt);
+            }
+        });
 
         jCheckBox2.setText("change to regular user");
+        jCheckBox2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jCheckBox2MouseClicked(evt);
+            }
+        });
 
         jTextField1.setText("Enter user name");
 
@@ -127,8 +137,9 @@ private TUI _cur;
                 Logger.getLogger(changeprivellages.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-           if (!this.jCheckBox1.isSelected()& this.jCheckBox2.isCursorSet()   ){
+           if (this.jCheckBox2.isSelected() & !this.jCheckBox1.isCursorSet()   ){
             try {
+                System.out.println(this._cur.sendMessageAndWaitForReply("member " + this.jTextField1.getText()));
                this.jLabel2.setText( this._cur.sendMessageAndWaitForReply("member " + this.jTextField1.getText()));
             } catch (IOException ex) {
                 Logger.getLogger(changeprivellages.class.getName()).log(Level.SEVERE, null, ex);
@@ -141,6 +152,18 @@ private TUI _cur;
         // TODO add your handling code here:
              this.hide();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jCheckBox1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jCheckBox1MouseClicked
+        // TODO add your handling code here:
+        this.jCheckBox1.setSelected(true);
+        this.jCheckBox2.setSelected(false);
+    }//GEN-LAST:event_jCheckBox1MouseClicked
+
+    private void jCheckBox2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jCheckBox2MouseClicked
+        // TODO add your handling code here:
+        this.jCheckBox1.setSelected(false);
+        this.jCheckBox2.setSelected(true);
+    }//GEN-LAST:event_jCheckBox2MouseClicked
 
     /**
     * @param args the command line arguments

@@ -319,8 +319,14 @@ public class TheController {
 			return uid;
 	}
 
+	public boolean changePassword(long uid,String newPass)
+	{
+		String newEcryptedPass = encryptMessage(newPass);
+		return _persistenceLayer.changeUserPassword(uid, newEcryptedPass);
+	}
+	
 	/**
-	 * Inner message that encrypts the input string using SHA algorithm and then
+	 * Inner method that encrypts the input string using SHA algorithm and then
 	 * also Base64 in order to make sure it can be re read with XML.
 	 * @param msg
 	 * @return
@@ -343,13 +349,19 @@ public class TheController {
 		_observersCollection.add(newUIObserver);
 	}
 	
+	public void unregisterObserver(UIObserver existingObserver)
+	{
+		_observersCollection.remove(existingObserver);
+	}
+	
 	private void updateObservers(String updateString)
 	{
 		Iterator<UIObserver> obsit = _observersCollection.iterator();
 		while (obsit.hasNext())
 		{
 			UIObserver currObs = obsit.next();
-			//currObs.updateUI(updateString);
+			currObs.updateUI(updateString);
 		}
 	}
+
 }

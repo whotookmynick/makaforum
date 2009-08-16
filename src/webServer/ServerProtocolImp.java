@@ -86,11 +86,36 @@ public class ServerProtocolImp implements ServerProtocol {
 			if (parsedString[0].contentEquals("search")){
 				return searchMethod(msg, parsedString);
 			}
+			if (parsedString[0].contentEquals("user")){
+				return changeUser(parsedString);
+			}
+			if (parsedString[0].contentEquals("pass")){
+				return changePassword(parsedString);
+			}
 			return "print unknown command \\e";
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "print server error please try again \\e";
 		}
+	}
+
+	private String changeUser(String[] parsedString) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private String changePassword(String[] parsedString) {
+		boolean success = _controller.changePassword(_connectedUser.get_uID(),parsedString[1]);
+		String answer = "";
+		if (success)
+		{
+			answer = "print password changed successfully \\e";
+		}
+		else
+		{
+			answer = "print unable to change password please try again \\e";
+		}
+		return answer;
 	}
 
 	private String searchMethod(String msg, String[] parsedString) {
@@ -269,6 +294,10 @@ public class ServerProtocolImp implements ServerProtocol {
 	
 	private String createStringFromMessagesCollection(Collection<Message> allMessages)
 	{
+		if (allMessages.isEmpty())
+		{
+			return "No messages found";
+		}
 		String returnString = "";
 		Iterator<Message> it = allMessages.iterator();
 		while (it.hasNext()){
