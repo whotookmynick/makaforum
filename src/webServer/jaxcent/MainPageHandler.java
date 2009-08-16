@@ -64,13 +64,18 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 				editCellInMessageTable(rowIndex, colIndex, oldContent, newContent);
 			}
 		};
-/********************* SHOULD I ADD DELETE AND/OR EDIT CAPABILITY TO SEARCH TABLE?*/		
+		/********************* SHOULD I ADD DELETE AND/OR EDIT CAPABILITY TO SEARCH TABLE?*/		
 		_searchTable = new HtmlTable(this, "searchTable");
 		_siteMap.add("home");
 		initTable(true,"-1");
 	}
 
-
+	protected void onUnload()
+	{
+		System.out.println(_currUserID + " is unloading now");
+		TheController controller = ControlerFactory.getControler();
+		controller.unregisterObserver(this);
+	}
 
 	protected void initTable(boolean isOnLoad,String fatherMsgID) {
 		try {
@@ -89,8 +94,8 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 				String []currRow = TUI.parseIncomingReceivedMessages(seperated[i]);
 				final String msgID = currRow[0];
 				String msgIDCellString ="<input id=\"msgIDRow"+(i+1)+
-										"\" type=\"hidden\" value=\""+msgID+"\"/>"+
-										"<a href=\"\" id=\"msglink"+msgID+"\">" +msgID + "</a>"; 
+				"\" type=\"hidden\" value=\""+msgID+"\"/>"+
+				"<a href=\"\" id=\"msglink"+msgID+"\">" +msgID + "</a>"; 
 				currRow[0] = msgIDCellString;
 				_msgIDs.add(msgID);
 				String []currRowWithReply = Arrays.copyOf(currRow, currRow.length+2);
@@ -131,18 +136,18 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 				{
 					_messageTable.enableCellEditing(i+1, 2, i+1, 2, true, false, null);
 				}
-				
+
 			}
-//			_messageTable.addDeleteButtons(1, -1, "delete", null);
-//			_messageTable.enableCellEditing(1, 2, -1, 2, true, false, null);
+			//			_messageTable.addDeleteButtons(1, -1, "delete", null);
+			//			_messageTable.enableCellEditing(1, 2, -1, 2, true, false, null);
 			initSiteMap();
 		} catch (Jaxception e) {
 			e.printStackTrace();
 		}
 	}
 
-	
-	
+
+
 	protected void deleteRowInMessageTable(int rowIndex)
 	{
 		try {
@@ -155,7 +160,7 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 			e.printStackTrace();
 		}
 	}
-	
+
 	protected void editCellInMessageTable(int rowIndex,int colIndex,String oldContent,String newContent)
 	{
 		String msgIDString;
@@ -169,7 +174,7 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 		}
 
 	}
-	
+
 	protected void loginClicked()
 	{
 		try {
@@ -208,31 +213,50 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 						editUserNameClicked();
 					}
 				};
-				HtmlInputSubmit editPasswordSubmit = new HtmlInputSubmit(this, "editUserSubmit");
+				HtmlInputSubmit editPassSubmit = new HtmlInputSubmit(this, "editPasswordSubmit")
+				{
+					@Override
+					protected void onClick() {
+						editPasswordClicked();
+					}
+				};
 				siteMapLinkClicked(_siteMap.size()-1);
-//				initTable(false, _siteMap.get(_siteMap.size()-1));
+				//				initTable(false, _siteMap.get(_siteMap.size()-1));
 			}
 		} catch (Jaxception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void editUserNameClicked() 
 	{
-		_protocolHandler.processMessage("");
+		try {
+			HtmlInputText newUserText = new HtmlInputText(this,"usernameedit");
+			String newUserName = newUserText.getValue();
+			String answer = _protocolHandler.processMessage("user " + newUserName);
+			updateStatus(formatServerAnswer(answer));
+		} catch (Jaxception e) {
+			e.printStackTrace();
+		}
 	}
-	
+
 	private void editPasswordClicked()
 	{
-		String command = "user ";
-		_protocolHandler.processMessage(command);
+		try {
+			HtmlInputText newPassText = new HtmlInputText(this,"userpasswordedit");
+			String newUserName = newPassText.getValue();
+			String answer = _protocolHandler.processMessage("pass " + newUserName);
+			updateStatus(formatServerAnswer(answer));
+		} catch (Jaxception e) {
+			e.printStackTrace();
+		}
 	}
-	
+
 	protected void registerClicked()
 	{
 		handleRegisterAndLogin("register");
 	}
-	
+
 	protected String handleRegisterAndLogin(String actionName)
 	{
 		try {
@@ -244,18 +268,18 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 			answer = formatServerAnswer(answer);
 			updateStatus(answer);
 			return answer;
-			
+
 		} catch (Jaxception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
+
 	protected void addMessageClicked()
 	{
 		try {
 			HtmlTextArea newMessageArea = new HtmlTextArea(this,"newMessageArea");
-//			String msgContent = newMessageArea.getInnerText();
+			//			String msgContent = newMessageArea.getInnerText();
 			String msgContent = newMessageArea.getValue();
 			String answer = _protocolHandler.processMessage("message " + msgContent);
 			newMessageArea.setValue("");
@@ -265,33 +289,33 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 			e.printStackTrace();
 		}
 	}
-	
+
 	protected void replyTo(final String msgID,int rowIndex)
 	{
 		try{
-//		System.out.println("replied");
-		String replyCell = 
-			"<tr>" +
-			"<td>" +
+			//		System.out.println("replied");
+			String replyCell = 
+				"<tr>" +
+				"<td>" +
 				"<textarea id=\"replyMessageArea" + msgID +"\" +" +
 				" rows=\"4\" cols=\"40\">Reply To Message</textarea>" +
 				"<br><input type=\"submit\""+
-							"id=\"replySubmit"+ msgID +"\" value=\"Submit\">" +
+				"id=\"replySubmit"+ msgID +"\" value=\"Submit\">" +
 				"</td></tr>";
-		String []rowToInsert = {replyCell};
-		_messageTable.insertRow(rowIndex+2, rowToInsert);
-		HtmlInputSubmit replySubmit = new HtmlInputSubmit(this, "replySubmit"+msgID){
-			protected void onClick()
-			{
-				replySubmitClicked(msgID);
-			}
-		};
+			String []rowToInsert = {replyCell};
+			_messageTable.insertRow(rowIndex+2, rowToInsert);
+			HtmlInputSubmit replySubmit = new HtmlInputSubmit(this, "replySubmit"+msgID){
+				protected void onClick()
+				{
+					replySubmitClicked(msgID);
+				}
+			};
 		}
 		catch (Jaxception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	protected void replySubmitClicked(String msgID)
 	{
 		try {
@@ -304,17 +328,17 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 			e.printStackTrace();
 		}
 	}
-	
+
 	protected void msgLinkClicked(String msgID){
 		_siteMap.add(msgID);
 		initTable(false,msgID);
 	}
-	
+
 	protected void initSiteMap()
 	{
 		try {
 			HtmlElement siteMap = new HtmlElement(this, "sitemap");
-//			siteMap.setData("");
+			//			siteMap.setData("");
 			String newContent = "<b>>></b><a href=\"\" id=\"sitemaplinkhome\">Home</a>";
 			for (int i =1;i < _siteMap.size();i++){
 				newContent += "<b>>></b><a href=\"\"" + 
@@ -343,11 +367,12 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 		}
 
 	}
-	
+
 	protected void siteMapLinkClicked(int index)
 	{
 		try {
 			_searchTable.setVisible(false);
+			_searchTable.deleteAllRows();
 			_messageTable.setVisible(true);
 		} catch (Jaxception e) {
 			e.printStackTrace();
@@ -364,7 +389,7 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 		initTable(false, _siteMap.elementAt(index));
 
 	}
-	
+
 	protected void updateStatus(String newStatus)
 	{
 		try {
@@ -386,7 +411,7 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 	public void updateUI(String updateString) {
 		siteMapLinkClicked(_siteMap.size()-1);
 	}
-	
+
 	private void searchMessageClicked(Map pageData) {
 		try {
 			String searchType="content",searchContent="";
@@ -405,9 +430,9 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 		} catch (Jaxception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	private void initSearchTable(String searcType,String searchContent)
 	{
 		try {
@@ -422,8 +447,8 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 				String []currRow = TUI.parseIncomingReceivedMessages(seperated[i]);
 				final String msgID = currRow[0];
 				String msgIDCellString ="<input id=\"msgIDRow"+(i+1)+
-										"\" type=\"hidden\" value=\""+msgID+"\"/>"+
-										"<a href=\"\" id=\"msglink"+msgID+"\">" +msgID + "</a>"; 
+				"\" type=\"hidden\" value=\""+msgID+"\"/>"+
+				"<a href=\"\" id=\"msglink"+msgID+"\">" +msgID + "</a>"; 
 				currRow[0] = msgIDCellString;
 				_msgIDs.add(msgID);
 				//String []currRowWithReply = Arrays.copyOf(currRow, currRow.length+2);
@@ -436,7 +461,7 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 				currRowWithScore[currRowWithScore.length-1] = currMsgScore;
 				_searchTable.insertRow(-1, currRowWithScore);
 				final int rowNum = i;
-/*				HtmlElement replyElement = new HtmlElement(this,"reply" + msgID)
+				/*				HtmlElement replyElement = new HtmlElement(this,"reply" + msgID)
 				{
 					protected void onClick()
 					{
@@ -450,7 +475,7 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 						deleteRowInMessageTable(rowNum+1);
 					}
 				};
-				*/
+				 */
 				HtmlElement msgElement = new HtmlElement(this, "msglink" + msgID)
 				{
 					protected void onClick()
@@ -471,10 +496,10 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 				{
 					_messageTable.enableCellEditing(i+1, 2, i+1, 2, true, false, null);
 				}
-				*/
+				 */
 			}
-//			_messageTable.addDeleteButtons(1, -1, "delete", null);
-//			_messageTable.enableCellEditing(1, 2, -1, 2, true, false, null);
+			//			_messageTable.addDeleteButtons(1, -1, "delete", null);
+			//			_messageTable.enableCellEditing(1, 2, -1, 2, true, false, null);
 			initSiteMap();
 		} catch (Jaxception e) {
 			e.printStackTrace();
