@@ -26,10 +26,10 @@
 				</td>
 				<td id="mainCell">
 					<p><b>Status:  </b><span id="status">User not logged in</span></p>
-					<form id="loginForm">
+					<form id="loginForm" action="">
 						<p>Username:<input type="text" id="usernamelogin" name="usernamelogin"/>
 						Password:<input type="password" id="userpasswordlogin" name="userpasswordlogin" />
-						<input type="submit" id="loginSubmit" value="Login" />
+						<input type="button" id="loginSubmit" value="Login" />
 						<input type="submit" id="registerSubmit" value="Register" />
 					</form>
 					<br><br><br><br>
@@ -58,6 +58,16 @@
 					<input type="submit" id="newMessageSubmit" value="Add Message" />
 					</div>
 					<br><br>
+					
+					<div id="editUserDiv" style="visibility:hidden">
+					<p>Username:<input type="text" id="usernameedit" name="usernameedit"/>
+					<input type="submit" id="editUserSubmit" value="Edit User-Name" />
+					Password:<input type="password" id="userpasswordedit" name="userpasswordedit" />
+					<input type="submit" id="editPasswordSubmit" value="Edit Password" />
+					</div>
+					
+					<br><br>
+					
 					<div id="moderatordiv" style="visibility:hidden">
 					<p>User-Name: <input type="text" id="moderatorName"/></p>
 					<input type="submit" id="moderatorSubmit" value="Add Moderator"/>

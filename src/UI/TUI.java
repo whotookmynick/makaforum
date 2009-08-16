@@ -24,6 +24,8 @@ import java.util.Date;
  * search date fromdate todate // searches for messages written between these dates.
  * 							   // IMPORTANT: date must be in format of M/D/YYYY
  * logoff // log user off
+ * user newUserName
+ * password newPassword
  * 
  * @author Noam
  *

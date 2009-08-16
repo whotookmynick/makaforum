@@ -29,7 +29,8 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 		_protocolHandler = new ServerProtocolImp(controller);
 		controller.registerObserver(this);
 		_siteMap = new Vector<String>();
-		HtmlInputSubmit loginButton = new HtmlInputSubmit(this,"loginSubmit"){
+		//HtmlInputSubmit loginButton = new HtmlInputSubmit(this,"loginSubmit"){
+		HtmlInputButton loginButton = new HtmlInputButton(this,"loginSubmit"){
 			protected void onClick(Map pageData)
 			{
 				loginClicked();
@@ -175,12 +176,14 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 			String result = handleRegisterAndLogin("login");
 			if (result.indexOf("succesfully") >= 0)
 			{
-				HtmlInputSubmit loginButton = new HtmlInputSubmit(this,"loginSubmit");
+				//HtmlInputSubmit loginButton = new HtmlInputSubmit(this,"loginSubmit");
+				HtmlInputButton loginButton = new HtmlInputButton(this,"loginSubmit");
 				HtmlInputSubmit registerButton = new HtmlInputSubmit(this,"registerSubmit");
 				HtmlInputText userNameInput = new HtmlInputText(this,"usernamelogin");
 				HtmlInputPassword userPasswordInput = new HtmlInputPassword(this,"userpasswordlogin");
 				HtmlDiv addMessageDiv = new HtmlDiv(this,"addMessageDiv");
 				HtmlDiv moderatordiv = new HtmlDiv(this,"moderatordiv");
+				HtmlDiv editUserDiv = new HtmlDiv(this, "editUserDiv");
 				HtmlInputSubmit adminSubmit = new HtmlInputSubmit(this,"adminSubmit");
 				loginButton.setDisabled(true);
 				registerButton.setDisabled(true);
@@ -197,12 +200,32 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 				{
 					adminSubmit.setVisible(true);
 				}
+				editUserDiv.setVisible(true);
+				HtmlInputSubmit editUserNameSubmit = new HtmlInputSubmit(this, "editUserSubmit")
+				{
+					@Override
+					protected void onClick() {
+						editUserNameClicked();
+					}
+				};
+				HtmlInputSubmit editPasswordSubmit = new HtmlInputSubmit(this, "editUserSubmit");
 				siteMapLinkClicked(_siteMap.size()-1);
 //				initTable(false, _siteMap.get(_siteMap.size()-1));
 			}
 		} catch (Jaxception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private void editUserNameClicked() 
+	{
+		_protocolHandler.processMessage("");
+	}
+	
+	private void editPasswordClicked()
+	{
+		String command = "user ";
+		_protocolHandler.processMessage(command);
 	}
 	
 	protected void registerClicked()
