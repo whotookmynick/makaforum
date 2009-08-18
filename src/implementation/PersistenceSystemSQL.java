@@ -40,7 +40,7 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 		String driver = "net.sourceforge.jtds.jdbc.Driver";
 		Class.forName(driver);
 		//String connString = "Provider=SQLOLEDB.1;Password=maka;Persist Security Info=True;User ID=maka;Initial Catalog=MAKA;Data Source=localhost\\SQLEXPRESS";
-		Connection conn = DriverManager.getConnection("jdbc:jtds:sqlserver://10.0.0.1:1433","maka","maka");
+		Connection conn = DriverManager.getConnection("jdbc:jtds:sqlserver://192.168.1.100:1433","maka","maka");
 		return conn;
 	}
 
@@ -97,6 +97,21 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 			}
 			catch (Exception e) {e.printStackTrace();}
 		return false;
+	}
+	
+	/**
+	 * this function changes the user name from oldName to newName .
+	 * it doesn't check if newName exists or not, so this has to be checked by the controller.
+	 */
+	@Override
+	public void changeUserName(String oldName, String newName) {
+	        try{
+	            String userNameChangeSQL = "UPDATE [MAKAFORUM].[dbo].[Users] SET UserName = '"+ newName +
+	            "' WHERE UserName ='" + oldName + "';";
+	            PreparedStatement userNamePS = _conn.prepareStatement(userNameChangeSQL);
+	            userNamePS.execute();
+	        }
+	        catch (Exception e) {e.printStackTrace();}
 	}
 
 	/* (non-Javadoc)
@@ -328,8 +343,7 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 	 */
 	@Override
 	public void incUserId() {
-		// TODO Auto-generated method stub
-		
+		// does not do anything here, was supported in the old forum with XML.
+		// here is done automatically.
 	}
-
 }

@@ -536,4 +536,10 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 		toXMLFile(ids, idFilePath);
 	}
 
+	@Override
+	public void changeUserName(String oldName, String newName) {
+		// doesn't support this functionality.
+		
+	}
+
 }
