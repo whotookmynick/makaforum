@@ -43,4 +43,6 @@ public interface PersistenceSystem {
 	public void incMsgId();
 	
 	public void incUserId();
+	
+	public void changeUserName(String oldName, String newName);
 }
