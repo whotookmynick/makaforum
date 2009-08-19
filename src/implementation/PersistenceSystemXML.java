@@ -542,4 +542,16 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 		
 	}
 
+	@Override
+	public boolean deleteUser(String userName) {
+		//does not support this function.
+		return false;
+	}
+
+	@Override
+	public boolean deletePassword(long uid) {
+		//does not support this function.
+		return false;
+	}
+
 }

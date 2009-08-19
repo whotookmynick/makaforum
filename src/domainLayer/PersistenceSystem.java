@@ -22,7 +22,9 @@ public interface PersistenceSystem {
 	public boolean changeUserPassword(long uid,String newPass);
 	
 	/* no need */
-	//public boolean deleteUser(long uid);
+	public boolean deleteUser(String userName);
+	
+	public boolean deletePassword(long uid);
 	
 	public void addMsg(Message msg);
 	
