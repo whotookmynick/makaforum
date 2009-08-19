@@ -23,9 +23,11 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 		try {
 			_conn = createConnection();
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			/*e.printStackTrace();*/
+			System.out.println("connection not established check if you have correct sql server address and update it.");
 		} catch (SQLException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
+			System.out.println("missing sql server or server is not defined correctly.");
 		}
 	}
 	/**
@@ -44,7 +46,7 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 		return conn;
 	}
 
-	/* (non-Javadoc)
+	/** 
 	 * @see domainLayer.PersistenceSystem#addMsg(implementation.Message)
 	 */
 	@Override
@@ -57,10 +59,10 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 		PreparedStatement ps = _conn.prepareStatement(MsgSQL);
 		ps.execute();
 		}
-		catch (Exception e) {e.printStackTrace();}
+		catch (Exception e) {/*e.printStackTrace();*/}
 	}
 
-	/* (non-Javadoc)
+	/** 
 	 * @see domainLayer.PersistenceSystem#addUser(implementation.RegisteredUser, java.lang.String)
 	 */
 	@Override
@@ -78,12 +80,12 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 			addUserPS.execute();
 			addPassPS.execute();
 			}
-			catch (Exception e) {e.printStackTrace();}
-		
+			catch (Exception e) {/*e.printStackTrace();*/}
 	}
 
-	/* (non-Javadoc)
+	/** 
 	 * @see domainLayer.PersistenceSystem#changeUserPassword(long, java.lang.String)
+	 * on exception returns false,otherwise true.
 	 */
 	@Override
 	public boolean changeUserPassword(long uid, String newPass) {
@@ -95,8 +97,8 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 			PreparedStatement changePassPS = _conn.prepareStatement(changePassSQL);
 			changePassPS.execute();
 			}
-			catch (Exception e) {e.printStackTrace();}
-		return false;
+			catch (Exception e) {return false;}
+		return true;
 	}
 	
 	/**
@@ -111,11 +113,12 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 	            PreparedStatement userNamePS = _conn.prepareStatement(userNameChangeSQL);
 	            userNamePS.execute();
 	        }
-	        catch (Exception e) {e.printStackTrace();}
+	        catch (Exception e) {/*e.printStackTrace();*/}
 	}
 
-	/* (non-Javadoc)
+	/** 
 	 * @see domainLayer.PersistenceSystem#createHashTableofUserNametoUID()
+	 * might be empty hash map on exception.
 	 */
 	@Override
 	public ConcurrentHashMap<String, Long> createHashTableofUserNametoUID() {
@@ -131,44 +134,69 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 				UserNametoUidTable.put(userName, uId);
 			}
 		}
-		catch (Exception e) {e.printStackTrace();}
+		catch (Exception e) {/*e.printStackTrace();*/}
 		return UserNametoUidTable;
 	}
 
-	/* (non-Javadoc)
+	/** 
 	 * @see domainLayer.PersistenceSystem#deleteMessage(long)
+	 * msg returned might be null.
 	 */
 	@Override
 	public Message deleteMessage(long mid) {
 		Message msg = getMessage(mid);
 		try{
-//			Connection conn = createConnection();
 			String deleteMsgSQL = "Delete FROM [MAKAFORUM].[dbo].[Messages] WHERE mID = " + mid+ ";";
 			PreparedStatement deleteMsgSQLPS = _conn.prepareStatement(deleteMsgSQL);
 			deleteMsgSQLPS.execute();
-			
 		}
-		catch (Exception e) {e.printStackTrace();}
+		catch (Exception e) {/*e.printStackTrace();*/}
 		return msg;
 	}
+	
+	/**
+	 * deletes the user id user record from db.
+	 */
+	@Override
+	public boolean deleteUser(String userName) {
+		try{
+			String deleteUserSQL = "Delete FROM [MAKAFORUM].[dbo].[Users] WHERE UserName = '" + userName+ "';";
+			PreparedStatement deleteMsgSQLPS = _conn.prepareStatement(deleteUserSQL);
+			deleteMsgSQLPS.execute();
+		}
+		catch (Exception e){return false;}
+		return true;
+	}
+	
+	/**
+	 * deletes the user id password record from db.
+	 */
+	@Override
+	public boolean deletePassword(long uid) {
+		try{
+			String deletePassSQL = "Delete FROM [MAKAFORUM].[dbo].[Passwords] WHERE UserId = " + uid+ ";";
+			PreparedStatement deleteMsgSQLPS = _conn.prepareStatement(deletePassSQL);
+			deleteMsgSQLPS.execute();
+		}
+		catch (Exception e){return false;}
+		return true;
+	}
 
-	/* (non-Javadoc)
+	/** 
 	 * @see domainLayer.PersistenceSystem#editMessage(long, domainLayer.MessageData)
 	 */
 	@Override
 	public void editMessage(long mid, MessageData newMsg) {
 		try{
-//			Connection conn = createConnection();
 			String editMsgSQL = "UPDATE [MAKAFORUM].[dbo].[Messages] SET msgElement = '" + newMsg.toString() +
 			"' ,msgData_ID = " + newMsg.getMid() + "WHERE mID =" + mid + ";";
-			
 			PreparedStatement editMsgPS = _conn.prepareStatement(editMsgSQL);
 			editMsgPS.execute();
 			}
-			catch (Exception e) {e.printStackTrace();}
+			catch (Exception e) {/*e.printStackTrace();*/}//no change is made on exception.
 	}
 
-	/* (non-Javadoc)
+	/** 
 	 * @see domainLayer.PersistenceSystem#getCurrentMsgID()
 	 */
 	@Override
@@ -185,20 +213,21 @@ public class PersistenceSystemSQL implements PersistenceSystem{
                 int j = 1;
                 int i = rs.findColumn("mID");
                 while(rs.next()){
-                    if(j == 1){
+                    if(j == 1){//first time
                         mid = rs.getInt(i);
+                        j++;
                     }
                     if(rs.getInt(i) > mid) 
                     	mid = rs.getInt(i);
                 }
             }
         }
-        catch (Exception e) {e.printStackTrace();}
+        catch (Exception e) {mid=1;}
         return mid+1;
     }
 
 
-	/* (non-Javadoc)
+	/** 
 	 * @see domainLayer.PersistenceSystem#getCurrentUserID()
 	 */
 	@Override
@@ -213,20 +242,22 @@ public class PersistenceSystemSQL implements PersistenceSystem{
                 int j = 1;
                 int i = rs.findColumn("uID");
                 while(rs.next()){
-                    if(j == 1){
+                    if(j == 1){//first time
                         uid = rs.getInt(i);
+                        j++;
                     }
                     if(rs.getInt(i) > uid) 
                     	uid = rs.getInt(i);
                 }
             }
         }
-        catch (Exception e) {e.printStackTrace();}
+        catch (Exception e) {uid =1;}
         return uid+1;
     }
 
-	/* (non-Javadoc)
+	/** 
 	 * @see domainLayer.PersistenceSystem#getMessage(long)
+	 * on exception returns null.
 	 */
 	@Override
 	public Message getMessage(long mid) {
@@ -247,12 +278,13 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 			msgData.setMid(msgData_ID);
 			msg= new Message(msgData, msgPosterID, fatherMessageID, mid, msgPostTime);
 		}
-		catch (Exception e) {e.printStackTrace();}
+		catch (Exception e) {/*e.printStackTrace();*/}
 		return msg;
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see domainLayer.PersistenceSystem#getMessagesWithFather(long)
+	 * on exception returns an empty vector.
 	 */
 	@Override
 	public Collection<Message> getMessagesWithFather(long fatherID) {
@@ -277,12 +309,13 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 				}
 			}
 		}
-		catch (Exception e) {e.printStackTrace();}
+		catch (Exception e) {/*e.printStackTrace();*/}
 		return msgVector;
 	}
 
-	/* (non-Javadoc)
+	/** 
 	 * @see domainLayer.PersistenceSystem#getUser(long)
+	 * on exception returns null.
 	 */
 	@Override
 	public RegisteredUser getUser(long uid) {
@@ -301,12 +334,13 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 
 			registeredUser = new RegisteredUser(LastLoginTime, SignupTime, NumberOfMessages, uid, UserName, UserType); 
 		}
-		catch (Exception e) {e.printStackTrace();}
+		catch (Exception e) {/*e.printStackTrace();*/}
 		return registeredUser;
 	}
 
-	/* (non-Javadoc)
+	/** 
 	 * @see domainLayer.PersistenceSystem#getUserPassword(long)
+	 * on exception returns ""
 	 */
 	@Override
 	public String getUserPassword(long uid) {
@@ -325,20 +359,19 @@ public class PersistenceSystemSQL implements PersistenceSystem{
                 }
             }
         }
-        catch (Exception e) {e.printStackTrace();}
+        catch (Exception e) {/*e.printStackTrace();*/}
         return pass;
     }
 
-	/* (non-Javadoc)
+	/** 
 	 * @see domainLayer.PersistenceSystem#incMsgId()
 	 */
 	@Override
 	public void incMsgId() {
-		// TODO Auto-generated method stub
-		
+		// not implemented in this version because is automated.
 	}
 
-	/* (non-Javadoc)
+	/** 
 	 * @see domainLayer.PersistenceSystem#incUserId()
 	 */
 	@Override
@@ -346,4 +379,6 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 		// does not do anything here, was supported in the old forum with XML.
 		// here is done automatically.
 	}
+	
+	
 }

@@ -112,13 +112,13 @@ public class TheControllerTest {
 	}
 
 	
-	public void testGetAllMessagesChildren() {
+	/*public void testGetAllMessagesChildren() {
 		fail("Not yet implemented");
 	}
 
 	
 	public void testReplyToMessage() {
 		fail("Not yet implemented");
-	}
+	}*/
 
 }
