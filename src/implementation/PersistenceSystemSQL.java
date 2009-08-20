@@ -379,6 +379,11 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 		// does not do anything here, was supported in the old forum with XML.
 		// here is done automatically.
 	}
+	@Override
+	public int getNumOfMessageForDay(long userid, long beginOfDay) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	
 	
 }

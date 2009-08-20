@@ -554,4 +554,10 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 		return false;
 	}
 
+	@Override
+	public int getNumOfMessageForDay(long userid, long beginOfDay) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

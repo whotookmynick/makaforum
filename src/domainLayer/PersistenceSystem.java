@@ -47,4 +47,6 @@ public interface PersistenceSystem {
 	public void incUserId();
 	
 	public void changeUserName(String oldName, String newName);
+	
+	public int getNumOfMessageForDay(long userid,long beginOfDay);
 }
