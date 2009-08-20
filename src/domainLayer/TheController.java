@@ -2,7 +2,10 @@ package domainLayer;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
@@ -363,4 +366,24 @@ public class TheController {
 		}
 	}
 
+	/*From here on these are all functions that serve the graphs
+	 */
+	
+	/**
+	 ** This method returns an array of size 30 that holds the
+	 ** number of messages sent in the last 30 days by userid
+	 ** ans[0] = today - 30
+	 **/
+	public int[][] getMessagesForThirtyDays(long userid)
+	{
+		int [][]ans = new int[30][2];
+		Calendar now = Calendar.getInstance();
+		now.set(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+		for (int i = 29; i >= 0; i++)
+		{
+			ans[i][0] = i;
+			ans[i][1] = _persistenceLayer.getNumOfMessageForDay(userid,now.getTimeInMillis());
+		}
+		return ans;
+	}
 }
