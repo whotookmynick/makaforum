@@ -102,10 +102,11 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 			//			_messageTable.deleteAllRows();
 			//_messageTable.insertRow(-1, tempRow);
 			_msgIDs.clear();
-			if (!isOnLoad)
-			{
-				_messageTable.deleteFromBottom(_messageTable.getNumRows()-1);
-			}
+			_messageTable.deleteAllRows();
+//			if (!isOnLoad)
+//			{
+//				_messageTable.deleteFromBottom(_messageTable.getNumRows()-1);
+//			}
 			String getAllMessagesString = "display " + fatherMsgID;
 			String messages = _protocolHandler.processMessage(getAllMessagesString);
 			String []seperated = messages.split("\n");
@@ -348,7 +349,8 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 			String actionString = "reply " + replyTextArea.getValue() +" " + msgID;
 			String answer = _protocolHandler.processMessage(actionString);
 			updateStatus(formatServerAnswer(answer));
-			initTable(false,"-1");
+			//initTable(false,"-1");
+			siteMapLinkClicked(_siteMap.size()-1);
 		} catch (Jaxception e) {
 			e.printStackTrace();
 		}
@@ -462,10 +464,17 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 	{
 		try {
 			_messageTable.setVisible(false);
+			_searchTable.deleteAllRows();
 			_searchTable.setVisible(true);
 			_msgIDs.clear();
 			String getAllMessagesString = "search " + searcType + " " + searchContent;
 			String messages = _protocolHandler.processMessage(getAllMessagesString);
+			if (messages.contentEquals("print No messages found\\e"))
+			{
+				String []noMessageFound = {"No Messages Found"};
+				_searchTable.insertRow(-1, noMessageFound);
+				return;
+			}
 			String []seperated = messages.split("\n");
 			for (int i = 0; i < seperated.length-1; i++)
 			{
