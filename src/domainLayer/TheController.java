@@ -180,7 +180,7 @@ public class TheController {
 	public boolean deleteMessage(RegisteredUser user,long mID){
 		Message msg = _persistenceLayer.getMessage(mID);
 		if (msg != null && _loggedUsers.contains(user) &&
-				(user.isModerator() | user.get_uID() == msg.get_msgPosterID()))
+				(user.isModerator() | user.isAdministretor() | user.get_uID() == msg.get_msgPosterID()))
 		{
 			deleteMessageTree(user, msg);
 			return true;
@@ -192,7 +192,7 @@ public class TheController {
 	}
 
 	private void deleteMessageTree(RegisteredUser user, Message msg) {
-		if (msg.get_fatherMessageID()<0){
+		//if (msg.get_fatherMessageID()<0){
 			Collection<Message> children = getAllMessagesChildren(msg.get_mID());
 			Iterator<Message> iterator = children.iterator();
 			while (iterator.hasNext()) {
@@ -200,7 +200,7 @@ public class TheController {
 				deleteMessage(user,message.get_mID());
 			}
 
-		}
+		//}
 		long deletedMid = msg.get_mID();
 		_persistenceLayer.deleteMessage(deletedMid);
 		updateObservers("delete " + deletedMid);
