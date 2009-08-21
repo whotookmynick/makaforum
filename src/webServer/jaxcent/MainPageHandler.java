@@ -1,6 +1,7 @@
 package webServer.jaxcent;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Map;
 import java.util.Vector;
 
@@ -8,6 +9,7 @@ import UI.TUI;
 import UI.UIObserver;
 import webServer.ServerProtocolImp;
 import implementation.ControlerFactory;
+import implementation.RegisteredUser;
 import domainLayer.TheController;
 
 import jaxcent.*;
@@ -21,6 +23,7 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 	Vector<String> _siteMap;
 	String _currUserID;
 	int _currUserType;
+	Calendar _loadTime;
 
 	public MainPageHandler() {
 		_currUserID = "";
@@ -55,6 +58,20 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 				searchMessageClicked(pageData);
 			}
 		};
+		HtmlInputSubmit moderatorButton = new HtmlInputSubmit(this, "moderatorSubmit")
+		{
+			protected void onClick(Map pageData)
+			{
+				moderatorClicked();
+			}
+		};
+		HtmlInputSubmit adminButton = new HtmlInputSubmit(this, "adminSubmit")
+		{
+			protected void onClick(Map pageData)
+			{
+				adminClicked();
+			}
+		};
 		_msgIDs = new Vector<String>();
 		_messageTable = new HtmlTable(this, "messageTable"){
 			protected void onRowDeleted(int rowIndex){
@@ -67,6 +84,7 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 		/********************* SHOULD I ADD DELETE AND/OR EDIT CAPABILITY TO SEARCH TABLE?*/		
 		_searchTable = new HtmlTable(this, "searchTable");
 		_siteMap.add("home");
+		_loadTime = Calendar.getInstance();
 		initTable(true,"-1");
 	}
 
@@ -75,6 +93,8 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 		System.out.println(_currUserID + " is unloading now");
 		TheController controller = ControlerFactory.getControler();
 		controller.unregisterObserver(this);
+		Calendar endCal = Calendar.getInstance();
+		controller.updateHoursOfConnected(_loadTime.get(Calendar.HOUR_OF_DAY),endCal.get(Calendar.HOUR_OF_DAY));
 	}
 
 	protected void initTable(boolean isOnLoad,String fatherMsgID) {
@@ -190,6 +210,7 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 				HtmlDiv moderatordiv = new HtmlDiv(this,"moderatordiv");
 				HtmlDiv editUserDiv = new HtmlDiv(this, "editUserDiv");
 				HtmlInputSubmit adminSubmit = new HtmlInputSubmit(this,"adminSubmit");
+				HtmlAnchor showChartsLink = new HtmlAnchor(this, "showChartsLink");
 				loginButton.setDisabled(true);
 				registerButton.setDisabled(true);
 				userNameInput.setDisabled(true);
@@ -204,6 +225,10 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 				if (_currUserType > 1)
 				{
 					adminSubmit.setVisible(true);
+				}
+				if (_currUserType == 1)
+				{
+					showChartsLink.setVisible(true);
 				}
 				editUserDiv.setVisible(true);
 				HtmlInputSubmit editUserNameSubmit = new HtmlInputSubmit(this, "editUserSubmit")
@@ -504,5 +529,33 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 		} catch (Jaxception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	protected void moderatorClicked() {
+		try {
+			HtmlInputText newModerName = new HtmlInputText(this, "moderatorName");
+		
+			String answer = _protocolHandler.processMessage("moderator " + newModerName.getValue());
+			updateStatus(formatServerAnswer(answer));
+			newModerName.setValue("");
+		} catch (Jaxception e) {
+
+			e.printStackTrace();
+		}
+		
+	}
+	
+	protected void adminClicked() {
+		try {
+			HtmlInputText newModerName = new HtmlInputText(this, "moderatorName");
+		
+			String answer = _protocolHandler.processMessage("admin " + newModerName.getValue());
+			updateStatus(formatServerAnswer(answer));
+			newModerName.setValue("");
+		} catch (Jaxception e) {
+
+			e.printStackTrace();
+		}		
+		
 	}
 }

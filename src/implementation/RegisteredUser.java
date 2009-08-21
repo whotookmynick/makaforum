@@ -101,6 +101,10 @@ public class RegisteredUser{ //extends NonRegisteredUser {
 	public void setModerator(){
 		setUserType(1);
 	}
+	
+	public void setAdmin(){
+		setUserType(2);
+	}
 
 	/**
 	 * @author moti and roee

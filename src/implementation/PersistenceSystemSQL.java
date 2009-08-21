@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
@@ -57,11 +58,13 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 					" VALUES (" + msg.get_mID()+"," + msg.get_msgPosterID() +"," + msg.get_fatherMessageID()
 					+"," + msg.get_msgPostTime() +",'" + msg.get_msgBody().toString() +"'," + msg.get_msgBody().getMid()+");";
 		PreparedStatement ps = _conn.prepareStatement(MsgSQL);
+		incNumOfMessagesPerHour();
+							
 		ps.execute();
 		}
 		catch (Exception e) {/*e.printStackTrace();*/}
 	}
-
+	
 	/** 
 	 * @see domainLayer.PersistenceSystem#addUser(implementation.RegisteredUser, java.lang.String)
 	 */
@@ -381,9 +384,56 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 	}
 	@Override
 	public int getNumOfMessageForDay(long userid, long beginOfDay) {
-		// TODO Auto-generated method stub
+		System.out.println("PersistenceSystemSQL getNumOfMessageForDay unimplemented yet");
 		return 0;
 	}
+	@Override
+	public double getNumOfMessagesForHour(int hour) {
+		System.out.println("PersistenceSystemSQL getNumOfMessagesForHour unimplemented yet");
+		return 0;
+	}
+	@Override
+	public double getNumOfUsersForHour(int i) {
+		System.out.println("PersistenceSystemSQL getNumOfUsersForHour unimplemented yet");
+		return 0;
+	}
+
+	private void incNumOfMessagesPerHour() throws SQLException {
+		Calendar c = Calendar.getInstance();
+		String getNumSql = "SELECT Amount From MessagesAtHour WHERE Hour =" + c.get(Calendar.HOUR);
+		PreparedStatement getNumps = _conn.prepareStatement(getNumSql);
+		ResultSet num = getNumps.executeQuery();
+		String msgAtHour ="UPDATE [MAKAFORUM].[dbo].[MessagesAtHour]" +
+						  "SET Amount = " + (num.getInt(0) + 1) +
+						  "WHERE Hour =" + c.get(Calendar.HOUR);
+		PreparedStatement updateNumps = _conn.prepareStatement(msgAtHour);
+		updateNumps.execute();
+	}
 	
+	public void incNumOfUsersPerHour(int hour){
+		try {
+			String getNumSql = "SELECT Amount From UsersAtHour WHERE Hour =" + hour;
+			PreparedStatement getNumps = _conn.prepareStatement(getNumSql);
+			ResultSet num = getNumps.executeQuery();
+			String msgAtHour ="UPDATE [MAKAFORUM].[dbo].[UsersAtHour]" +
+							  "SET Amount = " + (num.getInt(0) + 1) +
+							  "WHERE Hour =" + hour;
+			PreparedStatement updateNumps = _conn.prepareStatement(msgAtHour);
+			updateNumps.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	@Override
+	public void updateUserType(String username, int type) {
+        try{
+            String userNameChangeSQL = "UPDATE [MAKAFORUM].[dbo].[Users] SET uID = "+ type +
+            " WHERE UserName ='" + username + "';";
+            PreparedStatement userNamePS = _conn.prepareStatement(userNameChangeSQL);
+            userNamePS.execute();
+        }
+        catch (Exception e) {/*e.printStackTrace();*/}
+		
+	}
 	
 }

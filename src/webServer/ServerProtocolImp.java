@@ -74,6 +74,10 @@ public class ServerProtocolImp implements ServerProtocol {
 			{
 				return giveModeratorPrivellages(parsedString);
 			}
+			if (parsedString[0].contentEquals("admin"))
+			{
+				return giveAdminPrivellages(parsedString);
+			}
 			if (parsedString[0].contentEquals("member"))
 			{
 				return assignMember(parsedString);
@@ -189,6 +193,19 @@ public class ServerProtocolImp implements ServerProtocol {
 		if (_controller.assignModerator(_connectedUser, assignee))
 		{
 			return "print user was granted moderator privellages \\e";
+		}
+		else
+		{
+			return "print you are not authorized to make that change \\e";
+		}
+	}
+	
+	private String giveAdminPrivellages(String[] parsedString) {
+		String userName = parsedString[1];
+		RegisteredUser assignee = _controller.getUser(userName);
+		if (_controller.assignAdmin(_connectedUser, assignee))
+		{
+			return "print user was granted Admin privellages \\e";
 		}
 		else
 		{
