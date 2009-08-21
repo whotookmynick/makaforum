@@ -6,7 +6,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Date;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
@@ -556,8 +559,30 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 
 	@Override
 	public int getNumOfMessageForDay(long userid, long beginOfDay) {
+		Date d = new Date(beginOfDay);
+		return d.getDate();
+	}
+
+	@Override
+	public double getNumOfMessagesForHour(int hour) {
+		
+		return hour;
+	}
+
+	@Override
+	public double getNumOfUsersForHour(int i) {
+		return i + 24;
+	}
+
+	@Override
+	public void incNumOfUsersPerHour(int hour) {
+		System.out.println("Unimplemented");
+	}
+
+	@Override
+	public void updateUserType(String username, int type) {
 		// TODO Auto-generated method stub
-		return 0;
+		
 	}
 
 }

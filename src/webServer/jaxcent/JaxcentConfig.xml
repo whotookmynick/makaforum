@@ -4,4 +4,8 @@
     <PagePath>/baseHTML.html</PagePath>
     <PageClass>webServer.jaxcent.MainPageHandler</PageClass>
  </Page>
+  <Page>
+    <PagePath>/charts.html</PagePath>
+    <PageClass>webServer.jaxcent.ChartCreator</PageClass>
+ </Page>
 </JaxcentConfiguration>

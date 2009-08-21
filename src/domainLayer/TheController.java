@@ -269,8 +269,21 @@ public class TheController {
 	 * @author Moti and Roee
 	 */
 	public boolean assignModerator(RegisteredUser assigner,RegisteredUser assignee){
-		if (assigner.isAdministretor() && assignee.isMember()){
+		if ((assigner.isAdministretor() || assigner.isModerator()) && assignee.isMember()){
 			assignee.setModerator();
+			_persistenceLayer.updateUserType(assignee.get_userName(),1);
+			return true;
+		}
+		else{
+			System.out.println("can't assign moderator");
+			return false;
+		}
+	}
+	
+	public boolean assignAdmin(RegisteredUser assigner,RegisteredUser assignee){
+		if (assigner.isAdministretor() && assignee.isMember()){
+			assignee.setAdmin();
+			_persistenceLayer.updateUserType(assignee.get_userName(),2);
 			return true;
 		}
 		else{
@@ -375,16 +388,61 @@ public class TheController {
 	 ** number of messages sent in the last 30 days by userid
 	 ** ans[0] = today - 30
 	 **/
-	public int[][] getMessagesForThirtyDays(long userid)
+	public double[][] getMessagesForThirtyDays(long userid)
 	{
-		int [][]ans = new int[30][2];
+		double [][]ans = new double[30][2];
 		Calendar now = Calendar.getInstance();
 		now.set(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-		for (int i = 29; i >= 0; i++)
+		for (int i = 29; i >= 0; i--)
 		{
 			ans[i][0] = i;
 			ans[i][1] = _persistenceLayer.getNumOfMessageForDay(userid,now.getTimeInMillis());
+			now.add(Calendar.SECOND, -86400);
 		}
 		return ans;
+	}
+	
+	public double[][] getNumOfMessagesPerHour()
+	{
+		double[][] ans = new double[24][2];
+		for (int i = 0; i < 24; i++)
+		{
+			ans[i][0] = i;
+			ans[i][1] = _persistenceLayer.getNumOfMessagesForHour(i);
+		}
+		return ans;
+	}
+	
+	public double[][] getConnectedUsersPerHour()
+	{
+		double[][] ans = new double[24][2];
+		for (int i = 0; i < 24; i++)
+		{
+			ans[i][0] = i;
+			ans[i][1] = _persistenceLayer.getNumOfUsersForHour(i);
+		}
+		return ans;		
+	}
+	
+	public void updateHoursOfConnected(int beginHour,int endHour)
+	{
+		if (endHour > beginHour)
+		{
+			for (int i = beginHour; i < endHour;i++)
+			{
+				_persistenceLayer.incNumOfUsersPerHour(i);
+			}
+		}
+		else
+		{
+			for (int i = beginHour; i < 24; i++)
+			{
+				_persistenceLayer.incNumOfUsersPerHour(i);
+			}
+			for (int i = 0; i < endHour; i++)
+			{
+				_persistenceLayer.incNumOfUsersPerHour(i);
+			}
+		}
 	}
 }

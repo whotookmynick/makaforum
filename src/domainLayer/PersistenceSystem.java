@@ -1,5 +1,6 @@
 package domainLayer;
 
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -49,4 +50,13 @@ public interface PersistenceSystem {
 	public void changeUserName(String oldName, String newName);
 	
 	public int getNumOfMessageForDay(long userid,long beginOfDay);
+	
+	public double getNumOfMessagesForHour(int hour);
+
+	public double getNumOfUsersForHour(int i);
+	
+	public void incNumOfUsersPerHour(int hour);
+	
+	public void updateUserType(String username,int type);
+	
 }
