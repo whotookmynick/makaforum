@@ -119,7 +119,7 @@ public Object [][] displayMessage(String answer){
                  // ans[0][3]=currMsgTime;
                    ans[0][3]=temp;
       }else{
-            for (int i = 0; i < seperated.length; i++)
+            for (int i = 0; i < seperated.length-1; i++)
             {
                   String currMsg = seperated[i];
                   String currMsgID = currMsg.substring(currMsg.indexOf("+1")+2,currMsg.indexOf("+2"));
