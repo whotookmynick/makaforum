@@ -7,9 +7,10 @@
 			background-image:url('./background_created.png');
 		}
 		</style>
+		<SCRIPT TYPE="text/javascript" SRC="./jaxcent21.js"></SCRIPT>
 	</head>
-	<SCRIPT TYPE="text/javascript" SRC="./jaxcent21.js"></SCRIPT>
 	<body link="lightgreen" vlink="lightgreen" alink="lightgreen">
+		<script type="text/JavaScript" src="./scw.js"></script>
 		<table id="mainTable" cellpadding="10">
 			<caption align="center">
 				<font align="center" size="5">MAKA FORUM</font>
@@ -22,6 +23,13 @@
 					<input type="radio" name="searchType" id="searchTypeDate" value="Date" />Date<br>
 					<input type="text" id="searchContent" /><br><br>
 					<input type="submit" id="searchSubmit" value="Search" />
+					<br/>
+					<input type="text" onclick='scwShow(this,event);' id="startDateCalendar" value="start date" style="visibility:hidden"/>
+					<br/>
+					<p>End Date
+					<br/>
+					<input type="text" onclick='scwShow(this,event);' id="endDateCalendar" value="end date" style="visibility:hidden"/>
+					<br/>
 
 				</td>
 				<td id="mainCell">

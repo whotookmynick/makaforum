@@ -51,13 +51,6 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 				addMessageClicked();
 			}
 		};
-		HtmlInputSubmit searchButton = new HtmlInputSubmit(this, "searchSubmit")
-		{
-			protected void onClick(Map pageData)
-			{
-				searchMessageClicked(pageData);
-			}
-		};
 		HtmlInputSubmit moderatorButton = new HtmlInputSubmit(this, "moderatorSubmit")
 		{
 			protected void onClick(Map pageData)
@@ -70,6 +63,42 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 			protected void onClick(Map pageData)
 			{
 				adminClicked();
+			}
+		};
+		HtmlInputRadio dateRadio = new HtmlInputRadio(this, "searchTypeDate")
+		{
+			protected void onClick(String value)
+			{
+				try {
+					dateRadioOnClick(value);
+					this.setChecked(true);
+				} catch (Jaxception e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		HtmlInputRadio contentRadio = new HtmlInputRadio(this, "searchTypeContent")
+		{
+			protected void onClick(String value)
+			{
+				try {
+					dateRadioOnClick(value);
+					this.setChecked(true);
+				} catch (Jaxception e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		HtmlInputRadio authorRadio = new HtmlInputRadio(this, "searchTypeAuthor")
+		{
+			protected void onClick(String value)
+			{
+				try {
+					dateRadioOnClick(value);
+					this.setChecked(true);
+				} catch (Jaxception e) {
+					e.printStackTrace();
+				}
 			}
 		};
 		_msgIDs = new Vector<String>();
@@ -567,4 +596,54 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 		}		
 		
 	}
+	
+	private void dateRadioOnClick(String value) {
+			try {
+				final String finalValue = value;
+				final HtmlInputText searchContent = new HtmlInputText(this, "searchContent");
+				final HtmlInputText beginDate = new HtmlInputText(this, "startDateCalendar");
+				final HtmlInputText endDate = new HtmlInputText(this, "endDateCalendar");
+				if (value.contentEquals("Date"))
+				{
+					searchContent.setVisible(false);
+					beginDate.setVisible(true);
+					endDate.setVisible(true);
+					HtmlInputSubmit searchButton = new HtmlInputSubmit(this, "searchSubmit")
+					{
+						protected void onClick(Map pageData)
+						{
+							try {
+								String beginDateString = beginDate.getValue();
+								String endDateString = endDate.getValue();
+								String content = beginDateString + " " + endDateString;
+								initSearchTable("date", content);
+							} catch (Jaxception e) {
+								e.printStackTrace();
+							}
+						}
+					};
+				}
+				else
+				{
+					searchContent.setVisible(true);
+					beginDate.setVisible(false);
+					endDate.setVisible(false);
+					HtmlInputSubmit searchButton = new HtmlInputSubmit(this, "searchSubmit")
+					{
+						protected void onClick(Map pageData)
+						{
+							try {
+								String content = searchContent.getValue();
+								initSearchTable(finalValue.toLowerCase(), content);
+							} catch (Jaxception e) {
+								e.printStackTrace();
+							}
+						}
+					};
+				}
+			} catch (Jaxception e) {
+				e.printStackTrace();
+			}
+	}
+	
 }
