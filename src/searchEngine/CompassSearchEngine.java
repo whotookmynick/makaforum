@@ -1,5 +1,4 @@
 package searchEngine;
-import java.text.*;
 import implementation.Message;
 import implementation.MessageSearchAnswer;
 
@@ -25,6 +24,7 @@ public class CompassSearchEngine implements Search {
         CompassConfiguration conf = CompassConfigurationFactory
                 .newConfiguration()
                 .setConnection("genData");
+        conf.setSetting("filterDuplicates", true);
         conf.addClass(Message.class);
         _compass = conf.buildCompass();
 	}
