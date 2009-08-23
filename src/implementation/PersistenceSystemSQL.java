@@ -390,6 +390,7 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 		try {
 			PreparedStatement userPassPS = _conn.prepareStatement(sql);
 			ResultSet rs = userPassPS.executeQuery();
+			rs.next();
 			ans = rs.getInt(1);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -404,6 +405,7 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 		try {
 			PreparedStatement userPassPS = _conn.prepareStatement(sql);
 			ResultSet rs = userPassPS.executeQuery();
+			rs.next();			
 			ans = rs.getInt(1);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -417,6 +419,7 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 			String sql = "SELECT amount FROM UsersAtHour WHERE hour = " + i;
 			PreparedStatement userPassPS = _conn.prepareStatement(sql);
 			ResultSet rs = userPassPS.executeQuery();
+			rs.next();			
 			ans = rs.getInt(1);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -429,6 +432,7 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 		String getNumSql = "SELECT amount From MessagesAtHour WHERE hour =" + c.get(Calendar.HOUR);
 		PreparedStatement getNumps = _conn.prepareStatement(getNumSql);
 		ResultSet num = getNumps.executeQuery();
+		num.next();
 		String msgAtHour ="UPDATE [MAKAFORUM].[dbo].[MessagesAtHour]" +
 						  "SET Amount = " + (num.getInt(1) + 1) +
 						  "WHERE hour =" + c.get(Calendar.HOUR);
@@ -441,6 +445,7 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 			String getNumSql = "SELECT amount From UsersAtHour WHERE hour =" + hour;
 			PreparedStatement getNumps = _conn.prepareStatement(getNumSql);
 			ResultSet num = getNumps.executeQuery();
+			num.next();
 			String msgAtHour ="UPDATE [MAKAFORUM].[dbo].[UsersAtHour]" +
 							  "SET amount = " + (num.getInt(1) + 1) +
 							  "WHERE hour =" + hour;
@@ -461,24 +466,7 @@ public class PersistenceSystemSQL implements PersistenceSystem{
         catch (Exception e) {/*e.printStackTrace();*/}
 		
 	}
-	
-	public void emptyDataBase()
-	{
-		try {
-			String sql = "DELETE * FROM Messages";
-			PreparedStatement ps = _conn.prepareStatement(sql);
-			ps.execute();
-			sql = "DELETE * FROM Users";
-			ps = _conn.prepareStatement(sql);
-			ps.execute();
-			sql = "DELETE * Passwords";
-			ps = _conn.prepareStatement(sql);
-			ps.execute();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
+
 	public String getUserNameWithId(long id){
 		String result = "";
 		 try{
