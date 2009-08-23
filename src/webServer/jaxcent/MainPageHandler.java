@@ -143,7 +143,7 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 			{
 				String []currRow = TUI.parseIncomingReceivedMessages(seperated[i]);
 				final String msgID = currRow[0];
-				String msgIDCellString ="<input id=\"msgIDRow"+(i+1)+
+				String msgIDCellString ="<input id=\"msgIDRow"+(i)+
 				"\" type=\"hidden\" value=\""+msgID+"\"/>"+
 				"<a href=\"\" id=\"msglink"+msgID+"\">" +msgID + "</a>"; 
 				currRow[0] = msgIDCellString;
@@ -184,7 +184,8 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 				}
 				else
 				{
-					_messageTable.enableCellEditing(i+1, 2, i+1, 2, true, false, null);
+					//_messageTable.enableCellEditing(i+1, 2, i+1, 2, true, false, null);
+					_messageTable.enableCellEditing(i, 2, i, 2, true, false, null);
 				}
 
 			}
@@ -493,6 +494,7 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 	{
 		try {
 			_messageTable.setVisible(false);
+			_messageTable.deleteAllRows();
 			_searchTable.deleteAllRows();
 			_searchTable.setVisible(true);
 			_msgIDs.clear();
@@ -539,11 +541,11 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 					}
 				};
 				 */
-				HtmlElement msgElement = new HtmlElement(this, "msglink" + msgID)
+				HtmlAnchor msgElement = new HtmlAnchor(this, "msglink" + msgID)
 				{
 					protected void onClick()
 					{
-						msgLinkClicked(msgID);
+						searchLinkClicked(msgID);
 					}
 				};
 				/*
@@ -569,6 +571,17 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 		}
 	}
 	
+	protected void searchLinkClicked(String msgID) {
+		try {
+			_searchTable.setVisible(false);
+			_searchTable.deleteAllRows();
+			_messageTable.setVisible(true);
+			initTable(false, msgID);
+		} catch (Jaxception e) {
+			e.printStackTrace();
+		}
+	}
+
 	protected void moderatorClicked() {
 		try {
 			HtmlInputText newModerName = new HtmlInputText(this, "moderatorName");
