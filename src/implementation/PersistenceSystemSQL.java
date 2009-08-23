@@ -43,7 +43,7 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 		String driver = "net.sourceforge.jtds.jdbc.Driver";
 		Class.forName(driver);
 		//String connString = "Provider=SQLOLEDB.1;Password=maka;Persist Security Info=True;User ID=maka;Initial Catalog=MAKA;Data Source=localhost\\SQLEXPRESS";
-		Connection conn = DriverManager.getConnection("jdbc:jtds:sqlserver://192.168.1.100:1433","maka","maka");
+		Connection conn = DriverManager.getConnection("jdbc:jtds:sqlserver://132.72.196.14:1433","maka","maka");
 		return conn;
 	}
 
@@ -384,40 +384,66 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 	}
 	@Override
 	public int getNumOfMessageForDay(long userid, long beginOfDay) {
-		System.out.println("PersistenceSystemSQL getNumOfMessageForDay unimplemented yet");
-		return 0;
+		long endOfDay = beginOfDay + 86400000;
+		int ans = 0;
+		String sql = "SELECT COUNT(mID) FROM MESSAGES WHERE uID = " + userid + " and msgPostTime >= " + beginOfDay + " and msgPostTime <= " + endOfDay;
+		try {
+			PreparedStatement userPassPS = _conn.prepareStatement(sql);
+			ResultSet rs = userPassPS.executeQuery();
+			ans = rs.getInt(0);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return ans;
 	}
+
 	@Override
 	public double getNumOfMessagesForHour(int hour) {
-		System.out.println("PersistenceSystemSQL getNumOfMessagesForHour unimplemented yet");
-		return 0;
+		int ans = 0;
+		String sql = "SELECT amount FROM MessagesAtHour WHERE hour =" + hour;
+		try {
+			PreparedStatement userPassPS = _conn.prepareStatement(sql);
+			ResultSet rs = userPassPS.executeQuery();
+			ans = rs.getInt(0);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return ans;
 	}
 	@Override
 	public double getNumOfUsersForHour(int i) {
-		System.out.println("PersistenceSystemSQL getNumOfUsersForHour unimplemented yet");
-		return 0;
+		int ans = 0;
+		try {
+			String sql = "SELECT amount FROM UsersAtHour WHERE hour = " + i;
+			PreparedStatement userPassPS = _conn.prepareStatement(sql);
+			ResultSet rs = userPassPS.executeQuery();
+			ans = rs.getInt(0);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return ans;
 	}
 
 	private void incNumOfMessagesPerHour() throws SQLException {
 		Calendar c = Calendar.getInstance();
-		String getNumSql = "SELECT Amount From MessagesAtHour WHERE Hour =" + c.get(Calendar.HOUR);
+		String getNumSql = "SELECT amount From MessagesAtHour WHERE hour =" + c.get(Calendar.HOUR);
 		PreparedStatement getNumps = _conn.prepareStatement(getNumSql);
 		ResultSet num = getNumps.executeQuery();
 		String msgAtHour ="UPDATE [MAKAFORUM].[dbo].[MessagesAtHour]" +
 						  "SET Amount = " + (num.getInt(0) + 1) +
-						  "WHERE Hour =" + c.get(Calendar.HOUR);
+						  "WHERE hour =" + c.get(Calendar.HOUR);
 		PreparedStatement updateNumps = _conn.prepareStatement(msgAtHour);
 		updateNumps.execute();
 	}
 	
 	public void incNumOfUsersPerHour(int hour){
 		try {
-			String getNumSql = "SELECT Amount From UsersAtHour WHERE Hour =" + hour;
+			String getNumSql = "SELECT amount From UsersAtHour WHERE hour =" + hour;
 			PreparedStatement getNumps = _conn.prepareStatement(getNumSql);
 			ResultSet num = getNumps.executeQuery();
 			String msgAtHour ="UPDATE [MAKAFORUM].[dbo].[UsersAtHour]" +
-							  "SET Amount = " + (num.getInt(0) + 1) +
-							  "WHERE Hour =" + hour;
+							  "SET amount = " + (num.getInt(0) + 1) +
+							  "WHERE hour =" + hour;
 			PreparedStatement updateNumps = _conn.prepareStatement(msgAtHour);
 			updateNumps.execute();
 		} catch (SQLException e) {
@@ -434,6 +460,23 @@ public class PersistenceSystemSQL implements PersistenceSystem{
         }
         catch (Exception e) {/*e.printStackTrace();*/}
 		
+	}
+	
+	public void emptyDataBase()
+	{
+		try {
+			String sql = "DELETE * FROM Messages";
+			PreparedStatement ps = _conn.prepareStatement(sql);
+			ps.execute();
+			sql = "DELETE * FROM Users";
+			ps = _conn.prepareStatement(sql);
+			ps.execute();
+			sql = "DELETE * Passwords";
+			ps = _conn.prepareStatement(sql);
+			ps.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

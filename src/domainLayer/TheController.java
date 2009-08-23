@@ -43,8 +43,8 @@ public class TheController {
 	 */
 	public TheController(){
 		_loggedUsers = new Vector<RegisteredUser>();
-//		_persistenceLayer = new PersistenceSystemSQL();
-		_persistenceLayer = new PersistenceSystemXML();
+		_persistenceLayer = new PersistenceSystemSQL();
+//		_persistenceLayer = new PersistenceSystemXML();
 		_userNameToUserId = new ConcurrentHashMap<String, Long>();
 		_userNameToUserId = _persistenceLayer.createHashTableofUserNametoUID();
 		_currentUserID = _persistenceLayer.getCurrentUserID();
