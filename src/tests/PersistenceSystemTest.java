@@ -52,7 +52,7 @@ public class PersistenceSystemTest extends TestCase {
 		assertEquals(newUser.get_uID(),userFromDb.get_uID());
 		
 		//delete the user password.
-		System.out.println(_ps.getCurrentUserID() - 1);
+		//System.out.println(_ps.getCurrentUserID() - 1);
 		_ps.deletePassword(_ps.getCurrentUserID() - 1);
 		_ps.deleteUser("userTest1");
 		
@@ -69,7 +69,7 @@ public class PersistenceSystemTest extends TestCase {
 		String newUserPassFromDB = _ps.getUserPassword(newUser.get_uID());
 		assertTrue(newUserPass.contentEquals(newUserPassFromDB));
 		//no need to keep the password so I delete it.
-		System.out.println(_ps.getCurrentUserID() - 1);
+		//System.out.println(_ps.getCurrentUserID() - 1);
 		_ps.deletePassword(_ps.getCurrentUserID() - 1);
 		_ps.deleteUser("userTest1");
 	}
@@ -121,7 +121,7 @@ public class PersistenceSystemTest extends TestCase {
 		_ps.addUser(newUser, "pass1");
 		RegisteredUser userFromDb = _ps.getUser(_ps.getCurrentUserID()-1);
 		assertEquals(newUser.get_uID(),userFromDb.get_uID());
-		System.out.println(_ps.getCurrentUserID() - 1);
+		//System.out.println(_ps.getCurrentUserID() - 1);
 		_ps.deletePassword(_ps.getCurrentUserID() - 1);
 		_ps.deleteUser("userTest1");
 	}
@@ -134,7 +134,7 @@ public class PersistenceSystemTest extends TestCase {
 		_ps.addUser(newUser, "pass1");
 		String newUserPassFromDB = _ps.getUserPassword(newUser.get_uID());
 		assertTrue(newUserPassFromDB.contentEquals("pass1"));
-		System.out.println(_ps.getCurrentUserID() - 1);
+		//System.out.println(_ps.getCurrentUserID() - 1);
 		_ps.deletePassword(_ps.getCurrentUserID() - 1);
 		_ps.deleteUser("userTest1");//last time delete the user message.
 	}
