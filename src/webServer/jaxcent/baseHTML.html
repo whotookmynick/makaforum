@@ -1,23 +1,18 @@
 <html>
 	<head>
 		<title> MAKA FORUM </title>	
-		<style type="text/css">
-		body
-		{
-			background-image:url('./background_created.png');
-		}
-		</style>
-		<SCRIPT TYPE="text/javascript" SRC="./jaxcent21.js"></SCRIPT>
+		<SCRIPT TYPE="text/javascript" SRC="./jaxcent21.js"> </script>
 	</head>
-	<body link="lightgreen" vlink="lightgreen" alink="lightgreen">
+	<body bgcolor="Beige">
 		<script type="text/JavaScript" src="./scw.js"></script>
 		<table id="mainTable" cellpadding="10">
 			<caption align="center">
-				<font align="center" size="5">MAKA FORUM</font>
+							<img src="./MAKA_LOGO.jpg" width="300" height="150"/>
+				<!--<font color="Tomato" align="center" size="5">MAKA FORUM</font> -->
 			</caption>
 			<tr>
 				<td width="100" id="searchCell">
-					<b><u>Search by</u></b><br>
+					<b><u>Search by</u></b>
 					<input type="radio" name="searchType" id="searchTypeContent" value="content" />Content<br>
 					<input type="radio" name="searchType" id="searchTypeAuthor" value="Author" />Author<br>
 					<input type="radio" name="searchType" id="searchTypeDate" value="Date" />Date<br>
@@ -25,8 +20,6 @@
 					<input type="submit" id="searchSubmit" value="Search" />
 					<br/>
 					<input type="text" onclick='scwShow(this,event);' id="startDateCalendar" value="start date" style="visibility:hidden"/>
-					<br/>
-					<p>End Date
 					<br/>
 					<input type="text" onclick='scwShow(this,event);' id="endDateCalendar" value="end date" style="visibility:hidden"/>
 					<br/>
