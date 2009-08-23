@@ -28,13 +28,14 @@ public class TheControllerTest {
 	@Test
 	public void testLogMeIn() {
 		try {
-			_controler.registerNewUser("user1", "pass1");
+			if(_controler.getUser("user1") == null)
+				_controler.registerNewUser("user1", "pass1");
 			assertTrue(_controler.logMeIn("user1", "pass1") != null);
 			assertFalse(_controler.logMeIn("user1", "fake pass") != null);
 		} catch (UserDoesNotExistException e) {
-			e.printStackTrace();
+			/*e.printStackTrace();*/
 		} catch (UserAlreadyExistsException e) {
-			e.printStackTrace();
+			/*e.printStackTrace();*/
 		}
 		
 	}
@@ -42,29 +43,33 @@ public class TheControllerTest {
 	@Test
 	public void testRegisterNewUser() {
 		try {
-			_controler.registerNewUser("user1", "pass1");
+			if(_controler.getUser("user1") == null)
+				_controler.registerNewUser("user1", "pass1");
 			assertTrue(_controler.logMeIn("user1", "pass1") != null);
-			assertFalse(_controler.logMeIn("user1", "fake pass") == null);
+			assertTrue(_controler.logMeIn("user1", "fake pass") == null);
 		} catch (UserDoesNotExistException e) {
-			e.printStackTrace();
+			
 		} catch (UserAlreadyExistsException e) {
-			e.printStackTrace();
+			
 		}
 	}
 
 	@Test
 	public void testAddNewMessage() {
-		String messageContent = "test message";
+		String messageContent = "test message added succesfully";
 		MessageData msgData = new MessageDataImp(messageContent);
+		RegisteredUser user=null;
 		try {
-			_controler.registerNewUser("user2", "pass2");
-			_controler.logMeIn("user2", "pass2");
+			if(_controler.getUser("user2") == null)
+				_controler.registerNewUser("user2", "pass2");
+			user = _controler.logMeIn("user2", "pass2");
 		} catch (UserAlreadyExistsException e) {
-			e.printStackTrace();
+			
 		} catch (UserDoesNotExistException e) {
-			e.printStackTrace();
+			
 		}
-		_controler.addNewMessage(msgData,_controler.getUser("user2") );
+		
+		_controler.addNewMessage(msgData,user);
 		Iterator<Message> it = _controler.getAllMessagesChildren(-1).iterator();
 		while (it.hasNext())
 		{
@@ -81,32 +86,36 @@ public class TheControllerTest {
 		String messageContent = "test message";
 		String newMessageContent = "edited test message";
 		MessageData msgData = new MessageDataImp(messageContent);
+		RegisteredUser ru=null;
 		try {
-			_controler.registerNewUser("user1", "pass1");
-			_controler.logMeIn("user1", "pass1");
+			if(_controler.getUser("user1") == null)
+				_controler.registerNewUser("user1", "pass1");
+			ru = _controler.logMeIn("user1", "pass1");
 		} catch (UserAlreadyExistsException e) {
-			e.printStackTrace();
+			
 		} catch (UserDoesNotExistException e) {
-			e.printStackTrace();
+			
 		}
-		RegisteredUser ru = _controler.getUser("user1");
-		_controler.addNewMessage(msgData, ru);
-		
-		Iterator<Message> it = _controler.getAllMessagesChildren(-1).iterator();
-		while (it.hasNext())
-		{
-			Message curr = it.next();
-			if (curr.get_msgBody().toString().contentEquals(messageContent))
+		assertTrue(ru != null);
+		if(ru != null){
+			_controler.addNewMessage(msgData, ru);
+			
+			Iterator<Message> it = _controler.getAllMessagesChildren(-1).iterator();
+			while (it.hasNext())
 			{
-				_controler.editMsg(ru, curr.get_mID(), new MessageDataImp(newMessageContent));
+				Message curr = it.next();
+				if (curr.get_msgBody().toString().contentEquals(messageContent))
+				{
+					_controler.editMsg(ru, curr.get_mID(), new MessageDataImp(newMessageContent));
+				}
 			}
-		}
-		while (it.hasNext())
-		{
-			Message curr = it.next();
-			if (curr.get_msgBody().toString().contentEquals(messageContent))
+			while (it.hasNext())
 			{
-				assertTrue(curr.get_msgBody().toString().contentEquals(newMessageContent));
+				Message curr = it.next();
+				if (curr.get_msgBody().toString().contentEquals(messageContent))
+				{
+					assertTrue(curr.get_msgBody().toString().contentEquals(newMessageContent));
+				}
 			}
 		}
 	}
