@@ -390,7 +390,7 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 		try {
 			PreparedStatement userPassPS = _conn.prepareStatement(sql);
 			ResultSet rs = userPassPS.executeQuery();
-			ans = rs.getInt(0);
+			ans = rs.getInt(1);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -404,7 +404,7 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 		try {
 			PreparedStatement userPassPS = _conn.prepareStatement(sql);
 			ResultSet rs = userPassPS.executeQuery();
-			ans = rs.getInt(0);
+			ans = rs.getInt(1);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -417,7 +417,7 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 			String sql = "SELECT amount FROM UsersAtHour WHERE hour = " + i;
 			PreparedStatement userPassPS = _conn.prepareStatement(sql);
 			ResultSet rs = userPassPS.executeQuery();
-			ans = rs.getInt(0);
+			ans = rs.getInt(1);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -430,7 +430,7 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 		PreparedStatement getNumps = _conn.prepareStatement(getNumSql);
 		ResultSet num = getNumps.executeQuery();
 		String msgAtHour ="UPDATE [MAKAFORUM].[dbo].[MessagesAtHour]" +
-						  "SET Amount = " + (num.getInt(0) + 1) +
+						  "SET Amount = " + (num.getInt(1) + 1) +
 						  "WHERE hour =" + c.get(Calendar.HOUR);
 		PreparedStatement updateNumps = _conn.prepareStatement(msgAtHour);
 		updateNumps.execute();
@@ -442,7 +442,7 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 			PreparedStatement getNumps = _conn.prepareStatement(getNumSql);
 			ResultSet num = getNumps.executeQuery();
 			String msgAtHour ="UPDATE [MAKAFORUM].[dbo].[UsersAtHour]" +
-							  "SET amount = " + (num.getInt(0) + 1) +
+							  "SET amount = " + (num.getInt(1) + 1) +
 							  "WHERE hour =" + hour;
 			PreparedStatement updateNumps = _conn.prepareStatement(msgAtHour);
 			updateNumps.execute();
