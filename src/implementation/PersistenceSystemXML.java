@@ -585,4 +585,10 @@ public class PersistenceSystemXML implements PersistenceSystem,SearchTable {
 		
 	}
 
+	@Override
+	public String getUserNameWithId(long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

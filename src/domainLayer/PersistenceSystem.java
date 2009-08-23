@@ -59,4 +59,6 @@ public interface PersistenceSystem {
 	
 	public void updateUserType(String username,int type);
 	
+	public String getUserNameWithId(long id);
+	
 }

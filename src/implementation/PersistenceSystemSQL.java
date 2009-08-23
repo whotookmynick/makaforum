@@ -479,4 +479,21 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 		}
 	}
 	
+	public String getUserNameWithId(long id){
+		String result = "";
+		 try{
+			 String sql = "SELECT UserName FROM [MAKAFORUM].[dbo].[Users] WHERE uID =" + id;
+	            PreparedStatement userNamePS = _conn.prepareStatement(sql);
+	            ResultSet rs = userNamePS.executeQuery();
+	            if (rs!=null){
+	                while(rs.next()){
+	                    int i  = rs.findColumn("UserName");
+	                    result = rs.getString(i);
+	                }
+	            }
+	        }
+	        catch (Exception e) {/*e.printStackTrace();*/}
+		return result;
+	}
+	
 }
