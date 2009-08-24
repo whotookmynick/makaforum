@@ -36,7 +36,12 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 		HtmlInputButton loginButton = new HtmlInputButton(this,"loginSubmit"){
 			protected void onClick(Map pageData)
 			{
-				loginClicked();
+//				loginClicked();
+				try {
+					decideLoginButton(this.getValue());
+				} catch (Jaxception e) {
+					e.printStackTrace();
+				}
 			}
 		};
 		HtmlInputSubmit registerButton = new HtmlInputSubmit(this,"registerSubmit"){
@@ -132,10 +137,10 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 			//_messageTable.insertRow(-1, tempRow);
 			_msgIDs.clear();
 			_messageTable.deleteAllRows();
-//			if (!isOnLoad)
-//			{
-//				_messageTable.deleteFromBottom(_messageTable.getNumRows()-1);
-//			}
+			//			if (!isOnLoad)
+			//			{
+			//				_messageTable.deleteFromBottom(_messageTable.getNumRows()-1);
+			//			}
 			String getAllMessagesString = "display " + fatherMsgID;
 			String messages = _protocolHandler.processMessage(getAllMessagesString);
 			String []seperated = messages.split("\n");
@@ -151,6 +156,10 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 				String []currRowWithReply = Arrays.copyOf(currRow, currRow.length+2);
 				currRowWithReply[currRowWithReply.length-2] = "<a " + "\" id=\"reply" + msgID +"\" href=\"\">reply</a>";
 				currRowWithReply[currRowWithReply.length-1] = "<a " + "\" id=\"delete" + msgID +"\" href=\"\">delete</a>";
+				String userIDString = currRowWithReply[1];
+				String userNameString = _protocolHandler.processMessage("swapIdName " + userIDString);
+				userNameString = userNameString.substring("print ".length(),userNameString.length() -2);
+				currRowWithReply[1] = "<input type=\"hidden\" value=\"" + userIDString + "\">" + userNameString;
 				_messageTable.insertRow(-1, currRowWithReply);
 				final int rowNum = i;
 				HtmlElement replyElement = new HtmlElement(this,"reply" + msgID)
@@ -178,7 +187,7 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 				{
 					replyElement.setVisible(false);
 				}
-				if (!currRowWithReply[1].contentEquals(_currUserID) & !(_currUserType>0))
+				if (!userIDString.contentEquals(_currUserID) & !(_currUserType>0))
 				{
 					deleteElement.setVisible(false);
 				}
@@ -226,6 +235,18 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 
 	}
 
+	protected void decideLoginButton(String value)
+	{
+		if (value.contentEquals("Login"))
+		{
+			loginClicked();
+		}
+		else
+		{
+			logOffClicked();
+		}
+	}
+	
 	protected void loginClicked()
 	{
 		try {
@@ -234,6 +255,12 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 			{
 				//HtmlInputSubmit loginButton = new HtmlInputSubmit(this,"loginSubmit");
 				HtmlInputButton loginButton = new HtmlInputButton(this,"loginSubmit");
+//				{
+//					protected void onClick()
+//					{
+//						logOffClicked();
+//					}
+//				};
 				HtmlInputSubmit registerButton = new HtmlInputSubmit(this,"registerSubmit");
 				HtmlInputText userNameInput = new HtmlInputText(this,"usernamelogin");
 				HtmlInputPassword userPasswordInput = new HtmlInputPassword(this,"userpasswordlogin");
@@ -242,11 +269,11 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 				HtmlDiv editUserDiv = new HtmlDiv(this, "editUserDiv");
 				HtmlInputSubmit adminSubmit = new HtmlInputSubmit(this,"adminSubmit");
 				HtmlAnchor showChartsLink = new HtmlAnchor(this, "showChartsLink");
-				loginButton.setDisabled(true);
 				registerButton.setDisabled(true);
 				userNameInput.setDisabled(true);
 				userPasswordInput.setDisabled(true);
 				addMessageDiv.setVisible(true);
+				loginButton.setValue("Log-Off");
 				_currUserID = _protocolHandler.get_connectedUser().get_uID() + "";
 				_currUserType = _protocolHandler.get_connectedUser().get_userType();
 				if (_currUserType > 0)
@@ -282,6 +309,40 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 		} catch (Jaxception e) {
 			e.printStackTrace();
 		}
+	}
+
+	protected void logOffClicked() {
+		try {
+			String answer = _protocolHandler.processMessage("logoff");
+			updateStatus(formatServerAnswer(answer));
+			HtmlInputButton loginButton = new HtmlInputButton(this,"loginSubmit");
+			HtmlInputSubmit registerButton = new HtmlInputSubmit(this,"registerSubmit");
+			HtmlInputText userNameInput = new HtmlInputText(this,"usernamelogin");
+			HtmlInputPassword userPasswordInput = new HtmlInputPassword(this,"userpasswordlogin");
+			HtmlDiv addMessageDiv = new HtmlDiv(this,"addMessageDiv");
+			HtmlDiv moderatordiv = new HtmlDiv(this,"moderatordiv");
+			HtmlDiv editUserDiv = new HtmlDiv(this, "editUserDiv");
+			HtmlInputSubmit adminSubmit = new HtmlInputSubmit(this,"adminSubmit");
+			HtmlAnchor showChartsLink = new HtmlAnchor(this, "showChartsLink");
+			registerButton.setEnabled(true);
+			userNameInput.setEnabled(true);
+			userPasswordInput.setEnabled(true);
+			addMessageDiv.setVisible(false);
+			moderatordiv.setVisible(false);
+			adminSubmit.setVisible(false);
+			showChartsLink.setVisible(false);
+			editUserDiv.setVisible(false);
+//			{
+//				protected void onClick()
+//				{
+//					loginClicked();
+//				}
+//			};
+			loginButton.setValue("Login");
+		} catch (Jaxception e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	private void editUserNameClicked() 
@@ -570,7 +631,7 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 			e.printStackTrace();
 		}
 	}
-	
+
 	protected void searchLinkClicked(String msgID) {
 		try {
 			_searchTable.setVisible(false);
@@ -585,7 +646,7 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 	protected void moderatorClicked() {
 		try {
 			HtmlInputText newModerName = new HtmlInputText(this, "moderatorName");
-		
+
 			String answer = _protocolHandler.processMessage("moderator " + newModerName.getValue());
 			updateStatus(formatServerAnswer(answer));
 			newModerName.setValue("");
@@ -593,13 +654,13 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	protected void adminClicked() {
 		try {
 			HtmlInputText newModerName = new HtmlInputText(this, "moderatorName");
-		
+
 			String answer = _protocolHandler.processMessage("admin " + newModerName.getValue());
 			updateStatus(formatServerAnswer(answer));
 			newModerName.setValue("");
@@ -607,56 +668,56 @@ public class MainPageHandler extends jaxcent.JaxcentPage implements UIObserver{
 
 			e.printStackTrace();
 		}		
-		
+
 	}
-	
+
 	private void dateRadioOnClick(String value) {
-			try {
-				final String finalValue = value;
-				final HtmlInputText searchContent = new HtmlInputText(this, "searchContent");
-				final HtmlInputText beginDate = new HtmlInputText(this, "startDateCalendar");
-				final HtmlInputText endDate = new HtmlInputText(this, "endDateCalendar");
-				if (value.contentEquals("Date"))
+		try {
+			final String finalValue = value;
+			final HtmlInputText searchContent = new HtmlInputText(this, "searchContent");
+			final HtmlInputText beginDate = new HtmlInputText(this, "startDateCalendar");
+			final HtmlInputText endDate = new HtmlInputText(this, "endDateCalendar");
+			if (value.contentEquals("Date"))
+			{
+				searchContent.setVisible(false);
+				beginDate.setVisible(true);
+				endDate.setVisible(true);
+				HtmlInputSubmit searchButton = new HtmlInputSubmit(this, "searchSubmit")
 				{
-					searchContent.setVisible(false);
-					beginDate.setVisible(true);
-					endDate.setVisible(true);
-					HtmlInputSubmit searchButton = new HtmlInputSubmit(this, "searchSubmit")
+					protected void onClick(Map pageData)
 					{
-						protected void onClick(Map pageData)
-						{
-							try {
-								String beginDateString = beginDate.getValue();
-								String endDateString = endDate.getValue();
-								String content = beginDateString + " " + endDateString;
-								initSearchTable("date", content);
-							} catch (Jaxception e) {
-								e.printStackTrace();
-							}
+						try {
+							String beginDateString = beginDate.getValue();
+							String endDateString = endDate.getValue();
+							String content = beginDateString + " " + endDateString;
+							initSearchTable("date", content);
+						} catch (Jaxception e) {
+							e.printStackTrace();
 						}
-					};
-				}
-				else
-				{
-					searchContent.setVisible(true);
-					beginDate.setVisible(false);
-					endDate.setVisible(false);
-					HtmlInputSubmit searchButton = new HtmlInputSubmit(this, "searchSubmit")
-					{
-						protected void onClick(Map pageData)
-						{
-							try {
-								String content = searchContent.getValue();
-								initSearchTable(finalValue.toLowerCase(), content);
-							} catch (Jaxception e) {
-								e.printStackTrace();
-							}
-						}
-					};
-				}
-			} catch (Jaxception e) {
-				e.printStackTrace();
+					}
+				};
 			}
+			else
+			{
+				searchContent.setVisible(true);
+				beginDate.setVisible(false);
+				endDate.setVisible(false);
+				HtmlInputSubmit searchButton = new HtmlInputSubmit(this, "searchSubmit")
+				{
+					protected void onClick(Map pageData)
+					{
+						try {
+							String content = searchContent.getValue();
+							initSearchTable(finalValue.toLowerCase(), content);
+						} catch (Jaxception e) {
+							e.printStackTrace();
+						}
+					}
+				};
+			}
+		} catch (Jaxception e) {
+			e.printStackTrace();
+		}
 	}
-	
+
 }
