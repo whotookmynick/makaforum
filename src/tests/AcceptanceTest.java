@@ -3,7 +3,11 @@ package tests;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 
 import implementation.ControlerFactory;
@@ -28,6 +32,8 @@ public class AcceptanceTest extends TestCase{
 	private Search _searchEngine;
 	private long _msgPosterId;
 	RegisteredUser currentUser;
+	private long _msgPostTime;
+	private final String _messageData = "test message for search1";
 	
 	@Before
 	public void setUp() throws Exception {
@@ -42,7 +48,9 @@ public class AcceptanceTest extends TestCase{
 		}
 		currentUser = _contorller.logMeIn("user2New", "pass2");
 		_msgPosterId = currentUser.get_uID();
-		//mdi = new MessageDataImp(_messageData);
+		MessageDataImp mdi = new MessageDataImp(_messageData);
+		_contorller.addNewMessage(mdi, currentUser);
+		_msgPostTime = System.currentTimeMillis() - 60000;
 	}
 	
 	
@@ -56,9 +64,9 @@ public class AcceptanceTest extends TestCase{
 			assertTrue(_contorller.logMeIn("user1New", "password1") != null);
 			assertTrue(_contorller.logMeIn("user1New", "fake pass") == null);
 		} catch (UserDoesNotExistException e) {
-			e.printStackTrace();
+			/*e.printStackTrace();*/
 		} catch (UserAlreadyExistsException e) {
-			e.printStackTrace();
+			/*e.printStackTrace();*/
 		}
 	}
 	
@@ -76,6 +84,71 @@ public class AcceptanceTest extends TestCase{
 				assertTrue(curr.get_msgBody().toString().contentEquals(messageContent));
 			}
 		}
+	}
+	
+	@Test
+	public void testSearchByAuthor() {
+		Collection<Message> retMsgs = _searchEngine.searchByAuthor("user2New");
+		Iterator<Message> it = retMsgs.iterator();
+		boolean found = false;
+		while (it.hasNext() && !found){
+			Message curr = it.next();
+			found = curr.get_msgPosterID() == _msgPosterId;
+		}
+		assertTrue(found);
+	}
+
+	@Test
+	public void testSearchByContent() {
+		Collection<Message> retMsgs = _searchEngine.searchByContent(_messageData);
+		Iterator<Message> it = retMsgs.iterator();
+		boolean found = false;
+		while (it.hasNext() && !found){
+			Message curr = it.next();
+			found = curr.get_msgBody().toString().contentEquals(_messageData);
+		}
+		assertTrue(found);
+	}
+
+	@Test
+	public void testSearchByDate() {
+		Date fromDate = new Date(_msgPostTime);
+		Date toDate = new Date(_msgPostTime + 3600000);//the message post time plus one hour
+		Collection<Message> retMsgs = _searchEngine.searchByDate(fromDate,toDate);
+		Iterator<Message> it = retMsgs.iterator();
+		boolean found = false;
+		while (it.hasNext() && !found){
+			Message curr = it.next();
+			//  Date temp = new Date(curr.get_msgPostTime());
+			  assertTrue((curr.get_msgPostTime() >= _msgPostTime) &&
+					  (curr.get_msgPostTime() <= _msgPostTime + 3600000));
+			found =  curr.get_msgBody().toString().contentEquals(_messageData);
+		}
+		assertTrue(found);
+	}
+	
+	@Test
+	public void testReplyToMessage() {
+		String data = "this is the reply message." + System.currentTimeMillis();
+		MessageData md = new MessageDataImp(data);
+		try {
+			if (_contorller.getUser("user1New") == null)
+			{
+				_contorller.registerNewUser("user1New", "password1");
+			}
+			RegisteredUser newRu = _contorller.logMeIn("user1New", "password1");
+			_contorller.replyToMessage(md, newRu, _msgPosterId);
+			Collection <Message> coll = _contorller.getAllMessagesChildren(_msgPosterId);
+			Iterator<Message> it = coll.iterator();
+			boolean found = false;
+			while (it.hasNext() && !found){
+				Message curr = it.next();
+				found = curr.get_msgBody().toString().contentEquals(data);
+			}
+			assertTrue(found);
+		}catch(UserAlreadyExistsException e){
+			
+		}catch(Exception e){}
 	}
 	
 	/**
