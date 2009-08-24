@@ -43,8 +43,8 @@ public class TheController {
 	 */
 	public TheController(){
 		_loggedUsers = new Vector<RegisteredUser>();
-		_persistenceLayer = new PersistenceSystemSQL();
-//		_persistenceLayer = new PersistenceSystemXML();
+//		_persistenceLayer = new PersistenceSystemSQL();
+		_persistenceLayer = new PersistenceSystemXML();
 		_userNameToUserId = new ConcurrentHashMap<String, Long>();
 		_userNameToUserId = _persistenceLayer.createHashTableofUserNametoUID();
 		_currentUserID = _persistenceLayer.getCurrentUserID();
@@ -445,4 +445,19 @@ public class TheController {
 			}
 		}
 	}
+	
+	/**
+	 * This method return  the user name. 
+
+	 * the one specified in the persistence system.
+	 * NOTE: this method assumes that there is a way to convert userID to userName
+	 * @param ID
+	 * @param user name
+	 * @return
+	 * @throws UserDoesNotExistException
+	 */
+	public String SwapIdToName(long id){
+		return _persistenceLayer.getUserNameWithId(id);
+	}
+
 }

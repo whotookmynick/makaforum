@@ -44,6 +44,12 @@ public class ServerProtocolImp implements ServerProtocol {
 	public String processMessage(String msg) {
 		try {
 			String parsedString[] = msg.split(" ");
+            //
+            if  (parsedString[0].contentEquals("swapIdName")){
+            	
+            return SwapUserName(parsedString[1]);
+            }
+            ///
 			if (parsedString[0].contentEquals("login")){
 				return userLogIn(parsedString);
 			}
@@ -308,6 +314,14 @@ public class ServerProtocolImp implements ServerProtocol {
 			return "print username and/or password are incorrect \\e";
 		}
 	}
+	
+    private String SwapUserName(String id){
+    	
+        int Uid =Integer.parseInt(id);
+        String ans=_controller.SwapIdToName((long) Integer.parseInt(id));
+        ans = "print " + ans + "\\e";
+        return ans;
+    }
 	
 	private String createStringFromMessagesCollection(Collection<Message> allMessages)
 	{
