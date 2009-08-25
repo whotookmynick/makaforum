@@ -43,7 +43,7 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 		String driver = "net.sourceforge.jtds.jdbc.Driver";
 		Class.forName(driver);
 		//String connString = "Provider=SQLOLEDB.1;Password=maka;Persist Security Info=True;User ID=maka;Initial Catalog=MAKA;Data Source=localhost\\SQLEXPRESS";
-		Connection conn = DriverManager.getConnection("jdbc:jtds:sqlserver://132.72.196.14:1433","maka","maka");
+		Connection conn = DriverManager.getConnection("jdbc:jtds:sqlserver://132.72.195.188:1433","maka","maka");
 		return conn;
 	}
 
@@ -83,7 +83,7 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 			addUserPS.execute();
 			addPassPS.execute();
 			}
-			catch (Exception e) {/*e.printStackTrace();*/}
+			catch (Exception e) {e.printStackTrace();}
 	}
 
 	/** 
@@ -458,7 +458,7 @@ public class PersistenceSystemSQL implements PersistenceSystem{
 	@Override
 	public void updateUserType(String username, int type) {
         try{
-            String userNameChangeSQL = "UPDATE [MAKAFORUM].[dbo].[Users] SET uID = "+ type +
+            String userNameChangeSQL = "UPDATE [MAKAFORUM].[dbo].[Users] SET UserType = "+ type +
             " WHERE UserName ='" + username + "';";
             PreparedStatement userNamePS = _conn.prepareStatement(userNameChangeSQL);
             userNamePS.execute();
